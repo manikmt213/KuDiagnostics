@@ -28,6 +28,7 @@ final class Packages {
 		);
 	}
 
+	// phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn -- a filter callback must declare its value type for PHPStan, but this one always throws.
 	/**
 	 * "wp_redirect" filter used while activating: stops the redirect before the plugin's exit runs.
 	 *
@@ -38,6 +39,7 @@ final class Packages {
 	public static function stop_redirect( $location ): string {
 		throw new RedirectIntercepted( is_string( $location ) ? esc_url_raw( $location ) : '' );
 	}
+	// phpcs:enable Squiz.Commenting.FunctionComment.InvalidNoReturn
 
 	/**
 	 * Activate a plugin, stopping a redirect the plugin starts while being activated (see RedirectIntercepted).
