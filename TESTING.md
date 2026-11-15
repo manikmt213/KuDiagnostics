@@ -267,7 +267,10 @@ Site: the owner's Hostinger test site (WP 7.1.4, PHP 8.3, KuDiagnostics 1.3.0), 
 | Oxygen 6.2.0 | 51 abilities under `oxygen/`; same annotations; `report-bug` read-only, `set-home-page` with `post_id`; `run-site-tool` takes `post_ids` (treated as site-wide); create-post and edit-post run; page data in `_oxygen_data` | Matches, with the fixes above |
 | WPBakery 9.1 | Source: `WPBMap::getAllShortCodes()` expands lean-mapped elements (`generateData()` → `setElementSettings()`), `addAllMappedShortcodes()`, `getShortCode()`, `exists()`; mapping runs on `init` in every request (`Vc_Manager::init()` → `mapper()->init()`); `WPB_VC_VERSION` 9.1; meta keys `_wpb_vc_js_status`, `_wpb_shortcodes_custom_css` | Matches the stand-in's contract |
 
-Still to do: run the builder tools end to end on that site (needs the current build there and a reconnect of the connector with the plugins active).
+| Bricks 2.4.5 (theme, inactive) | Source through the theme file viewer: storage constants `BRICKS_DB_PAGE_HEADER/CONTENT/FOOTER` = `_bricks_page_header_2` / `_content_2` / `_footer_2`; `includes/abilities/manager.php` registers 167 abilities (only when `abilitiesApi` is on in Bricks' global settings; diagnostics always on); reads carry `readonly: true`, Bricks sets `destructive: false` when omitted; the page is `postId` (or `slug`, `path`, `title`); writes include delete-post (with `forceDelete`), delete-media, restore-revision, import-transfer-package | Read tool matches. **Defect found and fixed before use:** with 167 abilities, "any write that takes a post" let delete-post, restore-revision and similar run → Bricks writes are now an explicit page-level allow-list, and every post write must name the page by its numeric id (slug/path/title would have skipped the snapshot) (BricksTest) |
+| Divi 5.19.0 (theme, inactive) | Source: 116 `module.json` files, module names `divi/section`, `divi/row`, `divi/column`, `divi/text`, …, registered as WordPress block types (`ModuleRegistration::register_block_type_from_metadata()`) | Matches the read tools' `divi/` prefix and detection |
+
+Still to do: run the builder tools end to end on that site (needs a reconnect of the connector with the plugins active).
 
 ## Bricks, Divi 5, Etch (D41)
 

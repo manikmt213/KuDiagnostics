@@ -2,8 +2,8 @@
 /**
  * Stand-in for Bricks (no copy on the development machine): the meta key constants from the Bricks Academy data model
  * and abilities under "bricks/" as the Academy describes them (start-here, get-page-elements, set-page-elements,
- * set-global-settings, execute-php). Their input shapes are this stand-in's own (post_id, elements); the real input
- * schemas are UNVERIFIED. Checks KuDiagnostics' side only. Loaded with KUDUY_FAKES=bricks.
+ * set-global-settings, execute-php). Inputs follow Bricks 2.4.5 as read on a live site: the page is postId; delete-post
+ * takes postId too. Checks KuDiagnostics' side only. Loaded with KUDUY_FAKES=bricks.
  *
  * @package Kuduy\Mcp
  */
@@ -41,12 +41,12 @@ add_action(
 		$post = array(
 			'type'       => 'object',
 			'properties' => array(
-				'post_id' => array(
+				'postId' => array(
 					'type'    => 'integer',
 					'minimum' => 1,
 				),
 			),
-			'required'   => array( 'post_id' ),
+			'required'   => array( 'postId' ),
 		);
 		$reg  = static function ( string $name, array $schema, callable $run, ?bool $readonly, string $cap = 'edit_posts' ) {
 			$args = array(
@@ -69,12 +69,12 @@ add_action(
 		$reg(
 			'get-page-elements',
 			$post,
-			static fn( $input ) => array( 'elements' => (array) get_post_meta( (int) $input['post_id'], BRICKS_DB_PAGE_CONTENT, true ) ),
+			static fn( $input ) => array( 'elements' => (array) get_post_meta( (int) $input['postId'], BRICKS_DB_PAGE_CONTENT, true ) ),
 			true
 		);
 		$set                             = $post;
 		$set['properties']['elements']   = array( 'type' => 'array' );
-		$set['required']                 = array( 'post_id', 'elements' );
+		$set['required']                 = array( 'postId', 'elements' );
 		$reg(
 			'set-page-elements',
 			$set,
@@ -84,10 +84,19 @@ add_action(
 						return new WP_Error( 'invalid', 'Every element needs id and name.' );
 					}
 				}
-				update_post_meta( (int) $input['post_id'], BRICKS_DB_PAGE_CONTENT, $input['elements'] );
+				update_post_meta( (int) $input['postId'], BRICKS_DB_PAGE_CONTENT, $input['elements'] );
 				return array( 'saved' => count( $input['elements'] ) );
 			},
 			false
+		);
+		$reg(
+			'delete-post',
+			$post,
+			static function ( $input ) {
+				update_option( 'kuduy_fake_bricks_deleted', (int) $input['postId'] );
+				return array( 'deleted' => true );
+			},
+			null
 		);
 		$reg(
 			'set-global-settings',

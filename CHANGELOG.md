@@ -4,6 +4,8 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Changed: the Bricks tools run only Bricks' page-level changes (elements, page settings, interactions, conditions, forms, popups, creating and duplicating pages); Bricks 2.4.5 offers 167 abilities, including deletes and restores that cannot be undone here. Every page change must name the page by its id.
+
 ## 1.3.1 — 2026-11-15
 
 Fixes from checks on real Breakdance, Oxygen 6 and WPBakery sites, plus first tools for Bricks, Divi 5 and Etch (241 tools in all).

@@ -41,10 +41,13 @@ final class BuilderAbilities implements Tool, Snapshottable {
 
 	/**
 	 * Per builder: the version that brings the abilities, where they are switched on, meta key prefix of a post's
-	 * builder data (for undo), example abilities, abilities never run here, and abilities that take a post but change
-	 * the whole site (Breakdance's set-home-page).
+	 * builder data (for undo), example abilities, abilities never run here, abilities that take a post but change
+	 * the whole site (Breakdance's set-home-page), and - where the builder has many abilities that act on posts in
+	 * ways a post snapshot cannot undo (Bricks 2.4.5 registers 167, with delete-post, delete-media, restore-revision,
+	 * import-transfer-package) - the write abilities allowed here; null means every write on one post or creating
+	 * something new.
 	 *
-	 * @var array<string, array{since: string, switch: string, prefix: string, get: string, run: string, never: list<string>, site: list<string>}>
+	 * @var array<string, array{since: string, switch: string, prefix: string, get: string, run: string, never: list<string>, site: list<string>, allow: list<string>|null}>
 	 */
 	private const CONFIG = array(
 		'breakdance' => array(
@@ -55,6 +58,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			'run'    => 'breakdance/edit-post (element operations on one page, applied together) or breakdance/create-post',
 			'never'  => array( 'report-bug' ),
 			'site'   => array( 'set-home-page' ),
+			'allow'  => null,
 		),
 		'oxygen'     => array(
 			'since'  => 'Oxygen 6',
@@ -64,15 +68,17 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			'run'    => 'oxygen/edit-post (element operations on one page, applied together) or oxygen/create-post',
 			'never'  => array( 'report-bug' ),
 			'site'   => array( 'set-home-page' ),
+			'allow'  => null,
 		),
 		'bricks'     => array(
 			'since'  => 'Bricks 2.4',
 			'switch' => '"Enable Bricks abilities" in Bricks > AI > Configuration (each ability can also be switched off in Bricks > AI > Abilities)',
 			'prefix' => '_bricks_page_',
 			'get'    => 'bricks/start-here, bricks/get-page-elements, bricks/get-design-context',
-			'run'    => 'bricks/set-page-elements (the elements of one page)',
+			'run'    => 'bricks/update-element {"postId": 12, "elementId": "abc123", "settings": {…}} or bricks/set-page-elements (all elements of one page)',
 			'never'  => array( 'execute-php' ),
 			'site'   => array(),
+			'allow'  => array( 'set-page-elements', 'add-element', 'update-element', 'batch-update-elements', 'remove-element', 'set-page-settings', 'update-element-interactions', 'update-element-conditions', 'update-form-fields', 'update-form-actions', 'update-popup-settings', 'create-post', 'create-template', 'duplicate-post' ),
 		),
 	);
 
@@ -274,22 +280,28 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 *
 	 * @param \WP_Ability          $ability Ability.
 	 * @param array<string, mixed> $input   Tool arguments.
+	 * @param bool                 $listing For the abilities list (no input yet).
 	 */
-	private function blocked( \WP_Ability $ability, array $input ): string {
+	private function blocked( \WP_Ability $ability, array $input, bool $listing = false ): string {
 		$refused = $this->refused( $ability );
 		if ( '' !== $refused ) {
 			return $refused;
 		}
-		$short = substr( $ability->get_name(), strlen( $this->builder ) + 1 );
-		if ( in_array( $short, self::CONFIG[ $this->builder ]['site'], true ) ) {
+		$short  = substr( $ability->get_name(), strlen( $this->builder ) + 1 );
+		$config = self::CONFIG[ $this->builder ];
+		if ( in_array( $short, $config['site'], true ) ) {
 			return 'This ability changes the whole site (not only the page given), which cannot be undone from here. Do it in ' . $this->label() . ' or with the WordPress settings tools.';
 		}
-		if ( str_starts_with( $short, 'create-' ) || self::post_id( $input ) > 0 ) {
+		if ( null !== $config['allow'] && ! in_array( $short, $config['allow'], true ) ) {
+			return 'Only ' . $this->label() . '\'s page-level changes are run here (' . implode( ', ', $config['allow'] ) . '); this one deletes, restores or changes data shared across the site, which cannot be undone from here. Do it in ' . $this->label() . ' itself.';
+		}
+		if ( str_starts_with( $short, 'create-' ) || str_starts_with( $short, 'duplicate-' ) ) {
 			return '';
 		}
 		$schema = $ability->get_input_schema();
 		if ( isset( $schema['properties']['post_id'] ) || isset( $schema['properties']['postId'] ) ) {
-			return '';
+			// The page must be named by its id, so it can be snapshotted first (Bricks also accepts slug, path or title).
+			return $listing || self::post_id( $input ) > 0 ? '' : 'Name the page by its numeric id (' . ( isset( $schema['properties']['postId'] ) ? 'postId' : 'post_id' ) . ') so it can be saved first and the change undone.';
 		}
 		return 'This ability changes site-wide ' . $this->label() . ' settings, which cannot be undone from here. Change them in ' . $this->label() . ' itself.';
 	}
@@ -468,7 +480,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 */
 	private function row( \WP_Ability $ability ): array {
 		$reads = self::reads( $ability );
-		$why   = $reads ? $this->refused( $ability ) : $this->blocked( $ability, array() );
+		$why   = $reads ? $this->refused( $ability ) : $this->blocked( $ability, array(), true );
 		$row   = array(
 			'name'        => $ability->get_name(),
 			'label'       => wp_strip_all_tags( $ability->get_label() ),

@@ -134,6 +134,7 @@ final class BricksTest extends TestCase {
 		$this->assertSame( 'kuduy-bricks-ability-run', $rows['bricks/set-page-elements']['run_with'] );
 		$this->assertSame( 'not run here', $rows['bricks/set-global-settings']['run_with'] );
 		$this->assertSame( 'not run here', $rows['bricks/execute-php']['run_with'] );
+		$this->assertSame( 'not run here', $rows['bricks/delete-post']['run_with'], 'Takes a post, but deletes it: not on the page-level list.' );
 		$this->assertStringContainsString( 'runs code', $rows['bricks/execute-php']['why_not'] );
 
 		$integrations = array_column( $this->ok( 'kuduy-integrations', array( 'all' => true ) )['integrations'], null, 'id' );
@@ -148,7 +149,7 @@ final class BricksTest extends TestCase {
 			'kuduy-bricks-ability-get',
 			array(
 				'name'  => 'bricks/get-page-elements',
-				'input' => array( 'post_id' => $page ),
+				'input' => array( 'postId' => $page ),
 			)
 		)['result']['elements'];
 		$this->assertCount( 4, $elements );
@@ -158,7 +159,7 @@ final class BricksTest extends TestCase {
 			array(
 				'name'  => 'bricks/set-page-elements',
 				'input' => array(
-					'post_id'  => $page,
+					'postId'   => $page,
 					'elements' => array(
 						array(
 							'id'       => 'new001',
@@ -189,13 +190,30 @@ final class BricksTest extends TestCase {
 			array(
 				'name'  => 'bricks/set-page-elements',
 				'input' => array(
-					'post_id'  => $page,
+					'postId'   => $page,
 					'elements' => array( array( 'id' => 'x' ) ),
 				),
 			),
 			'Bricks refuses invalid elements'
 		);
 		$this->assertCount( 4, get_post_meta( $page, '_bricks_page_content_2', true ) );
+		$this->fails(
+			'kuduy-bricks-ability-run',
+			array(
+				'name'  => 'bricks/delete-post',
+				'input' => array( 'postId' => $page ),
+			),
+			'deleting is not a page-level change'
+		);
+		$this->assertFalse( get_option( 'kuduy_fake_bricks_deleted' ) );
+		$this->fails(
+			'kuduy-bricks-ability-run',
+			array(
+				'name'  => 'bricks/set-page-elements',
+				'input' => array( 'elements' => array() ),
+			),
+			'the page must be named by its id so it can be undone'
+		);
 
 		$editor = self::make_user( 'editor' );
 		wp_set_current_user( $editor );
