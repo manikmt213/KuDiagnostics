@@ -4,21 +4,36 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
-- Added: **Elementor — duplicate a page** (`kuduy-elementor-duplicate`): copies a page, post or library template with its elements, page settings and page template into a new draft.
-- Added: **Elementor — page settings** (`kuduy-elementor-document-settings`, `kuduy-elementor-document-settings-update`): read and change the page-level settings of a document (hide title, background, padding, …), with undo.
-- Added: **Elementor — dynamic tags** (`kuduy-elementor-dynamic-tags`, `kuduy-elementor-dynamic-set`): list the registered tags and where a page uses them; connect a widget setting to a tag or clear it, with undo. `kuduy-elementor-widget-schema` marks settings that accept a tag. Classic widgets only; Elementor Pro's own tags were not available to test.
-- Added: **Theme tools** — `kuduy-theme-facts` (what the active theme is and how its design is managed), `kuduy-theme-settings` and `kuduy-theme-settings-update` (read and change the settings a theme registers in the Customizer, through the theme's own checks, with undo). Tested with Kadence, GeneratePress and OceanWP.
-- Added: **Astra** — `kuduy-astra-abilities`, `kuduy-astra-ability-get`, `kuduy-astra-ability-run`: read and change Astra's settings through the abilities Astra itself provides, with undo. The site owner must switch abilities on in Astra > Settings.
-- Checked: the Site Editor tools on the block themes Ollie and Spectra One.
-- Added: **Blocksy** settings through the theme tools (tested with 2.1.61).
+## 1.3.0 — 2026-11-15
+
+**More page builders, themes and forms plugins (232 tools in all).** Tools for a builder, theme or plugin appear only while it is active. Products marked "not yet verified" were built from their source and tested against stand-ins, because no working copy was available to the test runner; please check them on a real site before relying on them.
+
+### Page builders
+
+- Added: **Beaver Builder** — 7 `kuduy-beaver-*` tools, shown while Beaver Builder is active: status, modules and their settings, list and read layouts, create a page from rows, columns and modules, and edit a layout (add rows, columns and modules, change settings, move, duplicate, remove) with undo. Tested with Beaver Builder Lite 2.11.1.2. Shared (global) rows and modules and column widths are left to the builder; the paid version was not tested.
+- Changed: `kuduy-post-update` no longer overwrites the content of a page built with Beaver Builder.
 - Added: **Breakdance 3 and Oxygen 6** — `kuduy-breakdance-abilities`, `-ability-get`, `-ability-run` and the same for Oxygen: read and edit pages through the abilities these builders provide themselves, with undo for page changes. Site-wide settings are left to the builder. Not yet verified against the builders themselves.
 - Added: **Kirki builder** (version 6) — `kuduy-kirki-status`, `kuduy-kirki-pages`, `kuduy-kirki-get`: list pages and read their block structure. Read only.
 - Added: **Brizy** — `kuduy-brizy-status`, `kuduy-brizy-pages`, `kuduy-brizy-get`: list pages and read their structure. Read only (Brizy builds the public page in its own editor), and not yet verified against Brizy itself.
-- Added: **Beaver Builder** — 7 `kuduy-beaver-*` tools, shown while Beaver Builder is active: status, modules and their settings, list and read layouts, create a page from rows, columns and modules, and edit a layout (add rows, columns and modules, change settings, move, duplicate, remove) with undo. Tested with Beaver Builder Lite 2.11.1.2. Shared (global) rows and modules and column widths are left to the builder; the paid version was not tested.
-- Changed: `kuduy-post-update` no longer overwrites the content of a page built with Beaver Builder.
+
+### Elementor
+
+- Added: **Elementor — duplicate a page** (`kuduy-elementor-duplicate`): copies a page, post or library template with its elements, page settings and page template into a new draft.
+- Added: **Elementor — page settings** (`kuduy-elementor-document-settings`, `kuduy-elementor-document-settings-update`): read and change the page-level settings of a document (hide title, background, padding, …), with undo.
+- Added: **Elementor — dynamic tags** (`kuduy-elementor-dynamic-tags`, `kuduy-elementor-dynamic-set`): list the registered tags and where a page uses them; connect a widget setting to a tag or clear it, with undo. `kuduy-elementor-widget-schema` marks settings that accept a tag. Classic widgets only; Elementor Pro's own tags were not available to test.
+- Added: seven more free Elementor add-ons verified through the Elementor tools: Happy Addons, HT Mega, PowerPack Lite, Qi Addons, Xpro, Element Pack Lite, Piotnet.
 - Fixed: undoing `kuduy-elementor-kit-update` did nothing when the Kit had no stored settings before (a fresh Elementor 3.x site).
 - Fixed: `kuduy-elementor-widget-schema` could drop a responsive setting when Elementor had already built its per-device copies in the same request.
-- Added: seven more free Elementor add-ons verified through the Elementor tools: Happy Addons, HT Mega, PowerPack Lite, Qi Addons, Xpro, Element Pack Lite, Piotnet (232 tools in all).
+
+### Themes
+
+- Added: **Theme tools** — `kuduy-theme-facts` (what the active theme is and how its design is managed), `kuduy-theme-settings` and `kuduy-theme-settings-update` (read and change the settings a theme registers in the Customizer, through the theme's own checks, with undo). Tested with Kadence, GeneratePress and OceanWP.
+- Added: **Astra** — `kuduy-astra-abilities`, `kuduy-astra-ability-get`, `kuduy-astra-ability-run`: read and change Astra's settings through the abilities Astra itself provides, with undo. The site owner must switch abilities on in Astra > Settings.
+- Added: **Blocksy** settings through the theme tools (tested with 2.1.61).
+- Checked: the Site Editor tools on the block themes Ollie and Spectra One.
+
+### Forms
+
 - Added: **Ninja Forms** and **Formidable Forms** in the forms tools (`kuduy-forms-*`): forms, fields and notifications; entries with personal data masked. Ninja Forms submissions can be trashed and restored (with undo); Formidable entries are read only.
 - Added: **Gravity Forms** and **WPForms Pro entries** in the forms tools: entries, read / starred / spam / trash with undo, notes. Both are paid and no licensed copy was available: they are tested against stand-ins and **not yet verified against the plugins themselves**.
 
