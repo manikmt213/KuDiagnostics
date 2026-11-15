@@ -4,9 +4,12 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+## 1.3.1 — 2026-11-15
+
+Fixes from checks on real Breakdance, Oxygen 6 and WPBakery sites, plus first tools for Bricks, Divi 5 and Etch (241 tools in all).
+
 - Fixed: activating a plugin that sends the browser to its welcome page right after activation (Breakdance does this the first time) no longer breaks `kuduy-plugin-activate` and `kuduy-plugin-install`; the plugin is activated and the skipped page is named in `note`.
 - Fixed: the Breakdance and Oxygen tools never run the builders' `report-bug` ability (it sends data to the builder's makers, although marked read-only) and treat `set-home-page` as a site-wide change.
-
 - Added: **Bricks** — `kuduy-bricks-pages` and `kuduy-bricks-get` read pages from Bricks' documented data model; with Bricks 2.4 or later and its abilities switched on, `kuduy-bricks-abilities`, `-ability-get` and `-ability-run` read and edit pages through Bricks itself, with undo. Bricks' PHP and site-wide abilities are never run. Not yet verified against Bricks.
 - Added: **Divi 5** and **Etch** — `kuduy-divi-pages`, `kuduy-divi-get`, `kuduy-etch-pages`, `kuduy-etch-get`: list pages and read their structure. Read only. Not yet verified against Divi or Etch.
 
