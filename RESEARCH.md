@@ -374,6 +374,15 @@ Source read: WordPress `class-wp-customize-setting.php` (`save()` → `update()`
 - Themes call `$wp_customize->get_setting( 'blogname' )` etc. in their callbacks: core's `register_controls()` must have run first.
 - **UNVERIFIED:** child themes, the paid add-ons of these themes (Astra Pro, Kadence Pro, GP Premium, Ocean Extra), settings whose controls are added only by JavaScript.
 
+## 10j. Brizy and Kirki (D39, 2026-11-15)
+
+Source read: **Brizy 2.8.26** and **Kirki 6.4.2** (wordpress.org ZIPs; ideas and API only).
+
+- **Brizy:** `Brizy_Editor_Post::get( $id )`; `Brizy_Editor_Entity::isBrizyEnabled()` (meta `brizy_enabled`); `get_editor_data( true )` returns the editor JSON (`items` of `{type, value: {_id, items, …}}`); compiled HTML is kept separately (`getCompiledHtml()`), produced by the editor in the browser; `Brizy_Editor_Compiler::needsCompile()` only compares versions and `compilePost()` posts the page to Brizy's compiler service. So editor data written on the server does not reach the public page. `Brizy_Editor::get()->supported_post_types()`, `Brizy_Editor_User::is_user_allowed()`. Brizy's migrations call `mysqli_query()` on `$wpdb->dbh`, which fails on SQLite (Playground).
+- **Kirki 6** (the former Customizer framework is now a visual builder): editor mode meta `kirki_editor_mode` = `kirki`; `Kirki\HelperFunctions::is_kirki_type_data( $post_id )` returns `blocks` (id => `name`, `children`, `properties` with `tag`, `attributes`, `contents`) under `root`, plus `styles`; `save_kirki_data_to_db()` writes blocks, style blocks, used style ids and fonts and staging data together; access `user_has_builder_access()`. Pages are rendered on the server from the blocks.
+- **Blocksy:** `inc/init.php` requires `inc/customizer/init.php` only `if ( isset( $wp_customize ) )`; that file hooks `customize_register` and registers every option (and inner option) as a setting with `blocksy_include_sanitizer()`.
+- **UNVERIFIED:** Brizy against the real plugin and Brizy Pro; Kirki's style blocks and staging when writing; Kirki Pro.
+
 ## 11. Licensing and dependencies
 
 | Component | License (verified) | Use in KUDUY |

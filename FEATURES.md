@@ -150,8 +150,17 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 | Customizer settings: list with label, section, control, choices, default and value; change through the setting's own sanitizer and validator; undo (`kuduy-theme-settings`, `kuduy-theme-settings-update`) | Tested (TH2–TH4: Kadence 1.6.0, GeneratePress 3.6.1, OceanWP 4.2.8; core settings on every theme) |
 | Astra settings through Astra's own abilities: list, read, write, undo (`kuduy-astra-abilities`, `-ability-get`, `-ability-run`) | Tested (TH5–TH7: Astra 4.14.2). Works only when the site owner has switched abilities on in Astra > Settings |
 | Block themes Ollie 1.6.6 and Spectra One 1.2.6 with the Site Editor tools | Tested (S1–S5 run on both themes) |
-| Blocksy settings | Blocked for now — Blocksy registers none of its options as Customizer settings; needs its own adapter |
+| Blocksy settings | Tested 2026-11-15 (TH1, TH2, TH4: Blocksy 2.1.61; `maxSiteWidth` lands in its theme mod and undo restores it). Blocksy loads its Customizer registration only when the manager exists at theme load, so that file is included when the tools build the manager |
 | Astra settings without the abilities switch; child themes; header/footer builders of Kadence and OceanWP beyond their registered settings | Not started |
+
+## Brizy and Kirki — added 2026-11-15 (D39), read only
+
+| Feature | Status |
+|---|---|
+| Kirki builder (6.x): status, list pages, block structure (`kuduy-kirki-status`, `-pages`, `-get`) | Tested (KK1–KK3; Kirki 6.4.2, real plugin, WP 6.9 + 7.1) |
+| Kirki: change layouts | Not started — a page is saved as blocks, style blocks, used styles and staged versions together (`save_kirki_data_to_db()`) |
+| Brizy: status, list pages, page structure (`kuduy-brizy-status`, `-pages`, `-get`) | Implemented — tested 2026-11-15 against a stand-in only (BZ1–BZ3); **not verified against Brizy** (Brizy cannot boot on the SQLite test site) |
+| Brizy: change layouts | Not offered — Brizy compiles the public page in its own editor; editor data changed elsewhere would not reach the site |
 
 ## Beaver Builder — added 2026-11-14 (D37)
 
@@ -190,7 +199,7 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Feature | Status |
 |---|---|
 | Central integration registry with capability discovery: installed, active, version, support class, tools and whether they are available now | Tested 2026-11-10 (IR1–IR3: `kuduy-integrations`, `IntegrationsTest`) |
-| Catalogue covers the 58 target integrations and what is supported beyond them (67 rows) | Tested (IR1: consistency test) |
+| Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |
 | Phase B — forms: create or change forms and fields (Fluent, Ninja, Formidable) | Not started — needs research into each plugin's supported way to save a form |

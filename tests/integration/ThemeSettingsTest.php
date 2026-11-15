@@ -27,6 +27,7 @@ final class ThemeSettingsTest extends TestCase {
 	private const KNOWN = array(
 		'generatepress' => array( 'generate_settings[container_width]', 1111, 'option', 'container_width' ),
 		'oceanwp'       => array( 'ocean_main_container_width', 1111, 'theme_mod', '' ),
+		'blocksy'       => array( 'maxSiteWidth', 1111, 'theme_mod', '' ),
 		'kadence'       => array( 'scroll_up', true, 'theme_mod', '' ),
 	);
 

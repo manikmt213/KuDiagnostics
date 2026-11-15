@@ -20,7 +20,8 @@ One row per integration in the upgrade brief (58), plus what KuDiagnostics suppo
 | Elementor | free 4.3.6 (Pro paid; 4.3.2 ZIP local) | **Full** | 19 tools, tested on 3.35.9 and 4.3.6, incl. duplicate a document, page settings, dynamic tags (2026-11-14); Theme Builder with Pro. Missing: popups (Pro), dynamic tags on v4 elements | F |
 | WPBakery Page Builder | paid | **Partial** | 16 tools; tested against a stand-in, not the plugin. Missing: templates | L (verify) |
 | Beaver Builder | free Lite 2.11.1.2 | **Full** (BB1–BB6, 2026-11-14) | 7 tools: status, modules, schema, list, read, create, edit (rows, columns, modules) with undo. Not changed: global nodes, column widths, saved templates; paid version untested | — |
-| Kirki | free 6.4.2 | None | — (now sold as a page builder; needs research) | H |
+| Kirki | free 6.4.2 | **Partial** (KK1–KK3, 2026-11-15) | Read only: status, list pages, block structure (3 tools), tested on the real plugin. Missing: changing layouts (blocks, style blocks and staged versions are saved together) | H |
+| Brizy | free 2.8.26 | **Partial** (BZ1–BZ3 against a stand-in, 2026-11-15) | Read only: status, list pages, page structure (3 tools). Not verified against Brizy itself (it cannot boot on the SQLite test site). Layouts are not changed: Brizy compiles the public page in its own editor | L (verify) |
 | Bricks | paid (theme) | None | — | L |
 | Oxygen 6 | paid | None | — | L |
 | Divi 5 | paid | None | — | L |
@@ -36,7 +37,7 @@ One row per integration in the upgrade brief (58), plus what KuDiagnostics suppo
 | Spectra One | free 1.2.6 (block theme) | **Full** (TH1, S1–S5 on this theme, 2026-11-15) | Same tools | — |
 | Astra | free 4.14.2 | **Full** (TH5–TH7, 2026-11-15) | Theme facts; settings read and changed through the abilities Astra itself provides (`kuduy-astra-abilities`, `-ability-get`, `-ability-run`), with undo. Needs the site owner to switch abilities on in Astra > Settings | — |
 | Kadence | free 1.6.0 | **Full** (TH1–TH4, 2026-11-15) | Theme facts; Customizer settings read and changed with the theme sanitizers (`kuduy-theme-settings`, `-settings-update`), with undo | — |
-| Blocksy | free 2.1.61 | Detection | Theme facts only: Blocksy registers none of its options as Customizer settings on the server, so they are not managed (found 2026-11-15) | D (own adapter) |
+| Blocksy | free 2.1.61 | **Full** (TH1, TH2, TH4, 2026-11-15) | Theme facts; Customizer settings read and changed with Blocksy's own sanitizer, with undo (its registration file is included when the manager is built) | — |
 | GeneratePress | free 3.6.1 | **Full** (TH1–TH4, 2026-11-15) | Same as Kadence | — |
 | OceanWP | free 4.2.8 | **Full** (TH1–TH4, 2026-11-15) | Same as Kadence | — |
 | Avada (+ Avada Builder) | paid (real 7.16.4 on staging) | **Full** (builder) / Partial (theme: Global Options read only) | 20 `kuduy-avada-*` tools (D31); tested on real Avada 7.16.4 / Builder 3.16.4 on staging, 2026-11-13 (AV11) | — |

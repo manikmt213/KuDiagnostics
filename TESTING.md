@@ -253,7 +253,20 @@ Runs: `KUDUY_THEME=<slug>@<version>` — `astra@4.14.2`, `kadence@1.6.0`, `block
 | TH7 | Astra validates its own input; read/write tools refuse the other kind; post-meta ability left to post tools; editor refused | I — **pass 2026-11-15** |
 | S1–S5 on Ollie and Spectra One | Site Editor tools on two more block themes | I — **pass 2026-11-15** (`SiteEditorTest`) |
 
-Found on the way: themes rely on core's Customizer settings existing before their own `customize_register` callbacks (core registers first on the real screen); Astra builds its settings only inside the Customizer and a Customizer-path save did not reach its option, so Astra goes through its abilities; Blocksy registers no settings of its own. Undo is checked against stored values because `WP_Customize_Setting` and Astra cache per PHP process and all tests share one process. WP 6.9.11 / PHP 8.1 (2026-11-15): Astra, GeneratePress, OceanWP, Ollie and Spectra One pass the same tests. Kadence 1.6.0 could not be run on PHP 8.1: Playground's PHP 8.1 build crashes ("memory access out of bounds") on every request with Kadence active, including tests that do not touch the theme tools; Kadence passes on WP 6.9.11 with PHP 8.3. Blocksy was not run on 6.9.
+Found on the way: themes rely on core's Customizer settings existing before their own `customize_register` callbacks (core registers first on the real screen); Astra builds its settings only inside the Customizer and a Customizer-path save did not reach its option, so Astra goes through its abilities; Blocksy loads its registration only when the manager exists at theme load, so the tools include that file (added 2026-11-15, TH4 passes). Undo is checked against stored values because `WP_Customize_Setting` and Astra cache per PHP process and all tests share one process. WP 6.9.11 / PHP 8.1 (2026-11-15): Astra, GeneratePress, OceanWP, Ollie and Spectra One pass the same tests. Kadence 1.6.0 could not be run on PHP 8.1: Playground's PHP 8.1 build crashes ("memory access out of bounds") on every request with Kadence active, including tests that do not touch the theme tools; Kadence passes on WP 6.9.11 with PHP 8.3. Blocksy was not run on 6.9.
+
+## Brizy and Kirki (D39)
+
+| # | Feature | Type |
+|---|---|---|
+| KK1 | Kirki status; registry row active, partial, tools available | I — **pass 2026-11-15** on WP 7.1.4 and 6.9.11 with `kirki@6.4.2` (`KirkiTest`) |
+| KK2 | List Kirki pages; block tree with names, tags and text; properties on request | I — **pass 2026-11-15**, both pairs. The fixture page is stored as Kirki stores one and read back through Kirki's helper |
+| KK3 | Not a Kirki page refused; author refused and not listed; reading changes nothing | I — **pass 2026-11-15**, both pairs |
+| BZ1 | Brizy status; registry row partial, tools available | I — **pass 2026-11-15** on both pairs against a **stand-in** (`BrizyTest`, `KUDUY_FAKES=brizy`) |
+| BZ2 | List Brizy pages; structure with type, id, text; values on request | I — **pass 2026-11-15**, stand-in |
+| BZ3 | Not a Brizy page refused; author refused; reading changes nothing | I — **pass 2026-11-15**, stand-in |
+
+Brizy 2.8.26 itself fails on the SQLite test site (`mysqli_query()` on the database handle in its migrations), so it is not verified here. Blocksy on WP 6.9: TH1, TH2, TH4 pass (2026-11-15).
 
 ## Beaver Builder (D37)
 

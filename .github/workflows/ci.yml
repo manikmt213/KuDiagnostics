@@ -110,6 +110,12 @@ jobs:
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'oceanwp@4.2.8', label: '+ OceanWP' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'ollie@1.6.6', label: '+ Ollie' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'spectra-one@1.2.6', label: '+ Spectra One' }
+          # Brizy (D39), read-only tools: the real plugin cannot boot on the SQLite test site (it calls mysqli_query() directly),
+          # so the tools run against a stand-in for its page model (tests/integration/fakes/brizy.php).
+          - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: '', fakes: 'brizy', label: '+ Brizy (stand-in)' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'brizy', label: '+ Brizy (stand-in)' }
+          # Kirki builder (D39): the real plugin, read-only tools.
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'kirki@6.4.2', label: '+ Kirki' }
           # Beaver Builder Lite (upgrade phase H, D37): the real plugin; Elementor stays active to prove the builders coexist.
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'beaver-builder-lite-version@2.11.1.2', label: '+ Beaver Builder' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'beaver-builder-lite-version@2.11.1.2', label: '+ Beaver Builder' }

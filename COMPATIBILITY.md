@@ -88,7 +88,9 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Polylang (free) | 3.9.2 | **Tested** in Playground 2026-11-10 (WP 6.9.11 + 7.1.4): L1–L4; Hostinger staging 2026-11-10 (undo-to-no-language bug found and fixed) | WPML not supported |
 | Astra | 4.14.2 | **Tested** in Playground 2026-11-15: TH1, TH5–TH7 (Astra's own abilities) | CI: theme job. Abilities must be switched on by the site owner |
 | Kadence, GeneratePress, OceanWP | 1.6.0, 3.6.1, 4.2.8 | **Tested** in Playground 2026-11-15: TH1–TH4 (Customizer settings) on WP 7.1 / PHP 8.3; GeneratePress and OceanWP also on WP 6.9 / PHP 8.1 | CI: one theme job each. Kadence on PHP 8.1 is **not tested**: Playground's PHP 8.1 crashes with Kadence active (Kadence passes on WP 6.9 with PHP 8.3) |
-| Blocksy | 2.1.61 | **Detection only** — theme facts and core settings (TH1, TH2); its own options are not registered as Customizer settings | CI: theme job |
+| Blocksy | 2.1.61 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): TH1, TH2, TH4 (Customizer settings) | CI: theme job |
+| Kirki (builder) | 6.4.2 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): KK1–KK3, read only | CI: Kirki job |
+| Brizy | 2.8.26 | **Not verified** — read-only tools built from the source, tested against a stand-in (BZ1–BZ3); Brizy cannot boot on the SQLite test site | CI: stand-in jobs |
 | Ollie, Spectra One (block themes) | 1.6.6, 1.2.6 | **Tested** in Playground 2026-11-15: TH1 and S1–S5 | CI: one theme job each |
 | Block themes (Site Editor) | Twenty Twenty-Five | **Tested** in Playground 2026-11-10 (WP 6.9.11 + 7.1.4): S1–S5 | Hybrid/classic themes with widget areas: widgets tested with a registered test area |
 | CF7, WPForms, Gravity, Fluent, WPML, Polylang | — | Not tested | Phase 7 |

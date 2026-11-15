@@ -1,0 +1,53 @@
+<?php
+/**
+ * Brizy and Kirki are not dependencies; this declares only the Brizy API and the Kirki constants KUDUY and its tests
+ * use (verified in Brizy 2.8.26 and Kirki 6.4.2 source, RESEARCH.md §10j).
+ */
+
+namespace {
+	define( 'BRIZY_VERSION', '2.8.26' );
+	define( 'BRIZY_EDITOR_VERSION', '383-wp' );
+
+	class Brizy_Editor {
+		public static function get(): Brizy_Editor {}
+		/** @return array<int, string> */
+		public function supported_post_types() {}
+	}
+
+	define( 'KIRKI_VERSION', '6.4.2' );
+	define( 'KIRKI_META_NAME_FOR_POST_EDITOR_MODE', 'kirki_editor_mode' );
+
+	class Brizy_Editor_User {
+		public static function is_user_allowed(): bool {}
+	}
+
+	class Brizy_Editor_Entity {
+		/** @param int|WP_Post $post */
+		public static function isBrizyEnabled( $post ): bool {}
+	}
+
+	class Brizy_Editor_Post extends Brizy_Editor_Entity {
+		/**
+		 * @param int|WP_Post $apost
+		 * @return Brizy_Editor_Post
+		 */
+		public static function get( $apost, $uid = null ) {}
+		/** @return string */
+		public function get_editor_data( bool $decode = false ) {}
+		/**
+		 * @param string|null $content
+		 * @return $this
+		 */
+		public function set_editor_data( $content ) {}
+		/** @return $this */
+		public function enable_editor() {}
+		/** @return $this */
+		public function set_editor_version( string $editor_version ) {}
+		/** @return bool */
+		public function save( int $autosave = 0 ) {}
+		/** @return bool */
+		public function isCompiledWithCurrentVersion() {}
+		/** @return string */
+		public function edit_url() {}
+	}
+}

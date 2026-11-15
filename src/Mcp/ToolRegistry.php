@@ -7,6 +7,7 @@
 
 namespace Kuduy\Mcp\Mcp;
 
+use Kuduy\Mcp\Modules\Brizy\BrizyRead;
 use Kuduy\Mcp\Modules\Core\AstraAbilities;
 use Kuduy\Mcp\Modules\Core\CheckUpdate;
 use Kuduy\Mcp\Modules\Core\Comments;
@@ -55,6 +56,7 @@ use Kuduy\Mcp\Modules\Types\TypeTools;
 use Kuduy\Mcp\Modules\Forms\Cf7Save;
 use Kuduy\Mcp\Modules\Forms\FormEntries;
 use Kuduy\Mcp\Modules\Forms\FormsTools;
+use Kuduy\Mcp\Modules\Kirki\KirkiRead;
 use Kuduy\Mcp\Modules\Media\MediaFiles;
 use Kuduy\Mcp\Modules\Avada\AvadaRead;
 use Kuduy\Mcp\Modules\Avada\AvadaWrite;
@@ -162,6 +164,12 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'edit', 'create' ) as $mode ) {
 			$registry->register( new BeaverWrite( $mode ) );
+		}
+		foreach ( array( 'status', 'pages', 'get' ) as $mode ) {
+			$registry->register( new BrizyRead( $mode ) );
+		}
+		foreach ( array( 'status', 'pages', 'get' ) as $mode ) {
+			$registry->register( new KirkiRead( $mode ) );
 		}
 		foreach ( array( 'status', 'get', 'update' ) as $mode ) {
 			$registry->register( new SeoTools( $mode ) );

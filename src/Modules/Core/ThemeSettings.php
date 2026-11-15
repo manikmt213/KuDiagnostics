@@ -17,7 +17,7 @@ use Kuduy\Mcp\Mcp\ToolError;
  * GeneratePress and OceanWP store their settings differently (theme mods, one option array, several options), but
  * register them with WP_Customize_Manager on "customize_register", each with its own sanitize and validate
  * callbacks. (Astra builds its settings only inside the Customizer and has its own abilities: AstraAbilities.
- * Blocksy keeps its options in its own panels and registers none of them as settings.) So one adapter serves them: a manager is created for the request, the theme registers its
+ * Blocksy registers its options only when the manager exists at theme load; its registration file is included here.) So one adapter serves them: a manager is created for the request, the theme registers its
  * settings, values are read with WP_Customize_Setting::value() and written the way the Customizer publishes them:
  * set_post_value(), validate_setting_values(), then "customize_save", every setting's own save() (its sanitizer and
  * storage) and "customize_save_after", the hooks themes use to rebuild their CSS. No changeset post is created.
@@ -181,6 +181,7 @@ final class ThemeSettings implements Tool, Snapshottable {
 		// Themes and core read the manager from this global (core sets it the same way on Customizer requests).
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- WordPress's own global for the Customizer manager.
 		$GLOBALS['wp_customize'] = $manager;
+		self::blocksy_before_register();
 		// On the Customizer screen core's manager exists before themes load, so core's own settings (site title,
 		// logo, …) are registered before any theme callback; themes rely on that. Register them first here too.
 		remove_action( 'customize_register', array( $manager, 'register_controls' ) );
@@ -194,6 +195,22 @@ final class ThemeSettings implements Tool, Snapshottable {
 		}
 		self::$manager = $manager;
 		return $manager;
+	}
+
+	/**
+	 * Blocksy (tested with 2.1.61) includes its Customizer registration only when the manager already exists while
+	 * the theme loads (inc/init.php: "if ( isset( $wp_customize ) ) require .../inc/customizer/init.php"). Here the
+	 * manager is created later, so the same file is included now; it hooks "customize_register" and registers every
+	 * Blocksy option as a theme mod setting with Blocksy's own sanitizer.
+	 */
+	private static function blocksy_before_register(): void {
+		if ( ! function_exists( 'blocksy_get_options' ) || function_exists( 'blocksy_customizer_register_options' ) ) {
+			return;
+		}
+		$file = get_template_directory() . '/inc/customizer/init.php';
+		if ( is_readable( $file ) ) {
+			require_once $file;
+		}
 	}
 
 	/**
