@@ -153,6 +153,17 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 | Blocksy settings | Tested 2026-11-15 (TH1, TH2, TH4: Blocksy 2.1.61; `maxSiteWidth` lands in its theme mod and undo restores it). Blocksy loads its Customizer registration only when the manager exists at theme load, so that file is included when the tools build the manager |
 | Astra settings without the abilities switch; child themes; header/footer builders of Kadence and OceanWP beyond their registered settings | Not started |
 
+## Bricks, Divi 5, Etch — added 2026-11-15 (D41)
+
+| Feature | Status |
+|---|---|
+| Bricks: list pages and read their elements from the documented data model (`kuduy-bricks-pages`, `-get`) | Implemented — tested against a stand-in (BR1); **not verified against Bricks** |
+| Bricks 2.4+: its own abilities through the shared builder tools (`kuduy-bricks-abilities`, `-ability-get`, `-ability-run`), page writes with undo; PHP and site-wide abilities not run | Implemented — stand-in only (BR2–BR4); the real input shapes are UNVERIFIED |
+| Divi 5: list pages and read their block structure; Divi 4 pages recognised (`kuduy-divi-pages`, `-get`) | Implemented — stand-in only (BK1, BK3) |
+| Etch: list pages and read their block structure (`kuduy-etch-pages`, `-get`) | Implemented — stand-in only (BK2, BK3) |
+| Divi 5 and Etch: change pages | Not started — neither builder documents how its blocks may be changed outside its editor |
+| Mosaic, Voxel, MyListing | Not started — no developer documentation found; waiting for the products on the owner's test site to read their code |
+
 ## Breakdance 3 and Oxygen 6 — added 2026-11-15 (D40)
 
 | Feature | Status |

@@ -14,7 +14,10 @@ use Kuduy\Mcp\Mcp\Tool;
 use Kuduy\Mcp\Mcp\ToolError;
 
 /**
- * Breakdance 3 and Oxygen 6 through the abilities they register themselves (D40; source of Breakdance 3.0.0-beta.4
+ * Page builders through the abilities they register themselves. Bricks 2.4+ (D41; Bricks Academy "AI Abilities and
+ * Skills": abilities under "bricks/…", switched on in Bricks > AI > Configuration, each checked by Bricks against the
+ * user's capabilities and builder permissions; post element writes create Bricks revisions; PHP abilities are never
+ * run here, rule 6). Breakdance 3 and Oxygen 6 (D40; source of Breakdance 3.0.0-beta.4
  * and Oxygen 6.2.0, which share one codebase: BREAKDANCE_MODE is "breakdance" or "oxygen"). With "Agents & MCP" on
  * in the builder's settings (it is unless switched off) the builder registers about forty abilities under
  * "breakdance/…" or "oxygen/…" with the WordPress Abilities API: get-post-tree, edit-post (atomic element
@@ -33,6 +36,40 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	public const BUILDERS = array(
 		'breakdance' => 'Breakdance',
 		'oxygen'     => 'Oxygen',
+		'bricks'     => 'Bricks',
+	);
+
+	/**
+	 * Per builder: the version that brings the abilities, where they are switched on, meta key prefix of a post's
+	 * builder data (for undo), example abilities, and abilities never run here.
+	 *
+	 * @var array<string, array{since: string, switch: string, prefix: string, get: string, run: string, never: list<string>}>
+	 */
+	private const CONFIG = array(
+		'breakdance' => array(
+			'since'  => 'Breakdance 3',
+			'switch' => '"Agents & MCP" in the Breakdance settings (on unless switched off)',
+			'prefix' => '',
+			'get'    => 'breakdance/get-instructions, breakdance/get-post-tree {"post_id": 12}, breakdance/get-element-schemas',
+			'run'    => 'breakdance/edit-post (element operations on one page, applied together) or breakdance/create-post',
+			'never'  => array( 'report-bug' ),
+		),
+		'oxygen'     => array(
+			'since'  => 'Oxygen 6',
+			'switch' => '"Agents & MCP" in the Oxygen settings (on unless switched off)',
+			'prefix' => '',
+			'get'    => 'oxygen/get-instructions, oxygen/get-post-tree {"post_id": 12}, oxygen/get-element-schemas',
+			'run'    => 'oxygen/edit-post (element operations on one page, applied together) or oxygen/create-post',
+			'never'  => array( 'report-bug' ),
+		),
+		'bricks'     => array(
+			'since'  => 'Bricks 2.4',
+			'switch' => '"Enable Bricks abilities" in Bricks > AI > Configuration (each ability can also be switched off in Bricks > AI > Abilities)',
+			'prefix' => '_bricks_page_',
+			'get'    => 'bricks/start-here, bricks/get-page-elements, bricks/get-design-context',
+			'run'    => 'bricks/set-page-elements (the elements of one page)',
+			'never'  => array( 'execute-php' ),
+		),
 	);
 
 	/**
@@ -77,10 +114,11 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	public function description(): string {
 		$b = $this->label();
 		$n = $this->builder;
+		$c = self::CONFIG[ $n ];
 		return match ( $this->mode ) {
-			'abilities'   => 'Lists what ' . $b . ' lets an assistant do through its own abilities (read a page as an element tree, edit elements, create pages and templates, element schemas, …): name, label, description, read or write, and whether it can be run here. With name it returns that ability\'s input schema. Start with ' . $n . '/get-instructions. Says so when the builder\'s "Agents & MCP" setting is off.',
-			'ability-get' => 'Runs one of ' . $b . '\'s read abilities and returns its data, e.g. ' . $n . '/get-instructions, ' . $n . '/get-post-tree {"post_id": 12}, ' . $n . '/get-element-schemas. Names and inputs: kuduy-' . $n . '-abilities.',
-			default       => 'Runs one of ' . $b . '\'s write abilities with the input it declares, e.g. ' . $n . '/edit-post (element operations on one page, applied together) or ' . $n . '/create-post. ' . $b . ' validates the input and rebuilds the page. Only abilities that work on one post (input post_id) or create something new are run; site-wide settings are left to the builder. Snapshot of that post\'s builder data first; undo with kuduy-snapshot-restore.',
+			'abilities'   => 'Lists what ' . $b . ' lets an assistant do through its own abilities (read a page as an element tree, edit elements, create pages, element schemas, …): name, label, description, read or write, and whether it can be run here. With name it returns that ability\'s input schema. They come with ' . $c['since'] . ' and are switched on with ' . $c['switch'] . '; the list says so when they are off.',
+			'ability-get' => 'Runs one of ' . $b . '\'s read abilities and returns its data, e.g. ' . $c['get'] . '. Names and inputs: kuduy-' . $n . '-abilities.',
+			default       => 'Runs one of ' . $b . '\'s write abilities with the input it declares, e.g. ' . $c['run'] . '. ' . $b . ' validates the input and checks its own permissions. Only abilities that work on one post (input post_id) or create something new are run; site-wide settings are left to the builder. Snapshot of that post\'s builder data first; undo with kuduy-snapshot-restore.',
 		};
 	}
 
@@ -151,9 +189,10 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 * {@inheritDoc}
 	 */
 	public function is_available(): bool|string {
-		return defined( 'BREAKDANCE_MODE' ) && constant( 'BREAKDANCE_MODE' ) === $this->builder
-			? true
-			: $this->label() . ( 'oxygen' === $this->builder ? ' 6 or later' : '' ) . ' is not active on this site.';
+		$active = 'bricks' === $this->builder
+			? defined( 'BRICKS_DB_PAGE_CONTENT' )
+			: defined( 'BREAKDANCE_MODE' ) && constant( 'BREAKDANCE_MODE' ) === $this->builder;
+		return $active ? true : self::CONFIG[ $this->builder ]['since'] . ' or later is not active on this site.';
 	}
 
 	/**
@@ -163,7 +202,12 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 */
 	private static function post_id( array $input ): int {
 		$args = (array) ( $input['input'] ?? array() );
-		return isset( $args['post_id'] ) && is_numeric( $args['post_id'] ) ? (int) $args['post_id'] : 0;
+		foreach ( array( 'post_id', 'postId' ) as $key ) {
+			if ( isset( $args[ $key ] ) && is_numeric( $args[ $key ] ) ) {
+				return (int) $args[ $key ];
+			}
+		}
+		return 0;
 	}
 
 	/**
@@ -185,13 +229,23 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	}
 
 	/**
-	 * Whether an ability only reads (the builder marks those).
+	 * Whether an ability only reads: the builder's annotations say so (readonly / readOnlyHint, the Abilities API
+	 * convention); without annotations, abilities named get-, list- or start-here are taken as reads.
 	 *
 	 * @param \WP_Ability $ability Ability.
 	 */
 	private static function reads( \WP_Ability $ability ): bool {
 		$annotations = $ability->get_meta_item( 'annotations', array() );
-		return is_array( $annotations ) && ! empty( $annotations['readonly'] );
+		if ( is_array( $annotations ) ) {
+			foreach ( array( 'readonly', 'readOnlyHint' ) as $key ) {
+				// WordPress fills unset annotations with null; only a value the builder set decides.
+				if ( isset( $annotations[ $key ] ) ) {
+					return (bool) $annotations[ $key ];
+				}
+			}
+		}
+		$short = (string) substr( $ability->get_name(), (int) strpos( $ability->get_name(), '/' ) + 1 );
+		return 1 === preg_match( '/^(get-|list-|start-here$)/', $short );
 	}
 
 	/**
@@ -205,11 +259,14 @@ final class BuilderAbilities implements Tool, Snapshottable {
 		if ( 'report-bug' === $short ) {
 			return 'This ability sends a report to ' . $this->label() . '\'s makers; KuDiagnostics does not send site data to outside services.';
 		}
+		if ( in_array( $short, self::CONFIG[ $this->builder ]['never'], true ) || str_contains( $short, 'php' ) ) {
+			return 'This ability runs code on the server. KuDiagnostics only runs code through its own guarded developer tools.';
+		}
 		if ( str_starts_with( $short, 'create-' ) || self::post_id( $input ) > 0 ) {
 			return '';
 		}
 		$schema = $ability->get_input_schema();
-		if ( isset( $schema['properties']['post_id'] ) ) {
+		if ( isset( $schema['properties']['post_id'] ) || isset( $schema['properties']['postId'] ) ) {
 			return '';
 		}
 		return 'This ability changes site-wide ' . $this->label() . ' settings, which cannot be undone from here. Change them in ' . $this->label() . ' itself.';
@@ -225,9 +282,12 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	}
 
 	/**
-	 * Meta key prefix of the builder's post data ("_breakdance_" / "_oxygen_"), or '' when the builder cannot say.
+	 * Meta key prefix of the builder's post data ("_breakdance_", "_oxygen_", "_bricks_page_"), or '' when unknown.
 	 */
-	private static function meta_prefix(): string {
+	private function meta_prefix(): string {
+		if ( '' !== self::CONFIG[ $this->builder ]['prefix'] ) {
+			return self::CONFIG[ $this->builder ]['prefix'];
+		}
 		$fn = '\Breakdance\BreakdanceOxygen\Strings\__bdox';
 		return self::exists( $fn ) ? (string) call_user_func( $fn, '_meta_prefix' ) : '';
 	}
@@ -240,7 +300,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	public function snapshot( array $input ): ?array {
 		$post_id = self::post_id( $input );
 		$post    = 'ability-run' === $this->mode && $post_id > 0 ? get_post( $post_id ) : null;
-		$prefix  = self::meta_prefix();
+		$prefix  = $this->meta_prefix();
 		if ( ! $post instanceof \WP_Post || '' === $prefix ) {
 			return null;
 		}
@@ -313,7 +373,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			return $this->listing( $all, (string) ( $input['name'] ?? '' ) );
 		}
 		if ( ! $all ) {
-			throw new ToolError( esc_html( $this->label() ) . ' has not registered its abilities on this site. Check "Agents & MCP" in the builder\'s settings; KuDiagnostics does not change that setting.' );
+			throw new ToolError( esc_html( $this->label() ) . ' has not registered its abilities on this site. They are switched on with ' . esc_html( self::CONFIG[ $this->builder ]['switch'] ) . '; KuDiagnostics does not change that setting.' );
 		}
 		$name    = (string) $input['name'];
 		$ability = $all[ $name ] ?? null;
@@ -355,7 +415,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			return array(
 				'enabled'   => false,
 				'abilities' => array(),
-				'note'      => $this->label() . ' has not registered its abilities. They come with ' . $this->label() . ( 'oxygen' === $this->builder ? ' 6' : ' 3' ) . ' and later and are on unless "Agents & MCP" is switched off in the builder\'s settings.',
+				'note'      => $this->label() . ' has not registered its abilities. They come with ' . self::CONFIG[ $this->builder ]['since'] . ' and are switched on with ' . self::CONFIG[ $this->builder ]['switch'] . '.',
 			);
 		}
 		if ( '' !== $name ) {

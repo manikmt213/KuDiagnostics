@@ -22,11 +22,11 @@ One row per integration in the upgrade brief (58), plus what KuDiagnostics suppo
 | Beaver Builder | free Lite 2.11.1.2 | **Full** (BB1–BB6, 2026-11-14) | 7 tools: status, modules, schema, list, read, create, edit (rows, columns, modules) with undo. Not changed: global nodes, column widths, saved templates; paid version untested | — |
 | Kirki | free 6.4.2 | **Partial** (KK1–KK3, 2026-11-15) | Read only: status, list pages, block structure (3 tools), tested on the real plugin. Missing: changing layouts (blocks, style blocks and staged versions are saved together) | H |
 | Brizy | free 2.8.26 | **Partial** (BZ1–BZ3 against a stand-in, 2026-11-15) | Read only: status, list pages, page structure (3 tools). Not verified against Brizy itself (it cannot boot on the SQLite test site). Layouts are not changed: Brizy compiles the public page in its own editor | L (verify) |
-| Bricks | paid (theme) | None | — | L |
+| Bricks | paid (theme) | **Partial** (BR1–BR4 against a stand-in, 2026-11-15) | `kuduy-bricks-pages`, `-get` read pages from Bricks' documented data model (any version); with Bricks 2.4+ abilities on, `kuduy-bricks-abilities`, `-ability-get`, `-ability-run` read and edit pages through Bricks itself, with undo. PHP and site-wide abilities not run. Not verified against Bricks | L (verify) |
 | Oxygen 6 | paid (6.2.0 read on the owner's test site) | **Partial** (BA1–BA4 against a stand-in, 2026-11-15) | 3 tools run the abilities Oxygen itself registers: list, read (page tree, schemas), write on one page or create, with undo. Site-wide settings not changed. Not verified against Oxygen. Oxygen 4 not supported | L (verify) |
-| Divi 5 | paid | None | — | L |
+| Divi 5 | paid (theme or Divi Builder plugin) | **Partial** (BK1, BK3 against a stand-in, 2026-11-15) | `kuduy-divi-pages`, `-get`: Divi 5 pages (WordPress blocks) listed and read; Divi 4 pages recognised. Read only. Not verified against Divi | L (verify) |
 | Breakdance | paid (3.0.0-beta.4 read on the owner's test site) | **Partial** (BA1–BA4 against a stand-in, 2026-11-15) | Same three tools on Breakdance's own abilities. Not verified against Breakdance | L (verify) |
-| Etch | paid | None | — | L |
+| Etch | paid | **Partial** (BK2, BK3 against a stand-in, 2026-11-15) | `kuduy-etch-pages`, `-get`: Etch pages (WordPress blocks) listed and read. Read only. Not verified against Etch | L (verify) |
 | Mosaic | unknown source | None | — | L |
 
 ## B. Themes

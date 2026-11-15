@@ -4,6 +4,9 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Added: **Bricks** — `kuduy-bricks-pages` and `kuduy-bricks-get` read pages from Bricks' documented data model; with Bricks 2.4 or later and its abilities switched on, `kuduy-bricks-abilities`, `-ability-get` and `-ability-run` read and edit pages through Bricks itself, with undo. Bricks' PHP and site-wide abilities are never run. Not yet verified against Bricks.
+- Added: **Divi 5** and **Etch** — `kuduy-divi-pages`, `kuduy-divi-get`, `kuduy-etch-pages`, `kuduy-etch-get`: list pages and read their structure. Read only. Not yet verified against Divi or Etch.
+
 ## 1.3.0 — 2026-11-15
 
 **More page builders, themes and forms plugins (232 tools in all).** Tools for a builder, theme or plugin appear only while it is active. Products marked "not yet verified" were built from their source and tested against stand-ins, because no working copy was available to the test runner; please check them on a real site before relying on them.
@@ -615,6 +618,12 @@ Avada tools checked on a real Avada 7.16.4 / Builder 3.16.4 site; two small fixe
 - `Modules/Elementor/ElementorDocs`: five tools (duplicate, document-settings, document-settings-update, dynamic-tags, dynamic-set). `kuduy-elementor-widget-schema` rows gain `dynamic`.
 - Tests: `ElementorDocsTest` (EL12–EL14, with `ElementorTestTag` because free Elementor registers no tags) passed on its first run; `ElementorAddonsTest` extended to seven more add-ons (two CI jobs). Runner: `slug@latest` for plugins without a versioned ZIP (Xpro, Piotnet). Unlimited Elements registers no widgets on a fresh install and was left out.
 - Not built: popups (Elementor Pro) — the Pro ZIP is not on this machine.
+
+### 2026-11-15 — Bricks, Divi 5, Etch (D41)
+
+- Owner: build the rest of the list even where the products are not on the test site yet. Built from official documentation only: Bricks (data model + 2.4 abilities, added to `BuilderAbilities` with per-builder settings), Divi 5 and Etch (read-only on WordPress blocks, `Blocks/BlockBuilderRead`). Stand-ins `fakes/bricks.php` and `fakes/blockbuilders.php`; `BricksTest`, `BlockBuildersTest`; one CI job.
+- `IntegrationsTest` now uses Mosaic as its example of an unbuilt builder.
+- Not built: Mosaic, Voxel, MyListing (no developer documentation; their code is needed).
 
 ### 2026-11-15 — Breakdance 3 and Oxygen 6 (D40)
 

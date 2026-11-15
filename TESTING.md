@@ -256,6 +256,22 @@ Runs: `KUDUY_THEME=<slug>@<version>` — `astra@4.14.2`, `kadence@1.6.0`, `block
 
 Found on the way: themes rely on core's Customizer settings existing before their own `customize_register` callbacks (core registers first on the real screen); Astra builds its settings only inside the Customizer and a Customizer-path save did not reach its option, so Astra goes through its abilities; Blocksy loads its registration only when the manager exists at theme load, so the tools include that file (added 2026-11-15, TH4 passes). Undo is checked against stored values because `WP_Customize_Setting` and Astra cache per PHP process and all tests share one process. WP 6.9.11 / PHP 8.1 (2026-11-15): Astra, GeneratePress, OceanWP, Ollie and Spectra One pass the same tests. Kadence 1.6.0 could not be run on PHP 8.1: Playground's PHP 8.1 build crashes ("memory access out of bounds") on every request with Kadence active, including tests that do not touch the theme tools; Kadence passes on WP 6.9.11 with PHP 8.3. Blocksy was not run on 6.9.
 
+## Bricks, Divi 5, Etch (D41)
+
+Run: `KUDUY_FAKES=bricks,blockbuilders` (`BricksTest`, `BlockBuildersTest`).
+
+| # | Feature | Type |
+|---|---|---|
+| BR1 | Bricks read tool: pages with areas, element tree with labels and text, settings on request, missing area refused, author refused | I — **pass 2026-11-15** on WP 7.1.4 and 6.9.11, stand-in |
+| BR2 | Bricks abilities listed: read by annotation or by name when unannotated; set-page-elements runs here; set-global-settings and execute-php do not | I — **pass 2026-11-15**, stand-in |
+| BR3 | get-page-elements and set-page-elements through the tools; undo restores the Bricks meta | I — **pass 2026-11-15**, stand-in |
+| BR4 | PHP and site-wide abilities refused and not run; Bricks refuses invalid elements; editor refused | I — **pass 2026-11-15**, stand-in |
+| BK1 | Divi 5 pages listed (blocks and Divi 4 shortcodes), block tree, attributes on request, Divi 4 page reported without tree | I — **pass 2026-11-15**, stand-in |
+| BK2 | Etch pages listed and read as a block tree with text | I — **pass 2026-11-15**, stand-in |
+| BK3 | Wrong builder and plain pages refused; author refused and not listed; reading changes nothing | I — **pass 2026-11-15**, stand-in |
+
+Found on the way: WordPress fills unset ability annotations with null, so an annotation counts only when the builder set it. Not run: the real Bricks, Divi or Etch.
+
 ## Breakdance 3 and Oxygen 6 (D40)
 
 Runs: `KUDUY_FAKES=breakdance` and `KUDUY_FAKES=oxygen` (`BuilderAbilitiesTest`); the stand-in registers abilities with the names, meta and permission read in the real plugins.

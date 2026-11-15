@@ -89,6 +89,8 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Astra | 4.14.2 | **Tested** in Playground 2026-11-15: TH1, TH5–TH7 (Astra's own abilities) | CI: theme job. Abilities must be switched on by the site owner |
 | Kadence, GeneratePress, OceanWP | 1.6.0, 3.6.1, 4.2.8 | **Tested** in Playground 2026-11-15: TH1–TH4 (Customizer settings) on WP 7.1 / PHP 8.3; GeneratePress and OceanWP also on WP 6.9 / PHP 8.1 | CI: one theme job each. Kadence on PHP 8.1 is **not tested**: Playground's PHP 8.1 crashes with Kadence active (Kadence passes on WP 6.9 with PHP 8.3) |
 | Blocksy | 2.1.61 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): TH1, TH2, TH4 (Customizer settings) | CI: theme job |
+| Bricks | — (Bricks Academy docs, 2026-11-15) | **Not verified** — read tool from the documented data model and Bricks 2.4+ abilities, tested against a stand-in (BR1–BR4) | Paid; to be checked by the owner |
+| Divi 5, Etch | — | **Not verified** — read-only tools on WordPress blocks, tested against a stand-in (BK1–BK3) | Paid; block name prefixes UNVERIFIED |
 | Breakdance | 3.0.0-beta.4 (source read) | **Not verified** — tools built from the plugin's own abilities, tested against a stand-in (BA1–BA4) | Paid; to be checked by the owner |
 | Oxygen | 6.2.0 (source read) | **Not verified** — same tools, stand-in only | Paid; Oxygen 4 is a different product and not supported |
 | Kirki (builder) | 6.4.2 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): KK1–KK3, read only | CI: Kirki job |

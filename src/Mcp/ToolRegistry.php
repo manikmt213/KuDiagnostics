@@ -7,6 +7,8 @@
 
 namespace Kuduy\Mcp\Mcp;
 
+use Kuduy\Mcp\Modules\Blocks\BlockBuilderRead;
+use Kuduy\Mcp\Modules\Bricks\BricksRead;
 use Kuduy\Mcp\Modules\Brizy\BrizyRead;
 use Kuduy\Mcp\Modules\Core\AstraAbilities;
 use Kuduy\Mcp\Modules\Core\BuilderAbilities;
@@ -176,6 +178,14 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'status', 'pages', 'get' ) as $mode ) {
 			$registry->register( new KirkiRead( $mode ) );
+		}
+		foreach ( array( 'pages', 'get' ) as $mode ) {
+			$registry->register( new BricksRead( $mode ) );
+		}
+		foreach ( array_keys( BlockBuilderRead::BUILDERS ) as $builder ) {
+			foreach ( array( 'pages', 'get' ) as $mode ) {
+				$registry->register( new BlockBuilderRead( $builder, $mode ) );
+			}
 		}
 		foreach ( array( 'status', 'get', 'update' ) as $mode ) {
 			$registry->register( new SeoTools( $mode ) );
