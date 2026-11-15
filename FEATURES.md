@@ -153,6 +153,15 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 | Blocksy settings | Tested 2026-11-15 (TH1, TH2, TH4: Blocksy 2.1.61; `maxSiteWidth` lands in its theme mod and undo restores it). Blocksy loads its Customizer registration only when the manager exists at theme load, so that file is included when the tools build the manager |
 | Astra settings without the abilities switch; child themes; header/footer builders of Kadence and OceanWP beyond their registered settings | Not started |
 
+## Breakdance 3 and Oxygen 6 — added 2026-11-15 (D40)
+
+| Feature | Status |
+|---|---|
+| List the builder's own abilities with what runs here; read abilities (instructions, page tree, element schemas, …) (`kuduy-breakdance-abilities`, `-ability-get`; `kuduy-oxygen-…`) | Implemented — tested 2026-11-15 against a stand-in (BA1, BA2); **not verified against the builders** |
+| Write abilities on one post (edit-post, …) or creating something new, with snapshot and undo (`-ability-run`) | Implemented — stand-in only (BA2, BA4) |
+| Site-wide writes (global settings, CSS variables, selectors, stylesheets, home page) and the bug-report ability | Not offered — no undo here; the report ability sends data to the vendor (BA3) |
+| Oxygen 4 (classic) | Not started |
+
 ## Brizy and Kirki — added 2026-11-15 (D39), read only
 
 | Feature | Status |

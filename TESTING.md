@@ -255,6 +255,19 @@ Runs: `KUDUY_THEME=<slug>@<version>` — `astra@4.14.2`, `kadence@1.6.0`, `block
 
 Found on the way: themes rely on core's Customizer settings existing before their own `customize_register` callbacks (core registers first on the real screen); Astra builds its settings only inside the Customizer and a Customizer-path save did not reach its option, so Astra goes through its abilities; Blocksy loads its registration only when the manager exists at theme load, so the tools include that file (added 2026-11-15, TH4 passes). Undo is checked against stored values because `WP_Customize_Setting` and Astra cache per PHP process and all tests share one process. WP 6.9.11 / PHP 8.1 (2026-11-15): Astra, GeneratePress, OceanWP, Ollie and Spectra One pass the same tests. Kadence 1.6.0 could not be run on PHP 8.1: Playground's PHP 8.1 build crashes ("memory access out of bounds") on every request with Kadence active, including tests that do not touch the theme tools; Kadence passes on WP 6.9.11 with PHP 8.3. Blocksy was not run on 6.9.
 
+## Breakdance 3 and Oxygen 6 (D40)
+
+Runs: `KUDUY_FAKES=breakdance` and `KUDUY_FAKES=oxygen` (`BuilderAbilitiesTest`); the stand-in registers abilities with the names, meta and permission read in the real plugins.
+
+| # | Feature | Type |
+|---|---|---|
+| BA1 | Abilities listed with kind and whether they run here; input schema; registry row partial | I — **pass 2026-11-15**, stand-in, both builders |
+| BA2 | Read abilities; edit-post stores the tree in the builder's meta; undo removes it and asks the builder to rebuild; create-post | I — **pass 2026-11-15**, stand-in |
+| BA3 | Site-wide write and bug report are not run | I — **pass 2026-11-15**, stand-in |
+| BA4 | Read/write tools refuse the other kind; unknown ability; the ability validates its input; editor refused by the builder's own permission | I — **pass 2026-11-15**, stand-in |
+
+Not run: the real Breakdance or Oxygen (the owner's test site has them installed but inactive, and runs KuDiagnostics 1.2.2, which does not have these tools).
+
 ## Brizy and Kirki (D39)
 
 | # | Feature | Type |

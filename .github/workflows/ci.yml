@@ -116,6 +116,9 @@ jobs:
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'brizy', label: '+ Brizy (stand-in)' }
           # Kirki builder (D39): the real plugin, read-only tools.
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'kirki@6.4.2', label: '+ Kirki' }
+          # Breakdance 3 / Oxygen 6 (D40): paid, so their own abilities are stood in for (tests/integration/fakes/breakdance.php, oxygen.php).
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'breakdance', label: '+ Breakdance (stand-in)' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'oxygen', label: '+ Oxygen 6 (stand-in)' }
           # Beaver Builder Lite (upgrade phase H, D37): the real plugin; Elementor stays active to prove the builders coexist.
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'beaver-builder-lite-version@2.11.1.2', label: '+ Beaver Builder' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'beaver-builder-lite-version@2.11.1.2', label: '+ Beaver Builder' }

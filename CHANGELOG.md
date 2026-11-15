@@ -11,13 +11,14 @@ Format: user-facing releases first (newest on top), then the dated development h
 - Added: **Astra** — `kuduy-astra-abilities`, `kuduy-astra-ability-get`, `kuduy-astra-ability-run`: read and change Astra's settings through the abilities Astra itself provides, with undo. The site owner must switch abilities on in Astra > Settings.
 - Checked: the Site Editor tools on the block themes Ollie and Spectra One.
 - Added: **Blocksy** settings through the theme tools (tested with 2.1.61).
+- Added: **Breakdance 3 and Oxygen 6** — `kuduy-breakdance-abilities`, `-ability-get`, `-ability-run` and the same for Oxygen: read and edit pages through the abilities these builders provide themselves, with undo for page changes. Site-wide settings are left to the builder. Not yet verified against the builders themselves.
 - Added: **Kirki builder** (version 6) — `kuduy-kirki-status`, `kuduy-kirki-pages`, `kuduy-kirki-get`: list pages and read their block structure. Read only.
 - Added: **Brizy** — `kuduy-brizy-status`, `kuduy-brizy-pages`, `kuduy-brizy-get`: list pages and read their structure. Read only (Brizy builds the public page in its own editor), and not yet verified against Brizy itself.
 - Added: **Beaver Builder** — 7 `kuduy-beaver-*` tools, shown while Beaver Builder is active: status, modules and their settings, list and read layouts, create a page from rows, columns and modules, and edit a layout (add rows, columns and modules, change settings, move, duplicate, remove) with undo. Tested with Beaver Builder Lite 2.11.1.2. Shared (global) rows and modules and column widths are left to the builder; the paid version was not tested.
 - Changed: `kuduy-post-update` no longer overwrites the content of a page built with Beaver Builder.
 - Fixed: undoing `kuduy-elementor-kit-update` did nothing when the Kit had no stored settings before (a fresh Elementor 3.x site).
 - Fixed: `kuduy-elementor-widget-schema` could drop a responsive setting when Elementor had already built its per-device copies in the same request.
-- Added: seven more free Elementor add-ons verified through the Elementor tools: Happy Addons, HT Mega, PowerPack Lite, Qi Addons, Xpro, Element Pack Lite, Piotnet (226 tools in all).
+- Added: seven more free Elementor add-ons verified through the Elementor tools: Happy Addons, HT Mega, PowerPack Lite, Qi Addons, Xpro, Element Pack Lite, Piotnet (232 tools in all).
 - Added: **Ninja Forms** and **Formidable Forms** in the forms tools (`kuduy-forms-*`): forms, fields and notifications; entries with personal data masked. Ninja Forms submissions can be trashed and restored (with undo); Formidable entries are read only.
 - Added: **Gravity Forms** and **WPForms Pro entries** in the forms tools: entries, read / starred / spam / trash with undo, notes. Both are paid and no licensed copy was available: they are tested against stand-ins and **not yet verified against the plugins themselves**.
 
@@ -599,6 +600,11 @@ Avada tools checked on a real Avada 7.16.4 / Builder 3.16.4 site; two small fixe
 - `Modules/Elementor/ElementorDocs`: five tools (duplicate, document-settings, document-settings-update, dynamic-tags, dynamic-set). `kuduy-elementor-widget-schema` rows gain `dynamic`.
 - Tests: `ElementorDocsTest` (EL12–EL14, with `ElementorTestTag` because free Elementor registers no tags) passed on its first run; `ElementorAddonsTest` extended to seven more add-ons (two CI jobs). Runner: `slug@latest` for plugins without a versioned ZIP (Xpro, Piotnet). Unlimited Elements registers no widgets on a fresh install and was left out.
 - Not built: popups (Elementor Pro) — the Pro ZIP is not on this machine.
+
+### 2026-11-15 — Breakdance 3 and Oxygen 6 (D40)
+
+- The owner pointed to a test site with premium products installed. Installed there: Breakdance 3.0.0-beta.4, Oxygen 6.2.0 and 4.9.6, WPBakery 9.1, Elementor 4.4.0 + Pro 4.0.4, Brizy, Kirki, add-ons for Bricks, Divi and Etch; themes Astra, Avada, Blocksy, GeneratePress, Kadence, OceanWP, Ollie, Spectra One. Not installed: Bricks, Divi, Etch, Mosaic, Voxel, MyListing. The site runs KuDiagnostics 1.2.2 and is not connected to this session.
+- Breakdance and Oxygen source read through the plugin file editor (read only): both register their own abilities. `Core/BuilderAbilities` runs them (three tools per builder); `BuilderAbilitiesTest` (BA1–BA4) against `fakes/breakdance.php` / `fakes/oxygen.php`; two CI jobs.
 
 ### 2026-11-15 — Blocksy, Brizy, Kirki (D39)
 

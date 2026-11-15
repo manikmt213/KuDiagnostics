@@ -383,6 +383,15 @@ Source read: **Brizy 2.8.26** and **Kirki 6.4.2** (wordpress.org ZIPs; ideas and
 - **Blocksy:** `inc/init.php` requires `inc/customizer/init.php` only `if ( isset( $wp_customize ) )`; that file hooks `customize_register` and registers every option (and inner option) as a setting with `blocksy_include_sanitizer()`.
 - **UNVERIFIED:** Brizy against the real plugin and Brizy Pro; Kirki's style blocks and staging when writing; Kirki Pro.
 
+## 10k. Breakdance 3 and Oxygen 6 (D40, 2026-11-15)
+
+Source read on the owner's test site through the plugin file editor (read only): **Breakdance 3.0.0-beta.4**, **Oxygen 6.2.0**. Ideas and API only; nothing copied.
+
+- One codebase: `plugin.php` defines `BREAKDANCE_MODE` as `breakdance` or `oxygen`; strings and prefixes come from `Breakdance\BreakdanceOxygen\Strings\__bdox()` (`_meta_prefix` is `_breakdance_` for Breakdance).
+- Page data: `Breakdance\Data\save_document( $tree, …, $id )` stores `['tree_json_string' => …]` in the meta `<prefix>data` with `set_meta()`, then `wp_update_post()` and `Breakdance\Render\generateCacheForPost( $id )`.
+- Abilities (`plugin/mcp/`): loaded when `isMcpEnabled()` (global option `agents_and_mcp_enable_mcp_access` not `no`); registered on `wp_abilities_api_init` under the namespace from `breakdance_mcp_ability_namespace()` (`breakdance` / `oxygen`); permission `breakdance_mcp_current_user_can()` = `manage_options`; read abilities carry `meta.annotations.readonly = true`; all carry `meta.mcp.public`. Names: get-instructions, site-info, create-post, get-post-details, change-post-status, set-home-page, template conditions, create-template, get-element-slugs / -schemas / -css, search-posts, get-post-tree, edit-post (atomic `insert` / `update` / `delete` … operations, element ids are integers, root is 1), preview-post, html-to-page, CSS selectors, stylesheets, interactions, animations, forms and submissions, CSS variables, report-bug, popups (Breakdance only), global settings.
+- **UNVERIFIED:** everything at run time (the plugins were inactive on that site); the Oxygen meta prefix value; Oxygen 4.
+
 ## 11. Licensing and dependencies
 
 | Component | License (verified) | Use in KUDUY |

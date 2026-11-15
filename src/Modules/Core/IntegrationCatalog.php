@@ -40,10 +40,10 @@ final class IntegrationCatalog {
 		array( 'brizy', 'Brizy', 'builder', 'plugin', array( 'brizy', 'brizy-pro' ), 'partial', array( 'kuduy-brizy-' ), 'free', '', 'Pages are listed and their structure is read; built from the source of 2.8.26 and tested against a stand-in, not against Brizy itself. Layouts are not changed: Brizy compiles the public page in its own editor.' ),
 		array( 'kirki', 'Kirki', 'builder', 'plugin', array( 'kirki' ), 'partial', array( 'kuduy-kirki-' ), 'free', 'H', 'Pages built with the Kirki builder (version 6) are listed and their block structure is read (tested with 6.4.2). Layouts are not changed yet.' ),
 		array( 'bricks', 'Bricks', 'builder', 'theme', array( 'bricks' ), 'none', array(), 'paid', 'L', '' ),
-		array( 'oxygen', 'Oxygen', 'builder', 'plugin', array( 'oxygen' ), 'none', array(), 'paid', 'L', '' ),
+		array( 'oxygen', 'Oxygen', 'builder', 'plugin', array( 'oxygen' ), 'partial', array( 'kuduy-oxygen-' ), 'paid', 'L', 'Oxygen 6: pages are read and edited through the abilities Oxygen itself registers (read from 6.2.0 on a live site). Tested against a stand-in, not against Oxygen itself. Site-wide settings are not changed. Oxygen 4 (classic) is not supported.' ),
 		array( 'divi', 'Divi', 'builder', 'theme', array( 'Divi' ), 'none', array(), 'paid', 'L', '' ),
 		array( 'divi-builder', 'Divi Builder (plugin)', 'builder', 'plugin', array( 'divi-builder' ), 'none', array(), 'paid', 'L', '' ),
-		array( 'breakdance', 'Breakdance', 'builder', 'plugin', array( 'breakdance' ), 'none', array(), 'paid', 'L', '' ),
+		array( 'breakdance', 'Breakdance', 'builder', 'plugin', array( 'breakdance' ), 'partial', array( 'kuduy-breakdance-' ), 'paid', 'L', 'Breakdance 3: pages are read and edited through the abilities Breakdance itself registers (read from 3.0.0-beta.4 on a live site). Tested against a stand-in, not against Breakdance itself. Site-wide settings are not changed.' ),
 		array( 'etch', 'Etch', 'builder', 'plugin', array( 'etch' ), 'none', array(), 'paid', 'L', '' ),
 		array( 'mosaic', 'Mosaic', 'builder', 'plugin', array( 'mosaic' ), 'none', array(), 'paid', 'L', '' ),
 

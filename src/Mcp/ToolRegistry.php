@@ -9,6 +9,7 @@ namespace Kuduy\Mcp\Mcp;
 
 use Kuduy\Mcp\Modules\Brizy\BrizyRead;
 use Kuduy\Mcp\Modules\Core\AstraAbilities;
+use Kuduy\Mcp\Modules\Core\BuilderAbilities;
 use Kuduy\Mcp\Modules\Core\CheckUpdate;
 use Kuduy\Mcp\Modules\Core\Comments;
 use Kuduy\Mcp\Modules\Core\Diagnostics;
@@ -139,6 +140,11 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'abilities', 'ability-get', 'ability-run' ) as $mode ) {
 			$registry->register( new AstraAbilities( $mode ) );
+		}
+		foreach ( array_keys( BuilderAbilities::BUILDERS ) as $builder ) {
+			foreach ( array( 'abilities', 'ability-get', 'ability-run' ) as $mode ) {
+				$registry->register( new BuilderAbilities( $builder, $mode ) );
+			}
 		}
 		foreach ( array( 'health', 'cron', 'rewrite', 'rewrite-flush', 'hooks' ) as $mode ) {
 			$registry->register( new Diagnostics( $mode ) );

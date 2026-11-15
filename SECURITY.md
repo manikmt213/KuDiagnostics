@@ -95,6 +95,15 @@ Automated checks (all in the integration suite, both WordPress pairs):
 
 No high findings open.
 
+## 4f. Breakdance and Oxygen abilities (2026-11-15, D40)
+
+| Risk | Control |
+|---|---|
+| Acting beyond the user's rights | `manage_options` (and `edit_post` for a post-scoped write) on our side; the builder's own permission callback runs inside `WP_Ability::execute()` |
+| Sending site data to a third party | The builders' `report-bug` ability is never run (BA3) |
+| Changes that cannot be undone | Only abilities that work on one post or create something are run; the post's builder meta, status and content are snapshotted first; site-wide writes are refused (BA3) |
+| Running other vendors' abilities | Only names under the active builder's own namespace are accepted |
+
 ## 4e. Theme settings tools (2026-11-15, D38)
 
 | Risk | Control |
