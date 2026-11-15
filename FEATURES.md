@@ -168,8 +168,8 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 
 | Feature | Status |
 |---|---|
-| List the builder's own abilities with what runs here; read abilities (instructions, page tree, element schemas, …) (`kuduy-breakdance-abilities`, `-ability-get`; `kuduy-oxygen-…`) | Implemented — tested 2026-11-15 against a stand-in (BA1, BA2); **not verified against the builders** |
-| Write abilities on one post (edit-post, …) or creating something new, with snapshot and undo (`-ability-run`) | Implemented — stand-in only (BA2, BA4) |
+| List the builder's own abilities with what runs here; read abilities (instructions, page tree, element schemas, …) (`kuduy-breakdance-abilities`, `-ability-get`; `kuduy-oxygen-…`) | Breakdance: Tested (BA1, BA2; end to end on Breakdance 3.0.0-beta.4, 2026-11-15). Oxygen: stand-in only (BA1, BA2) |
+| Write abilities on one post (edit-post, …) or creating something new, with snapshot and undo (`-ability-run`) | Breakdance: Tested (BA2, BA4; create-post, edit-post, undo on the real plugin, 2026-11-15). Oxygen: stand-in only |
 | Site-wide writes (global settings, CSS variables, selectors, stylesheets, home page) and the bug-report ability | Not offered — no undo here; the report ability sends data to the vendor (BA3) |
 | Oxygen 4 (classic) | Not started |
 
@@ -195,12 +195,12 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 
 ## WPBakery Page Builder — added 2026-11-10 (D29)
 
-WPBakery is a paid plugin and no licensed copy was available: everything below is tested in Playground (WP 6.9.11 + 7.1.4) with a stand-in for WPBakery's element registry, and is **not yet verified against the real plugin**.
+WPBakery is a paid plugin and no licensed copy was available: everything below is tested in Playground (WP 6.9.11 + 7.1.4) with a stand-in for WPBakery's element registry. On 2026-11-15 the tools were also run end to end on WPBakery 9.1 on the owner's test site (see TESTING.md).
 
 | Feature | Status |
 |---|---|
 | Shortcode parser and serializer: nested rows/columns, several levels, self-closing tags, special characters, third-party and unknown shortcodes, byte-identical round trip | Tested (WB1–WB3: `WpBakeryParserTest`, runs in every job) |
-| Element discovery from `WPBMap` (WPBakery's, theme and add-on elements) with settings, types, defaults, options | Tested against the stand-in (WB4: `kuduy-wpbakery-elements`); **UNVERIFIED** against WPBakery |
+| Element discovery from `WPBMap` (WPBakery's, theme and add-on elements) with settings, types, defaults, options | Tested (WB4 against the stand-in; WPBakery 9.1 on the owner's site, 2026-11-15: 89 elements) |
 | Page structure, tree with ids, raw content | Tested (WB5: `kuduy-wpbakery-structure`, `-tree`, `-content`) |
 | Create a page from rows or shortcodes; Design Options CSS; responsive columns; links, images, repeating groups | Tested (WB6: `kuduy-wpbakery-create`) |
 | Add rows (incl. inner rows), columns and elements | Tested (WB7: `kuduy-wpbakery-add-row`, `-add-column`, `-add-element`) |

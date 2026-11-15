@@ -144,7 +144,8 @@ final class BuilderAbilitiesTest extends TestCase {
 	public function test_ba3_site_wide_writes_and_reports_are_not_run(): void {
 		$ns = self::$ns;
 		$this->fails( $this->tool( 'ability-run' ), array( 'name' => "$ns/set-global-settings" ), 'site-wide settings cannot be undone here' );
-		$this->fails( $this->tool( 'ability-run' ), array( 'name' => "$ns/report-bug" ), 'no data is sent to outside services' );
+		$message = $this->fails( $this->tool( 'ability-run' ), array( 'name' => "$ns/report-bug" ), 'no data is sent to outside services' );
+		$this->assertStringNotContainsString( '&#039;', $message, 'Error text is JSON, not HTML: no entities.' );
 		$this->fails( $this->tool( 'ability-get' ), array( 'name' => "$ns/report-bug" ), 'refused by the read tool too, although marked read-only' );
 		$this->fails(
 			$this->tool( 'ability-run' ),

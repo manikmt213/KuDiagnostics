@@ -57,7 +57,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Elementor | 4.3.6 | **Tested** (EL1–EL7, EL11; EL10 with claude.ai on Hostinger staging, WP 7.1.4, 2026-11-05) | CI: WP 7.1 / PHP 8.3 |
 | Elementor | 3.35.9 (latest 3.x) | **Tested** (EL1–EL7; v4 tools report unavailable) | CI: WP 6.9 / PHP 8.1 |
 | Beaver Builder Lite | 2.11.1.2 | **Tested** in Playground 2026-11-14 (WP 6.9.11 + 7.1.4): BB1–BB6 | CI: Beaver Builder job on both pairs. Paid versions not tested |
-| WPBakery Page Builder | none (paid; no licensed copy) | **Built, not verified against the plugin** (WB1–WB12 against a stand-in registry, 2026-11-10; WB13 open) | CI: both pairs with `KUDUY_FAKES=wpbakery`; see `docs/WPBAKERY.md` |
+| WPBakery Page Builder | 9.1 (owner's test site, 2026-11-15) | **Verified on 9.1** for elements, create, tree, add/update element, validate and undo, over real HTTP; WB1–WB12 against a stand-in in CI; behaviour in WPBakery's own editor after a save still open (WB13) | CI: both pairs with `KUDUY_FAKES=wpbakery`; see `docs/WPBAKERY.md` |
 | Avada / Avada Builder / Avada Core | format and API read from 7.16.4 / 3.16.4 / 5.16.4 (2026-11-13) | **Tested** (AV1–AV10 against a stand-in; AV11 on real Avada 7.16.4 / Builder 3.16.4 / Core 5.16.3, staging, 2026-11-13) | CI: both pairs with `KUDUY_FAKES=avada`; see `docs/AVADA.md` |
 | Essential Addons for Elementor (lite) | 6.8.8 | **Tested** (EL9) | CI: WP 7.1 job |
 | Ultimate Addons for Elementor (header-footer-elementor) | 2.9.6 | **Tested** (EL9) | CI: WP 7.1 job |
@@ -91,7 +91,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Blocksy | 2.1.61 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): TH1, TH2, TH4 (Customizer settings) | CI: theme job |
 | Bricks | 2.4.5 (source read on the owner's site, 2026-11-15) | **Not verified** — read tool from the documented data model and Bricks 2.4+ abilities, tested against a stand-in (BR1–BR4) | Paid; to be checked by the owner |
 | Divi 5 (5.19.0 source read), Etch | — | **Not verified** — read-only tools on WordPress blocks, tested against a stand-in (BK1–BK3) | Paid; block name prefixes UNVERIFIED |
-| Breakdance | 3.0.0-beta.4 (live checks 2026-11-15: abilities, data, activation) | **Not verified** — tools built from the plugin's own abilities, tested against a stand-in (BA1–BA4) | Paid; to be checked by the owner |
+| Breakdance | 3.0.0-beta.4 (owner's test site, 2026-11-15) | **Verified on 3.0.0-beta.4**: abilities list, reads, create-post, edit-post, undo (data and rendered page), refusals, over real HTTP; stand-in in CI (BA1–BA4) | Paid; to be checked by the owner |
 | Oxygen | 6.2.0 (source read) | **Not verified** — same tools, stand-in only | Paid; Oxygen 4 is a different product and not supported |
 | Kirki (builder) | 6.4.2 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): KK1–KK3, read only | CI: Kirki job |
 | Brizy | 2.8.26 | **Not verified** — read-only tools built from the source, tested against a stand-in (BZ1–BZ3); Brizy cannot boot on the SQLite test site | CI: stand-in jobs |

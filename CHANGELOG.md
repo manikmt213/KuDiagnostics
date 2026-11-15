@@ -4,6 +4,8 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Fixed: refusals from the Breakdance, Oxygen and Bricks tools showed `&#039;` instead of an apostrophe.
+- Checked: the Breakdance and WPBakery tools end to end on the owner's test site (Breakdance 3.0.0-beta.4, WPBakery 9.1).
 - Changed: the Bricks tools run only Bricks' page-level changes (elements, page settings, interactions, conditions, forms, popups, creating and duplicating pages); Bricks 2.4.5 offers 167 abilities, including deletes and restores that cannot be undone here. Every page change must name the page by its id.
 
 ## 1.3.1 — 2026-11-15

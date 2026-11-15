@@ -416,7 +416,8 @@ final class BuilderAbilities implements Tool, Snapshottable {
 		}
 		$refused = $this->refused( $ability );
 		if ( '' !== $refused ) {
-			throw new ToolError( esc_html( $refused ) . ' Nothing was run.' );
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- returned as JSON text, never HTML.
+			throw new ToolError( $refused . ' Nothing was run.' );
 		}
 		$write = 'ability-run' === $this->mode;
 		if ( self::reads( $ability ) === $write ) {
@@ -425,14 +426,16 @@ final class BuilderAbilities implements Tool, Snapshottable {
 		if ( $write ) {
 			$why = $this->blocked( $ability, $input );
 			if ( '' !== $why ) {
-				throw new ToolError( esc_html( $why ) . ' Nothing was changed.' );
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- returned as JSON text, never HTML.
+				throw new ToolError( $why . ' Nothing was changed.' );
 			}
 			$post_id = self::post_id( $input );
 			AuditLog::target( $post_id > 0 ? 'post' : 'builder', $post_id > 0 ? (string) $post_id : $this->builder );
 		}
 		$result = $ability->execute( (array) ( $input['input'] ?? array() ) );
 		if ( is_wp_error( $result ) ) {
-			throw new ToolError( esc_html( $this->label() ) . ' refused: ' . esc_html( wp_strip_all_tags( $result->get_error_message() ) ) . ( $write ? ' Nothing was changed.' : '' ) );
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- returned as JSON text, never HTML; tags are stripped.
+			throw new ToolError( $this->label() . ' refused: ' . wp_strip_all_tags( $result->get_error_message() ) . ( $write ? ' Nothing was changed.' : '' ) );
 		}
 		return array(
 			'ability' => $name,
