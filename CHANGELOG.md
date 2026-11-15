@@ -4,6 +4,9 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Fixed: activating a plugin that sends the browser to its welcome page right after activation (Breakdance does this the first time) no longer breaks `kuduy-plugin-activate` and `kuduy-plugin-install`; the plugin is activated and the skipped page is named in `note`.
+- Fixed: the Breakdance and Oxygen tools never run the builders' `report-bug` ability (it sends data to the builder's makers, although marked read-only) and treat `set-home-page` as a site-wide change.
+
 - Added: **Bricks** — `kuduy-bricks-pages` and `kuduy-bricks-get` read pages from Bricks' documented data model; with Bricks 2.4 or later and its abilities switched on, `kuduy-bricks-abilities`, `-ability-get` and `-ability-run` read and edit pages through Bricks itself, with undo. Bricks' PHP and site-wide abilities are never run. Not yet verified against Bricks.
 - Added: **Divi 5** and **Etch** — `kuduy-divi-pages`, `kuduy-divi-get`, `kuduy-etch-pages`, `kuduy-etch-get`: list pages and read their structure. Read only. Not yet verified against Divi or Etch.
 
@@ -618,6 +621,10 @@ Avada tools checked on a real Avada 7.16.4 / Builder 3.16.4 site; two small fixe
 - `Modules/Elementor/ElementorDocs`: five tools (duplicate, document-settings, document-settings-update, dynamic-tags, dynamic-set). `kuduy-elementor-widget-schema` rows gain `dynamic`.
 - Tests: `ElementorDocsTest` (EL12–EL14, with `ElementorTestTag` because free Elementor registers no tags) passed on its first run; `ElementorAddonsTest` extended to seven more add-ons (two CI jobs). Runner: `slug@latest` for plugins without a versioned ZIP (Xpro, Piotnet). Unlimited Elements registers no widgets on a fresh install and was left out.
 - Not built: popups (Elementor Pro) — the Pro ZIP is not on this machine.
+
+### 2026-11-15 — Checks on the owner's premium test site
+
+- Breakdance, Oxygen 6 and WPBakery checked against the real plugins on the owner's test site (abilities API, database, source); see `TESTING.md`. Three defects found and fixed: `report-bug` marked read-only, `set-home-page` taking a post, and Breakdance's activation redirect ending `kuduy-plugin-activate`. New `Core/RedirectIntercepted` and `Packages::activate()`; test in `CorePackagesTest`; the Breakdance stand-in now matches the real annotations.
 
 ### 2026-11-15 — Bricks, Divi 5, Etch (D41)
 

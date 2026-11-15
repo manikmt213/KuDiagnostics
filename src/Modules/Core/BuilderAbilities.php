@@ -41,9 +41,10 @@ final class BuilderAbilities implements Tool, Snapshottable {
 
 	/**
 	 * Per builder: the version that brings the abilities, where they are switched on, meta key prefix of a post's
-	 * builder data (for undo), example abilities, and abilities never run here.
+	 * builder data (for undo), example abilities, abilities never run here, and abilities that take a post but change
+	 * the whole site (Breakdance's set-home-page).
 	 *
-	 * @var array<string, array{since: string, switch: string, prefix: string, get: string, run: string, never: list<string>}>
+	 * @var array<string, array{since: string, switch: string, prefix: string, get: string, run: string, never: list<string>, site: list<string>}>
 	 */
 	private const CONFIG = array(
 		'breakdance' => array(
@@ -53,6 +54,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			'get'    => 'breakdance/get-instructions, breakdance/get-post-tree {"post_id": 12}, breakdance/get-element-schemas',
 			'run'    => 'breakdance/edit-post (element operations on one page, applied together) or breakdance/create-post',
 			'never'  => array( 'report-bug' ),
+			'site'   => array( 'set-home-page' ),
 		),
 		'oxygen'     => array(
 			'since'  => 'Oxygen 6',
@@ -61,6 +63,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			'get'    => 'oxygen/get-instructions, oxygen/get-post-tree {"post_id": 12}, oxygen/get-element-schemas',
 			'run'    => 'oxygen/edit-post (element operations on one page, applied together) or oxygen/create-post',
 			'never'  => array( 'report-bug' ),
+			'site'   => array( 'set-home-page' ),
 		),
 		'bricks'     => array(
 			'since'  => 'Bricks 2.4',
@@ -69,6 +72,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			'get'    => 'bricks/start-here, bricks/get-page-elements, bricks/get-design-context',
 			'run'    => 'bricks/set-page-elements (the elements of one page)',
 			'never'  => array( 'execute-php' ),
+			'site'   => array(),
 		),
 	);
 
@@ -249,18 +253,36 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	}
 
 	/**
-	 * Why a write ability is not run here, or '' when it is.
+	 * Why an ability is never run here, read or write, or '' when it may be. Breakdance marks report-bug as read-only,
+	 * yet it sends the report to Breakdance's makers (found on a live site, 2026-11-15).
 	 *
-	 * @param \WP_Ability          $ability Ability.
-	 * @param array<string, mixed> $input   Tool arguments.
+	 * @param \WP_Ability $ability Ability.
 	 */
-	private function blocked( \WP_Ability $ability, array $input ): string {
+	private function refused( \WP_Ability $ability ): string {
 		$short = substr( $ability->get_name(), strlen( $this->builder ) + 1 );
 		if ( 'report-bug' === $short ) {
 			return 'This ability sends a report to ' . $this->label() . '\'s makers; KuDiagnostics does not send site data to outside services.';
 		}
 		if ( in_array( $short, self::CONFIG[ $this->builder ]['never'], true ) || str_contains( $short, 'php' ) ) {
 			return 'This ability runs code on the server. KuDiagnostics only runs code through its own guarded developer tools.';
+		}
+		return '';
+	}
+
+	/**
+	 * Why a write ability is not run here, or '' when it is.
+	 *
+	 * @param \WP_Ability          $ability Ability.
+	 * @param array<string, mixed> $input   Tool arguments.
+	 */
+	private function blocked( \WP_Ability $ability, array $input ): string {
+		$refused = $this->refused( $ability );
+		if ( '' !== $refused ) {
+			return $refused;
+		}
+		$short = substr( $ability->get_name(), strlen( $this->builder ) + 1 );
+		if ( in_array( $short, self::CONFIG[ $this->builder ]['site'], true ) ) {
+			return 'This ability changes the whole site (not only the page given), which cannot be undone from here. Do it in ' . $this->label() . ' or with the WordPress settings tools.';
 		}
 		if ( str_starts_with( $short, 'create-' ) || self::post_id( $input ) > 0 ) {
 			return '';
@@ -380,6 +402,10 @@ final class BuilderAbilities implements Tool, Snapshottable {
 		if ( null === $ability ) {
 			throw new ToolError( esc_html( $this->label() ) . ' has no ability "' . esc_html( $name ) . '" on this site. See kuduy-' . esc_html( $this->builder ) . '-abilities.' );
 		}
+		$refused = $this->refused( $ability );
+		if ( '' !== $refused ) {
+			throw new ToolError( esc_html( $refused ) . ' Nothing was run.' );
+		}
 		$write = 'ability-run' === $this->mode;
 		if ( self::reads( $ability ) === $write ) {
 			throw new ToolError( $write ? 'This is a read ability: use kuduy-' . esc_html( $this->builder ) . '-ability-get.' : 'This ability changes things: use kuduy-' . esc_html( $this->builder ) . '-ability-run.' );
@@ -442,13 +468,13 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 */
 	private function row( \WP_Ability $ability ): array {
 		$reads = self::reads( $ability );
-		$why   = $reads ? '' : $this->blocked( $ability, array() );
+		$why   = $reads ? $this->refused( $ability ) : $this->blocked( $ability, array() );
 		$row   = array(
 			'name'        => $ability->get_name(),
 			'label'       => wp_strip_all_tags( $ability->get_label() ),
 			'description' => wp_strip_all_tags( $ability->get_description() ),
 			'kind'        => $reads ? 'read' : 'write',
-			'run_with'    => $reads ? 'kuduy-' . $this->builder . '-ability-get' : ( '' === $why ? 'kuduy-' . $this->builder . '-ability-run' : 'not run here' ),
+			'run_with'    => '' !== $why ? 'not run here' : ( $reads ? 'kuduy-' . $this->builder . '-ability-get' : 'kuduy-' . $this->builder . '-ability-run' ),
 		);
 		if ( '' !== $why ) {
 			$row['why_not'] = $why;

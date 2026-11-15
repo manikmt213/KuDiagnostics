@@ -210,6 +210,35 @@ final class CorePackagesTest extends TestCase {
 		$this->assertFalse( is_plugin_active( self::BASE ) );
 	}
 
+	public function test_activation_redirect_is_stopped_and_reported(): void {
+		// Like Breakdance 3 on its first activation: an "activated_plugin" callback that redirects and exits.
+		$dir = WP_PLUGIN_DIR . '/kuduy-test-redirect';
+		wp_mkdir_p( $dir );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- test fixture.
+		file_put_contents(
+			$dir . '/kuduy-test-redirect.php',
+			"<?php\n/**\n * Plugin Name: Kuduy Test Redirect\n * Version: 1.0\n */\n"
+			. "register_activation_hook( __FILE__, function () {\n"
+			. "\tadd_action( 'activated_plugin', function ( \$plugin ) {\n"
+			. "\t\tif ( 'kuduy-test-redirect/kuduy-test-redirect.php' === \$plugin ) {\n"
+			. "\t\t\texit( wp_redirect( admin_url( 'admin.php?page=kuduy_test_welcome' ) ) );\n"
+			. "\t\t}\n"
+			. "\t} );\n"
+			. "} );\n"
+		);
+		wp_clean_plugins_cache();
+		$level = ob_get_level();
+
+		$on = $this->ok( 'kuduy-plugin-activate', array( 'file' => 'kuduy-test-redirect/kuduy-test-redirect.php' ) );
+		$this->assertTrue( $on['active'] );
+		$this->assertTrue( $on['done'] );
+		$this->assertStringContainsString( 'page=kuduy_test_welcome', $on['note'], 'The skipped redirect is reported.' );
+		$this->assertSame( $level, ob_get_level(), 'No output buffer is left open.' );
+		$this->assertTrue( is_plugin_active( 'kuduy-test-redirect/kuduy-test-redirect.php' ) );
+		$this->assertFalse( has_filter( 'wp_redirect', array( \Kuduy\Mcp\Modules\Core\Packages::class, 'stop_redirect' ) ), 'Redirects work again afterwards.' );
+		deactivate_plugins( 'kuduy-test-redirect/kuduy-test-redirect.php', true );
+	}
+
 	public function test_deactivate_is_confirm_first_and_names_dependents(): void {
 		activate_plugin( self::BASE );
 		activate_plugin( self::NEEDS );

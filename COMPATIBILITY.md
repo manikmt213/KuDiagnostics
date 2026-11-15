@@ -91,7 +91,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Blocksy | 2.1.61 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): TH1, TH2, TH4 (Customizer settings) | CI: theme job |
 | Bricks | — (Bricks Academy docs, 2026-11-15) | **Not verified** — read tool from the documented data model and Bricks 2.4+ abilities, tested against a stand-in (BR1–BR4) | Paid; to be checked by the owner |
 | Divi 5, Etch | — | **Not verified** — read-only tools on WordPress blocks, tested against a stand-in (BK1–BK3) | Paid; block name prefixes UNVERIFIED |
-| Breakdance | 3.0.0-beta.4 (source read) | **Not verified** — tools built from the plugin's own abilities, tested against a stand-in (BA1–BA4) | Paid; to be checked by the owner |
+| Breakdance | 3.0.0-beta.4 (live checks 2026-11-15: abilities, data, activation) | **Not verified** — tools built from the plugin's own abilities, tested against a stand-in (BA1–BA4) | Paid; to be checked by the owner |
 | Oxygen | 6.2.0 (source read) | **Not verified** — same tools, stand-in only | Paid; Oxygen 4 is a different product and not supported |
 | Kirki (builder) | 6.4.2 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): KK1–KK3, read only | CI: Kirki job |
 | Brizy | 2.8.26 | **Not verified** — read-only tools built from the source, tested against a stand-in (BZ1–BZ3); Brizy cannot boot on the SQLite test site | CI: stand-in jobs |

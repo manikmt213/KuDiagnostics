@@ -29,6 +29,43 @@ final class Packages {
 	}
 
 	/**
+	 * "wp_redirect" filter used while activating: stops the redirect before the plugin's exit runs.
+	 *
+	 * @param mixed $location Redirect location.
+	 * @return string Never returns.
+	 * @throws RedirectIntercepted Always.
+	 */
+	public static function stop_redirect( $location ): string {
+		throw new RedirectIntercepted( is_string( $location ) ? esc_url_raw( $location ) : '' );
+	}
+
+	/**
+	 * Activate a plugin, stopping a redirect the plugin starts while being activated (see RedirectIntercepted).
+	 *
+	 * @param string $file Plugin file.
+	 * @return array{0: \WP_Error|null, 1: string} WordPress' error (or null) and the redirect that was stopped ('' when none).
+	 */
+	public static function activate( string $file ): array {
+		$level = ob_get_level();
+		$stop  = array( self::class, 'stop_redirect' );
+		add_filter( 'wp_redirect', $stop, PHP_INT_MAX );
+		$redirect = '';
+		try {
+			$result = activate_plugin( $file );
+		} catch ( RedirectIntercepted $e ) {
+			$result   = null;
+			$redirect = '' !== $e->getMessage() ? $e->getMessage() : 'a page of the plugin';
+		} finally {
+			remove_filter( 'wp_redirect', $stop, PHP_INT_MAX );
+			// activate_plugin() buffers output; a stopped redirect skips its clean-up.
+			while ( ob_get_level() > $level ) {
+				ob_end_clean();
+			}
+		}
+		return array( is_wp_error( $result ) ? $result : null, $redirect );
+	}
+
+	/**
 	 * Load the admin code the upgraders need.
 	 */
 	public static function load_admin(): void {

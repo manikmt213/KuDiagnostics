@@ -168,20 +168,21 @@ namespace {
 					'meta'                => $meta( false ),
 				)
 			);
-			foreach ( array( 'set-global-settings', 'report-bug' ) as $slug ) {
+			// As on Breakdance 3.0.0-beta.4: report-bug is marked read-only; set-home-page takes a post_id.
+			foreach ( array( 'set-global-settings', 'report-bug', 'set-home-page' ) as $slug ) {
 				wp_register_ability(
 					"$ns/$slug",
 					array(
 						'label'               => $slug,
 						'description'         => 'Stand-in site-wide write.',
 						'category'            => $ns,
-						'input_schema'        => array( 'type' => 'object' ),
+						'input_schema'        => 'set-home-page' === $slug ? $post : array( 'type' => 'object' ),
 						'execute_callback'    => static function () use ( $slug ) {
 							update_option( 'kuduy_fake_bd_ran_' . $slug, 1 );
 							return array( 'success' => true );
 						},
 						'permission_callback' => 'kuduy_fake_bd_can',
-						'meta'                => $meta( false ),
+						'meta'                => $meta( 'report-bug' === $slug ),
 					)
 				);
 			}

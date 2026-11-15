@@ -153,6 +153,10 @@ final class Plugins implements Tool, Snapshottable {
 				'type'  => 'array',
 				'items' => array( 'type' => 'string' ),
 			),
+			'note'         => array(
+				'type'        => 'string',
+				'description' => 'Set when the plugin tried to open its own page during activation (skipped here).',
+			),
 			'_snapshot_id' => array( 'type' => 'integer' ),
 		);
 		$plugin['required'][]  = 'done';
@@ -232,9 +236,9 @@ final class Plugins implements Tool, Snapshottable {
 		Packages::load_admin();
 		$file = (string) ( $payload['file'] ?? '' );
 		if ( ! empty( $payload['active'] ) ) {
-			$result = activate_plugin( $file );
-			if ( is_wp_error( $result ) ) {
-				throw new ToolError( 'Undo failed: ' . esc_html( $result->get_error_message() ) );
+			[ $error ] = Packages::activate( $file );
+			if ( null !== $error ) {
+				throw new ToolError( 'Undo failed: ' . esc_html( $error->get_error_message() ) );
 			}
 		} else {
 			deactivate_plugins( $file );
@@ -268,11 +272,11 @@ final class Plugins implements Tool, Snapshottable {
 		$self = GitHubUpdater::basename() === $file;
 
 		if ( 'activate' === $this->mode ) {
-			$result = activate_plugin( $file );
-			if ( is_wp_error( $result ) ) {
-				throw new ToolError( 'WordPress could not activate it: ' . esc_html( $result->get_error_message() ) );
+			[ $error, $redirect ] = Packages::activate( $file );
+			if ( null !== $error ) {
+				throw new ToolError( 'WordPress could not activate it: ' . esc_html( $error->get_error_message() ) );
 			}
-			return self::shape( $file ) + array( 'done' => true );
+			return self::shape( $file ) + array( 'done' => is_plugin_active( $file ) ) + self::redirect_note( $file, $redirect );
 		}
 
 		if ( 'deactivate' === $this->mode ) {
@@ -360,13 +364,33 @@ final class Plugins implements Tool, Snapshottable {
 			throw new ToolError( 'The plugin was downloaded but WordPress cannot find its main file.' );
 		}
 		AuditLog::target( 'plugin', $file );
+		$note = array();
 		if ( $activate ) {
-			$result = activate_plugin( $file );
-			if ( is_wp_error( $result ) ) {
-				throw new ToolError( 'Installed, but WordPress could not activate it: ' . esc_html( $result->get_error_message() ) );
+			[ $error, $redirect ] = Packages::activate( $file );
+			if ( null !== $error ) {
+				throw new ToolError( 'Installed, but WordPress could not activate it: ' . esc_html( $error->get_error_message() ) );
 			}
+			$note = self::redirect_note( $file, $redirect );
 		}
-		return self::shape( $file ) + array( 'done' => true );
+		return self::shape( $file ) + array( 'done' => true ) + $note;
+	}
+
+	/**
+	 * Note about a redirect a plugin tried while it was activated.
+	 *
+	 * @param string $file     Plugin file.
+	 * @param string $redirect Location, or '' when there was none.
+	 * @return array<string, string>
+	 */
+	private static function redirect_note( string $file, string $redirect ): array {
+		if ( '' === $redirect ) {
+			return array();
+		}
+		return array(
+			'note' => is_plugin_active( $file )
+				? 'Activated. The plugin then tried to open its own page (' . $redirect . ', usually a welcome or setup screen); that was skipped here. Open it in wp-admin if setup is needed.'
+				: 'The plugin tried to open its own page (' . $redirect . ') while being activated and stopped before it was active. Activate it in wp-admin.',
+		);
 	}
 
 	/**

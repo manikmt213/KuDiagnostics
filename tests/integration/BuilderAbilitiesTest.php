@@ -79,6 +79,8 @@ final class BuilderAbilitiesTest extends TestCase {
 		$this->assertSame( 'not run here', $rows[ "$ns/set-global-settings" ]['run_with'] );
 		$this->assertSame( 'not run here', $rows[ "$ns/report-bug" ]['run_with'] );
 		$this->assertStringContainsString( 'outside services', $rows[ "$ns/report-bug" ]['why_not'] );
+		$this->assertSame( 'read', $rows[ "$ns/report-bug" ]['kind'], 'Breakdance marks it read-only; it is refused anyway.' );
+		$this->assertSame( 'not run here', $rows[ "$ns/set-home-page" ]['run_with'], 'Takes a post but changes the whole site.' );
 
 		$one = $this->ok( $this->tool( 'abilities' ), array( 'name' => "$ns/edit-post" ) )['ability'];
 		$this->assertContains( 'operations', $one['input_schema']['required'] );
@@ -143,6 +145,16 @@ final class BuilderAbilitiesTest extends TestCase {
 		$ns = self::$ns;
 		$this->fails( $this->tool( 'ability-run' ), array( 'name' => "$ns/set-global-settings" ), 'site-wide settings cannot be undone here' );
 		$this->fails( $this->tool( 'ability-run' ), array( 'name' => "$ns/report-bug" ), 'no data is sent to outside services' );
+		$this->fails( $this->tool( 'ability-get' ), array( 'name' => "$ns/report-bug" ), 'refused by the read tool too, although marked read-only' );
+		$this->fails(
+			$this->tool( 'ability-run' ),
+			array(
+				'name'  => "$ns/set-home-page",
+				'input' => array( 'post_id' => $this->page() ),
+			),
+			'the home page is a site-wide setting'
+		);
+		$this->assertFalse( get_option( 'kuduy_fake_bd_ran_set-home-page' ) );
 		$this->assertFalse( get_option( 'kuduy_fake_bd_ran_set-global-settings' ) );
 		$this->assertFalse( get_option( 'kuduy_fake_bd_ran_report-bug' ) );
 	}

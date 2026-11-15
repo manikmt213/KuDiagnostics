@@ -256,6 +256,18 @@ Runs: `KUDUY_THEME=<slug>@<version>` — `astra@4.14.2`, `kadence@1.6.0`, `block
 
 Found on the way: themes rely on core's Customizer settings existing before their own `customize_register` callbacks (core registers first on the real screen); Astra builds its settings only inside the Customizer and a Customizer-path save did not reach its option, so Astra goes through its abilities; Blocksy loads its registration only when the manager exists at theme load, so the tools include that file (added 2026-11-15, TH4 passes). Undo is checked against stored values because `WP_Customize_Setting` and Astra cache per PHP process and all tests share one process. WP 6.9.11 / PHP 8.1 (2026-11-15): Astra, GeneratePress, OceanWP, Ollie and Spectra One pass the same tests. Kadence 1.6.0 could not be run on PHP 8.1: Playground's PHP 8.1 build crashes ("memory access out of bounds") on every request with Kadence active, including tests that do not touch the theme tools; Kadence passes on WP 6.9.11 with PHP 8.3. Blocksy was not run on 6.9.
 
+## Checks on the owner's premium test site (2026-11-15)
+
+Site: the owner's Hostinger test site (WP 7.1.4, PHP 8.3, KuDiagnostics 1.3.0), connected to the session. Each product was activated alone, checked through WordPress' own Abilities REST API in the logged-in browser and with `kuduy-dev-db-query`, then deactivated; test pages were trashed. KuDiagnostics' builder tools themselves could not be called: the client keeps the tool list it had when it connected, before these plugins were active.
+
+| Product | Checked | Result |
+|---|---|---|
+| Breakdance 3.0.0-beta.4 | 42 abilities under `breakdance/`; annotations (`readonly` true on reads, null otherwise); inputs (`post_id`, `operations`); create-post and edit-post run; page data in `_breakdance_data` (+ `_breakdance_css_file_paths_cache`, `_breakdance_dependency_cache`); `Breakdance\Render\generateCacheForPost()` exists | Matches. **Two defects found and fixed:** `report-bug` is marked read-only (our read tool would have sent data to the vendor) → refused in every mode; `set-home-page` takes a `post_id` but changes the site → refused as site-wide. **Third defect:** first activation runs `exit( wp_redirect( …onboarding ) )` in an `activated_plugin` callback, so `kuduy-plugin-activate` returned the redirect page instead of its result → redirects are now stopped and reported during activation (CorePackagesTest) |
+| Oxygen 6.2.0 | 51 abilities under `oxygen/`; same annotations; `report-bug` read-only, `set-home-page` with `post_id`; `run-site-tool` takes `post_ids` (treated as site-wide); create-post and edit-post run; page data in `_oxygen_data` | Matches, with the fixes above |
+| WPBakery 9.1 | Source: `WPBMap::getAllShortCodes()` expands lean-mapped elements (`generateData()` → `setElementSettings()`), `addAllMappedShortcodes()`, `getShortCode()`, `exists()`; mapping runs on `init` in every request (`Vc_Manager::init()` → `mapper()->init()`); `WPB_VC_VERSION` 9.1; meta keys `_wpb_vc_js_status`, `_wpb_shortcodes_custom_css` | Matches the stand-in's contract |
+
+Still to do: run the builder tools end to end on that site (needs the current build there and a reconnect of the connector with the plugins active).
+
 ## Bricks, Divi 5, Etch (D41)
 
 Run: `KUDUY_FAKES=bricks,blockbuilders` (`BricksTest`, `BlockBuildersTest`).
