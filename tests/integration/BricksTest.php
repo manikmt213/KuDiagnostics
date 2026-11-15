@@ -136,6 +136,10 @@ final class BricksTest extends TestCase {
 		$this->assertSame( 'not run here', $rows['bricks/execute-php']['run_with'] );
 		$this->assertSame( 'not run here', $rows['bricks/delete-post']['run_with'], 'Takes a post, but deletes it: not on the page-level list.' );
 		$this->assertStringContainsString( 'runs code', $rows['bricks/execute-php']['why_not'] );
+		$this->assertSame( 'not run here', $rows['bricks/regenerate-css-files']['run_with'], 'Bricks declares no-input abilities with an object for properties.' );
+		$one = $this->ok( 'kuduy-bricks-abilities', array( 'name' => 'bricks/regenerate-css-files' ) )['ability'];
+		$this->assertSame( 'object', $one['input_schema']['type'] );
+		$this->assertStringContainsString( 'live output is still inline', $one['description'], 'An unclosed tag in a description keeps the text.' );
 
 		$integrations = array_column( $this->ok( 'kuduy-integrations', array( 'all' => true ) )['integrations'], null, 'id' );
 		$this->assertSame( 'partial', $integrations['bricks']['support'] );

@@ -176,7 +176,11 @@ namespace {
 						'label'               => $slug,
 						'description'         => 'Stand-in site-wide write.',
 						'category'            => $ns,
-						'input_schema'        => 'set-home-page' === $slug ? $post : array( 'type' => 'object' ),
+						// A no-input schema with `properties` as an object, the way Bricks 2.4.5 declares them.
+						'input_schema'        => 'set-home-page' === $slug ? $post : array(
+							'type'       => 'object',
+							'properties' => new stdClass(),
+						),
 						'execute_callback'    => static function () use ( $slug ) {
 							update_option( 'kuduy_fake_bd_ran_' . $slug, 1 );
 							return array( 'success' => true );

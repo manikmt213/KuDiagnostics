@@ -48,10 +48,10 @@ add_action(
 			),
 			'required'   => array( 'postId' ),
 		);
-		$reg  = static function ( string $name, array $schema, callable $run, ?bool $readonly, string $cap = 'edit_posts' ) {
+		$reg  = static function ( string $name, array $schema, callable $run, ?bool $readonly, string $cap = 'edit_posts', string $description = '' ) {
 			$args = array(
 				'label'               => $name,
-				'description'         => 'Stand-in ' . $name,
+				'description'         => '' !== $description ? $description : 'Stand-in ' . $name,
 				'category'            => 'bricks',
 				'input_schema'        => $schema,
 				'execute_callback'    => $run,
@@ -97,6 +97,21 @@ add_action(
 				return array( 'deleted' => true );
 			},
 			null
+		);
+		// Bricks 2.4.5 turns an empty `properties` into an object so it encodes as {} (Manager::register()).
+		$reg(
+			'regenerate-css-files',
+			array(
+				'type'                 => 'object',
+				'properties'           => new stdClass(),
+				'additionalProperties' => false,
+				'default'              => new stdClass(),
+			),
+			static fn() => array( 'regenerated' => 0 ),
+			null,
+			'manage_options',
+			// Bricks 2.4.5's description, with an unclosed tag in it.
+			'Rebuilds the per-post CSS files served when `cssLoading` is `file`. When `cssLoading` is `inline`, the regenerated files act only as a fallback; the live output is still inline `<style>` tags.'
 		);
 		$reg(
 			'set-global-settings',

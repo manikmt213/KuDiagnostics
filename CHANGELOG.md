@@ -5,7 +5,8 @@ Format: user-facing releases first (newest on top), then the dated development h
 ## Unreleased
 
 - Fixed: refusals from the Breakdance, Oxygen and Bricks tools showed `&#039;` instead of an apostrophe.
-- Checked: the Breakdance, Oxygen and WPBakery tools end to end on the owner's test site (Breakdance 3.0.0-beta.4, Oxygen 6.2.0, WPBakery 9.1).
+- Fixed: `kuduy-bricks-abilities` failed on Bricks 2.4.5 (abilities without inputs declare their properties as an object).
+- Checked: the Breakdance, Oxygen and WPBakery tools end to end on the owner's test site (Breakdance 3.0.0-beta.4, Oxygen 6.2.0, WPBakery 9.1); Bricks 2.4.5 page changes with undo.
 - Changed: the Bricks tools run only Bricks' page-level changes (elements, page settings, interactions, conditions, forms, popups, creating and duplicating pages); Bricks 2.4.5 offers 167 abilities, including deletes and restores that cannot be undone here. Every page change must name the page by its id.
 
 ## 1.3.1 — 2026-11-15

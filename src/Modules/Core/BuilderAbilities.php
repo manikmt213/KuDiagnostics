@@ -298,10 +298,11 @@ final class BuilderAbilities implements Tool, Snapshottable {
 		if ( str_starts_with( $short, 'create-' ) || str_starts_with( $short, 'duplicate-' ) ) {
 			return '';
 		}
-		$schema = $ability->get_input_schema();
-		if ( isset( $schema['properties']['post_id'] ) || isset( $schema['properties']['postId'] ) ) {
+		// Bricks 2.4.5 declares an empty `properties` as an object (so it encodes as {}): read it as an array.
+		$props = (array) ( $ability->get_input_schema()['properties'] ?? array() );
+		if ( isset( $props['post_id'] ) || isset( $props['postId'] ) ) {
 			// The page must be named by its id, so it can be snapshotted first (Bricks also accepts slug, path or title).
-			return $listing || self::post_id( $input ) > 0 ? '' : 'Name the page by its numeric id (' . ( isset( $schema['properties']['postId'] ) ? 'postId' : 'post_id' ) . ') so it can be saved first and the change undone.';
+			return $listing || self::post_id( $input ) > 0 ? '' : 'Name the page by its numeric id (' . ( isset( $props['postId'] ) ? 'postId' : 'post_id' ) . ') so it can be saved first and the change undone.';
 		}
 		return 'This ability changes site-wide ' . $this->label() . ' settings, which cannot be undone from here. Change them in ' . $this->label() . ' itself.';
 	}
