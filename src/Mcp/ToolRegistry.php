@@ -7,6 +7,7 @@
 
 namespace Kuduy\Mcp\Mcp;
 
+use Kuduy\Mcp\Modules\Core\AstraAbilities;
 use Kuduy\Mcp\Modules\Core\CheckUpdate;
 use Kuduy\Mcp\Modules\Core\Comments;
 use Kuduy\Mcp\Modules\Core\Diagnostics;
@@ -27,6 +28,7 @@ use Kuduy\Mcp\Modules\Core\SnapshotList;
 use Kuduy\Mcp\Modules\Core\SnapshotRestore;
 use Kuduy\Mcp\Modules\Core\TermList;
 use Kuduy\Mcp\Modules\Core\Themes;
+use Kuduy\Mcp\Modules\Core\ThemeSettings;
 use Kuduy\Mcp\Modules\Core\TermWrite;
 use Kuduy\Mcp\Modules\Core\Users;
 use Kuduy\Mcp\Modules\Beaver\BeaverRead;
@@ -129,6 +131,12 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'list', 'install', 'switch', 'update' ) as $mode ) {
 			$registry->register( new Themes( $mode ) );
+		}
+		foreach ( array( 'facts', 'settings', 'settings-update' ) as $mode ) {
+			$registry->register( new ThemeSettings( $mode ) );
+		}
+		foreach ( array( 'abilities', 'ability-get', 'ability-run' ) as $mode ) {
+			$registry->register( new AstraAbilities( $mode ) );
 		}
 		foreach ( array( 'health', 'cron', 'rewrite', 'rewrite-flush', 'hooks' ) as $mode ) {
 			$registry->register( new Diagnostics( $mode ) );

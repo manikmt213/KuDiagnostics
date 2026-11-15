@@ -58,6 +58,24 @@ for (const fake of fakes) {
   }
   steps.push({ step: 'writeFile', path: `/wordpress/wp-content/mu-plugins/kuduy-fake-${fake}.php`, data: `<?php require '/wordpress/wp-content/plugins/kuduy-mcp/tests/integration/fakes/${fake}.php';` });
 }
+// KUDUY_THEME=slug@version installs and activates a wordpress.org theme (theme settings tests, upgrade phase D).
+const theme = (process.env.KUDUY_THEME ?? '').trim();
+if (theme) {
+  const [slug, version] = theme.split('@');
+  if (!/^[a-z0-9-]+$/.test(slug) || !/^[0-9][0-9.]*$/.test(version ?? '')) {
+    console.error(`KUDUY_THEME "${theme}" must be slug@version.`);
+    process.exit(1);
+  }
+  steps.push({
+    step: 'installTheme',
+    themeData: { resource: 'url', url: `https://downloads.wordpress.org/theme/${slug}.${version}.zip` },
+    options: { activate: true },
+  });
+  if (slug === 'astra') {
+    // Astra registers its abilities only when the site owner switched them on (Astra > Settings); do that here.
+    steps.push({ step: 'setSiteOptions', options: { astra_admin_settings: { enable_abilities: true, enable_edit_abilities: true } } });
+  }
+}
 // KUDUY_PLUGINS=slug@version,… installs more wordpress.org plugins after Elementor (e.g. Elementor add-ons).
 for (const entry of (process.env.KUDUY_PLUGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean)) {
   const [slug, version] = entry.split('@');

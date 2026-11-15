@@ -1,0 +1,13 @@
+<?php
+/**
+ * Themes are not dependencies; this declares only the Astra function the tests call (Astra 4.14.2).
+ */
+
+namespace {
+	/**
+	 * @param string $option
+	 * @param mixed  $default_value
+	 * @return mixed
+	 */
+	function astra_get_option( $option, $default_value = '', $deprecated = '' ) {}
+}

@@ -32,13 +32,13 @@ One row per integration in the upgrade brief (58), plus what KuDiagnostics suppo
 
 | Integration | Copy | Support today | What exists | Phase |
 |---|---|---|---|---|
-| Ollie | free 1.6.6 (block theme) | **Partial** | Generic Site Editor tools (templates, Global Styles, navigation); never run on this theme | D |
-| Spectra One | free 1.2.6 (block theme) | **Partial** | Same generic tools; never run on this theme | D |
-| Astra | free 4.14.2 | Detection | `kuduy-theme-list`, install, switch | D |
-| Kadence | free 1.6.0 | Detection | same | D |
-| Blocksy | free 2.1.61 | Detection | same | D |
-| GeneratePress | free 3.6.1 | Detection | same | D |
-| OceanWP | free 4.2.8 | Detection | same | D |
+| Ollie | free 1.6.6 (block theme) | **Full** (TH1, S1–S5 on this theme, 2026-11-15) | Site Editor tools (templates, Global Styles, navigation) and theme facts | — |
+| Spectra One | free 1.2.6 (block theme) | **Full** (TH1, S1–S5 on this theme, 2026-11-15) | Same tools | — |
+| Astra | free 4.14.2 | **Full** (TH5–TH7, 2026-11-15) | Theme facts; settings read and changed through the abilities Astra itself provides (`kuduy-astra-abilities`, `-ability-get`, `-ability-run`), with undo. Needs the site owner to switch abilities on in Astra > Settings | — |
+| Kadence | free 1.6.0 | **Full** (TH1–TH4, 2026-11-15) | Theme facts; Customizer settings read and changed with the theme sanitizers (`kuduy-theme-settings`, `-settings-update`), with undo | — |
+| Blocksy | free 2.1.61 | Detection | Theme facts only: Blocksy registers none of its options as Customizer settings on the server, so they are not managed (found 2026-11-15) | D (own adapter) |
+| GeneratePress | free 3.6.1 | **Full** (TH1–TH4, 2026-11-15) | Same as Kadence | — |
+| OceanWP | free 4.2.8 | **Full** (TH1–TH4, 2026-11-15) | Same as Kadence | — |
 | Avada (+ Avada Builder) | paid (real 7.16.4 on staging) | **Full** (builder) / Partial (theme: Global Options read only) | 20 `kuduy-avada-*` tools (D31); tested on real Avada 7.16.4 / Builder 3.16.4 on staging, 2026-11-13 (AV11) | — |
 | Voxel | paid | Detection | same | L |
 | MyListing | paid | Detection | same | L |

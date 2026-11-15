@@ -7,11 +7,14 @@ Format: user-facing releases first (newest on top), then the dated development h
 - Added: **Elementor — duplicate a page** (`kuduy-elementor-duplicate`): copies a page, post or library template with its elements, page settings and page template into a new draft.
 - Added: **Elementor — page settings** (`kuduy-elementor-document-settings`, `kuduy-elementor-document-settings-update`): read and change the page-level settings of a document (hide title, background, padding, …), with undo.
 - Added: **Elementor — dynamic tags** (`kuduy-elementor-dynamic-tags`, `kuduy-elementor-dynamic-set`): list the registered tags and where a page uses them; connect a widget setting to a tag or clear it, with undo. `kuduy-elementor-widget-schema` marks settings that accept a tag. Classic widgets only; Elementor Pro's own tags were not available to test.
+- Added: **Theme tools** — `kuduy-theme-facts` (what the active theme is and how its design is managed), `kuduy-theme-settings` and `kuduy-theme-settings-update` (read and change the settings a theme registers in the Customizer, through the theme's own checks, with undo). Tested with Kadence, GeneratePress and OceanWP.
+- Added: **Astra** — `kuduy-astra-abilities`, `kuduy-astra-ability-get`, `kuduy-astra-ability-run`: read and change Astra's settings through the abilities Astra itself provides, with undo. The site owner must switch abilities on in Astra > Settings.
+- Checked: the Site Editor tools on the block themes Ollie and Spectra One. Blocksy's own options are not managed yet.
 - Added: **Beaver Builder** — 7 `kuduy-beaver-*` tools, shown while Beaver Builder is active: status, modules and their settings, list and read layouts, create a page from rows, columns and modules, and edit a layout (add rows, columns and modules, change settings, move, duplicate, remove) with undo. Tested with Beaver Builder Lite 2.11.1.2. Shared (global) rows and modules and column widths are left to the builder; the paid version was not tested.
 - Changed: `kuduy-post-update` no longer overwrites the content of a page built with Beaver Builder.
 - Fixed: undoing `kuduy-elementor-kit-update` did nothing when the Kit had no stored settings before (a fresh Elementor 3.x site).
 - Fixed: `kuduy-elementor-widget-schema` could drop a responsive setting when Elementor had already built its per-device copies in the same request.
-- Added: seven more free Elementor add-ons verified through the Elementor tools: Happy Addons, HT Mega, PowerPack Lite, Qi Addons, Xpro, Element Pack Lite, Piotnet (214 tools in all).
+- Added: seven more free Elementor add-ons verified through the Elementor tools: Happy Addons, HT Mega, PowerPack Lite, Qi Addons, Xpro, Element Pack Lite, Piotnet (220 tools in all).
 - Added: **Ninja Forms** and **Formidable Forms** in the forms tools (`kuduy-forms-*`): forms, fields and notifications; entries with personal data masked. Ninja Forms submissions can be trashed and restored (with undo); Formidable entries are read only.
 - Added: **Gravity Forms** and **WPForms Pro entries** in the forms tools: entries, read / starred / spam / trash with undo, notes. Both are paid and no licensed copy was available: they are tested against stand-ins and **not yet verified against the plugins themselves**.
 
@@ -593,6 +596,13 @@ Avada tools checked on a real Avada 7.16.4 / Builder 3.16.4 site; two small fixe
 - `Modules/Elementor/ElementorDocs`: five tools (duplicate, document-settings, document-settings-update, dynamic-tags, dynamic-set). `kuduy-elementor-widget-schema` rows gain `dynamic`.
 - Tests: `ElementorDocsTest` (EL12–EL14, with `ElementorTestTag` because free Elementor registers no tags) passed on its first run; `ElementorAddonsTest` extended to seven more add-ons (two CI jobs). Runner: `slug@latest` for plugins without a versioned ZIP (Xpro, Piotnet). Unlimited Elements registers no widgets on a fresh install and was left out.
 - Not built: popups (Elementor Pro) — the Pro ZIP is not on this machine.
+
+### 2026-11-15 — Upgrade round, phase D: themes (D38)
+
+- One adapter on the Customizer API (`Core/ThemeSettings`, 3 tools) instead of one per theme; `Core/AstraAbilities` (3 tools) for Astra. Runner option `KUDUY_THEME=slug@version` (Astra's abilities are switched on in the test site). Seven CI theme jobs.
+- Found by running against the real themes: core's Customizer settings must be registered before the theme callbacks; a second manager in one PHP process is fatal for themes that include files while registering, so one manager per request and saves go through each setting's `save()` rather than a changeset; Astra needs its abilities; Blocksy registers nothing usable.
+- Tests: `ThemeSettingsTest` (TH1–TH4), `AstraAbilitiesTest` (TH5–TH7), `SiteEditorTest` on Ollie and Spectra One. Several first-run failures were test artifacts of per-process caches (WordPress setting roots, Astra's options).
+- Not done: Blocksy adapter, Kirki, Elementor popups.
 
 ### 2026-11-14 — Upgrade round, phase H: Beaver Builder (D37)
 

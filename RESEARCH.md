@@ -362,6 +362,18 @@ Source read: **Beaver Builder Lite 2.11.1.2** (wordpress.org ZIP, GPL-2.0; ideas
 - Global (shared) nodes carry `template_id`; changing them changes other posts.
 - **UNVERIFIED:** the paid versions (extra modules, Themer, saved templates UI), global nodes in practice, multisite. Kirki: not researched yet.
 
+## 10i. Themes and the Customizer (D38, 2026-11-15)
+
+Source read: WordPress `class-wp-customize-setting.php` (`save()` → `update()` → `set_root_value()`: options with keys are aggregated per root and written with `update_option()` at once; roots are cached in a static for the PHP process), Astra 4.14.2, Kadence 1.6.0, Blocksy 2.1.61, GeneratePress 3.6.1, OceanWP 4.2.8 (wordpress.org ZIPs).
+
+- **GeneratePress:** `customize_register` (priority 20); settings `generate_settings[...]`, type `option`, each with a sanitize callback.
+- **Kadence:** `Kadence\Theme_Customizer` registers every setting from its settings array; theme mods by default (`kadence()->get_option_type()`), capability filter `kadence_theme_customizer_capability` (default `manage_options`).
+- **OceanWP:** `inc/customizer/customizer.php` registers on `customize_register`; theme mods such as `ocean_main_container_width`.
+- **Astra:** `Astra_Customizer` wires its configuration only when `is_customizer_context()` (admin, preview, cron, CLI) and registers settings dynamically from it; outside that context `customize_register` fails. A Customizer-path save with those hooks added by hand did not reach `astra-settings` in a test (cause not found), so that path was dropped. Astra ships about sixty abilities (`inc/abilities/`, ids `astra/get-…`, `astra/list-…`, `astra/update-…`) registered with the Abilities API when `astra_admin_settings[enable_abilities]` is on (`enable_edit_abilities` for writes, default on); they write `astra-settings` themselves and fire `astra_ability_settings_updated`. Astra caches options per request (`astra_get_options()` static, `Astra_Theme_Options::refresh()`).
+- **Blocksy:** `blocksy_customizer_register_options()` adds a setting per top-level option only; in a test no setting of its own with a scalar value was registered, so its options (panels) are not reachable through the Customizer API.
+- Themes call `$wp_customize->get_setting( 'blogname' )` etc. in their callbacks: core's `register_controls()` must have run first.
+- **UNVERIFIED:** child themes, the paid add-ons of these themes (Astra Pro, Kadence Pro, GP Premium, Ocean Extra), settings whose controls are added only by JavaScript.
+
 ## 11. Licensing and dependencies
 
 | Component | License (verified) | Use in KUDUY |

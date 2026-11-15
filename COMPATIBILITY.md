@@ -86,6 +86,10 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Formidable Forms (free) | 7.0 | **Tested** in Playground 2026-11-14 (WP 6.9 + 7.1): F9; entries read only | Formidable Pro not tested |
 | LiteSpeed Cache | 7.9.3 | **Tested** in Playground 2026-11-10 (WP 6.9.11 + 7.1.4): C1–C3; Hostinger staging (LiteSpeed server) 2026-11-10 | W3 Total Cache 2.11.0, WP Super Cache 3.1.5, WP Fastest Cache 1.5.5: API read, not run; WP Rocket: docs only |
 | Polylang (free) | 3.9.2 | **Tested** in Playground 2026-11-10 (WP 6.9.11 + 7.1.4): L1–L4; Hostinger staging 2026-11-10 (undo-to-no-language bug found and fixed) | WPML not supported |
+| Astra | 4.14.2 | **Tested** in Playground 2026-11-15: TH1, TH5–TH7 (Astra's own abilities) | CI: theme job. Abilities must be switched on by the site owner |
+| Kadence, GeneratePress, OceanWP | 1.6.0, 3.6.1, 4.2.8 | **Tested** in Playground 2026-11-15: TH1–TH4 (Customizer settings) on WP 7.1 / PHP 8.3; GeneratePress and OceanWP also on WP 6.9 / PHP 8.1 | CI: one theme job each. Kadence on PHP 8.1 is **not tested**: Playground's PHP 8.1 crashes with Kadence active (Kadence passes on WP 6.9 with PHP 8.3) |
+| Blocksy | 2.1.61 | **Detection only** — theme facts and core settings (TH1, TH2); its own options are not registered as Customizer settings | CI: theme job |
+| Ollie, Spectra One (block themes) | 1.6.6, 1.2.6 | **Tested** in Playground 2026-11-15: TH1 and S1–S5 | CI: one theme job each |
 | Block themes (Site Editor) | Twenty Twenty-Five | **Tested** in Playground 2026-11-10 (WP 6.9.11 + 7.1.4): S1–S5 | Hybrid/classic themes with widget areas: widgets tested with a registered test area |
 | CF7, WPForms, Gravity, Fluent, WPML, Polylang | — | Not tested | Phase 7 |
 | Plugins that print output during REST requests | — | **Tested** | Output guard (F2) |

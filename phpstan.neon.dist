@@ -13,6 +13,7 @@ parameters:
     - tests/phpstan/acf.stub
     - tests/phpstan/forms.stub
     - tests/phpstan/beaver.stub
+    - tests/phpstan/themes.stub
     # Stand-ins for paid plugins (WPBakery): their names, not ours, so they are scanned but not analysed.
     - tests/integration/fakes/wpbakery.php
   paths:

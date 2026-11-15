@@ -102,6 +102,14 @@ jobs:
           # (tests/integration/fakes/avada.php); Elementor stays active to prove the builders coexist.
           - { wp: '6.9', php: '8.1', elementor: '3.35.9', plugins: '', fakes: 'avada', label: '+ Avada (stand-in)' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'avada', label: '+ Avada (stand-in)' }
+          # Themes (upgrade phase D, D38): one job per theme; the runner switches Astra's abilities on.
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'astra@4.14.2', label: '+ Astra' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'kadence@1.6.0', label: '+ Kadence' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'blocksy@2.1.61', label: '+ Blocksy' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'generatepress@3.6.1', label: '+ GeneratePress' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'oceanwp@4.2.8', label: '+ OceanWP' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'ollie@1.6.6', label: '+ Ollie' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', theme: 'spectra-one@1.2.6', label: '+ Spectra One' }
           # Beaver Builder Lite (upgrade phase H, D37): the real plugin; Elementor stays active to prove the builders coexist.
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'beaver-builder-lite-version@2.11.1.2', label: '+ Beaver Builder' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'beaver-builder-lite-version@2.11.1.2', label: '+ Beaver Builder' }
@@ -129,6 +137,7 @@ jobs:
           KUDUY_HPOS: ${{ matrix.hpos || 'on' }}
           KUDUY_CODE_EXEC: ${{ matrix.code || '0' }}
           KUDUY_FAKES: ${{ matrix.fakes }}
+          KUDUY_THEME: ${{ matrix.theme }}
 
   smoke:
     name: MCP over real HTTP

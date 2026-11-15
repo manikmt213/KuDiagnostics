@@ -142,6 +142,17 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 | Behaviour on a real Avada site (rendering, Avada's editor opening pages saved here) | Tested 2026-11-13 on staging with real Avada 7.16.4 / Builder 3.16.4 (AV11) |
 | Changing Global Options, Layout conditions, element on/off, per-page theme options | Not offered |
 
+## Themes — added 2026-11-15 (D38)
+
+| Feature | Status |
+|---|---|
+| Theme facts: parent/child, block or classic, theme.json, supports, menu locations, widget areas, template parts, Customizer sections (`kuduy-theme-facts`) | Tested (TH1; default block theme, Astra, Kadence, Blocksy, GeneratePress, OceanWP, Ollie, Spectra One) |
+| Customizer settings: list with label, section, control, choices, default and value; change through the setting's own sanitizer and validator; undo (`kuduy-theme-settings`, `kuduy-theme-settings-update`) | Tested (TH2–TH4: Kadence 1.6.0, GeneratePress 3.6.1, OceanWP 4.2.8; core settings on every theme) |
+| Astra settings through Astra's own abilities: list, read, write, undo (`kuduy-astra-abilities`, `-ability-get`, `-ability-run`) | Tested (TH5–TH7: Astra 4.14.2). Works only when the site owner has switched abilities on in Astra > Settings |
+| Block themes Ollie 1.6.6 and Spectra One 1.2.6 with the Site Editor tools | Tested (S1–S5 run on both themes) |
+| Blocksy settings | Blocked for now — Blocksy registers none of its options as Customizer settings; needs its own adapter |
+| Astra settings without the abilities switch; child themes; header/footer builders of Kadence and OceanWP beyond their registered settings | Not started |
+
 ## Beaver Builder — added 2026-11-14 (D37)
 
 | Feature | Status |

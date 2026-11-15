@@ -95,6 +95,17 @@ Automated checks (all in the integration suite, both WordPress pairs):
 
 No high findings open.
 
+## 4e. Theme settings tools (2026-11-15, D38)
+
+| Risk | Control |
+|---|---|
+| Changing the site design without permission | `edit_theme_options` and the `kuduy:admin` scope for writes; each setting's own capability (`check_capabilities()`); Astra abilities run their own permission check |
+| Writing arbitrary options | Only ids registered as Customizer settings of type option or theme mod can be written; menus, widgets and custom CSS are excluded; a single unknown id refuses the whole call |
+| Unsafe values | Every value passes the setting's sanitize and validate callbacks (the theme's own); Astra validates inside its abilities |
+| Breaking the design | Snapshot of the stored roots (options / theme mods) before a write; undo restores them and fires the save hooks so themes rebuild their CSS |
+| Switching on features behind the owner's back | Astra's abilities switch is never changed by KuDiagnostics; when it is off the tools say so |
+| Secrets in settings | The redactor runs on every result as for all tools |
+
 ## 4d. Beaver Builder tools (2026-11-14, D37)
 
 Reviewed while building, against Beaver Builder Lite 2.11.1.2.
