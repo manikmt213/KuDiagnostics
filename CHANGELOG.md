@@ -4,6 +4,9 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Changed: the Bricks tools no longer list bricks/update-popup-settings as runnable: it names the popup by template id and keeps its settings outside the page data KuDiagnostics saves for undo.
+- Checked: Bricks 2.4.5 on the owner's test site with 1.3.2: abilities list, page changes with undo, and the page-level limit.
+
 ## 1.3.2 — 2026-11-15
 
 Fixes from live checks of the builder tools on real Breakdance, Oxygen 6, WPBakery and Bricks sites.

@@ -78,7 +78,9 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			'run'    => 'bricks/update-element {"postId": 12, "elementId": "abc123", "settings": {…}} or bricks/set-page-elements (all elements of one page)',
 			'never'  => array( 'execute-php' ),
 			'site'   => array(),
-			'allow'  => array( 'set-page-elements', 'add-element', 'update-element', 'batch-update-elements', 'remove-element', 'set-page-settings', 'update-element-interactions', 'update-element-conditions', 'update-form-fields', 'update-form-actions', 'update-popup-settings', 'create-post', 'create-template', 'duplicate-post' ),
+			// Not update-popup-settings: it names the popup by templateId/popupId and writes template settings outside
+			// the _bricks_page_ data the snapshot keeps, so it could not be undone (Bricks 2.4.5, checked live).
+			'allow'  => array( 'set-page-elements', 'add-element', 'update-element', 'batch-update-elements', 'remove-element', 'set-page-settings', 'update-element-interactions', 'update-element-conditions', 'update-form-fields', 'update-form-actions', 'create-post', 'create-template', 'duplicate-post' ),
 		),
 	);
 

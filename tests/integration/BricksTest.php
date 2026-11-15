@@ -210,6 +210,19 @@ final class BricksTest extends TestCase {
 			'deleting is not a page-level change'
 		);
 		$this->assertFalse( get_option( 'kuduy_fake_bricks_deleted' ) );
+		$why = $this->fails(
+			'kuduy-bricks-ability-run',
+			array(
+				'name'  => 'bricks/update-popup-settings',
+				'input' => array(
+					'templateId' => $page,
+					'settings'   => array(),
+				),
+			),
+			'popup settings live outside the page data a snapshot keeps'
+		);
+		$this->assertStringContainsString( 'page-level changes', $why );
+		$this->assertFalse( get_option( 'kuduy_fake_bricks_popup' ) );
 		$this->fails(
 			'kuduy-bricks-ability-run',
 			array(

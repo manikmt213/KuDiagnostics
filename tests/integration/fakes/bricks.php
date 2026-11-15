@@ -113,6 +113,23 @@ add_action(
 			// Bricks 2.4.5's description, with an unclosed tag in it.
 			'Rebuilds the per-post CSS files served when `cssLoading` is `file`. When `cssLoading` is `inline`, the regenerated files act only as a fallback; the live output is still inline `<style>` tags.'
 		);
+		// As in Bricks 2.4.5: names the popup template by templateId (or popupId, slug, title), not postId.
+		$reg(
+			'update-popup-settings',
+			array(
+				'type'       => 'object',
+				'properties' => array(
+					'templateId' => array( 'type' => 'integer' ),
+					'settings'   => array( 'type' => 'object' ),
+				),
+				'required'   => array( 'settings' ),
+			),
+			static function () {
+				update_option( 'kuduy_fake_bricks_popup', 1 );
+				return array( 'success' => true );
+			},
+			null
+		);
 		$reg(
 			'set-global-settings',
 			array( 'type' => 'object' ),

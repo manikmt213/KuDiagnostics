@@ -158,7 +158,7 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 | Feature | Status |
 |---|---|
 | Bricks: list pages and read their elements from the documented data model (`kuduy-bricks-pages`, `-get`) | Tested (BR1 against a stand-in; Bricks 2.4.5 on the owner's site, 2026-11-15) |
-| Bricks 2.4+: its own abilities through the shared builder tools (`kuduy-bricks-abilities`, `-ability-get`, `-ability-run`), page writes with undo; PHP and site-wide abilities not run | Page writes with undo Tested on Bricks 2.4.5 (create-post, add-element, update-element, restore; 2026-11-15) and BR2–BR4 against a stand-in. The listing and the page-level allow-list are tested against the stand-in only; the live site ran 1.3.1 |
+| Bricks 2.4+: its own abilities through the shared builder tools (`kuduy-bricks-abilities`, `-ability-get`, `-ability-run`), page writes with undo; PHP and site-wide abilities not run | Page writes with undo Tested on Bricks 2.4.5 (create-post, add-element, update-element, restore; 2026-11-15) and BR2–BR4 against a stand-in. Listing and page-level allow-list Tested on Bricks 2.4.5 with 1.3.2 (2026-11-15) |
 | Divi 5: list pages and read their block structure; Divi 4 pages recognised (`kuduy-divi-pages`, `-get`) | Implemented — stand-in only (BK1, BK3) |
 | Etch: list pages and read their block structure (`kuduy-etch-pages`, `-get`) | Implemented — stand-in only (BK2, BK3) |
 | Divi 5 and Etch: change pages | Not started — neither builder documents how its blocks may be changed outside its editor |
