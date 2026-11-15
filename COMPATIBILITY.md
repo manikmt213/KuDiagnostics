@@ -92,7 +92,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Bricks | 2.4.5 (source read on the owner's site, 2026-11-15) | **Not verified** — read tool from the documented data model and Bricks 2.4+ abilities, tested against a stand-in (BR1–BR4) | Paid; to be checked by the owner |
 | Divi 5 (5.19.0 source read), Etch | — | **Not verified** — read-only tools on WordPress blocks, tested against a stand-in (BK1–BK3) | Paid; block name prefixes UNVERIFIED |
 | Breakdance | 3.0.0-beta.4 (owner's test site, 2026-11-15) | **Verified on 3.0.0-beta.4**: abilities list, reads, create-post, edit-post, undo (data and rendered page), refusals, over real HTTP; stand-in in CI (BA1–BA4) | Paid; to be checked by the owner |
-| Oxygen | 6.2.0 (source read) | **Not verified** — same tools, stand-in only | Paid; Oxygen 4 is a different product and not supported |
+| Oxygen | 6.2.0 (owner's test site, 2026-11-15) | **Verified on 6.2.0**: abilities list, reads, create-post, edit-post, undo (data and rendered page), refusals, over real HTTP; stand-in in CI | Paid; Oxygen 4 is a different product and not supported |
 | Kirki (builder) | 6.4.2 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): KK1–KK3, read only | CI: Kirki job |
 | Brizy | 2.8.26 | **Not verified** — read-only tools built from the source, tested against a stand-in (BZ1–BZ3); Brizy cannot boot on the SQLite test site | CI: stand-in jobs |
 | Ollie, Spectra One (block themes) | 1.6.6, 1.2.6 | **Tested** in Playground 2026-11-15: TH1 and S1–S5 | CI: one theme job each |

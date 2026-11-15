@@ -168,8 +168,8 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 
 | Feature | Status |
 |---|---|
-| List the builder's own abilities with what runs here; read abilities (instructions, page tree, element schemas, …) (`kuduy-breakdance-abilities`, `-ability-get`; `kuduy-oxygen-…`) | Breakdance: Tested (BA1, BA2; end to end on Breakdance 3.0.0-beta.4, 2026-11-15). Oxygen: stand-in only (BA1, BA2) |
-| Write abilities on one post (edit-post, …) or creating something new, with snapshot and undo (`-ability-run`) | Breakdance: Tested (BA2, BA4; create-post, edit-post, undo on the real plugin, 2026-11-15). Oxygen: stand-in only |
+| List the builder's own abilities with what runs here; read abilities (instructions, page tree, element schemas, …) (`kuduy-breakdance-abilities`, `-ability-get`; `kuduy-oxygen-…`) | Breakdance: Tested (BA1, BA2; end to end on Breakdance 3.0.0-beta.4, 2026-11-15). Oxygen: Tested (BA1, BA2; end to end on Oxygen 6.2.0, 2026-11-15) |
+| Write abilities on one post (edit-post, …) or creating something new, with snapshot and undo (`-ability-run`) | Breakdance: Tested (BA2, BA4; create-post, edit-post, undo on the real plugin, 2026-11-15). Oxygen: Tested (same run on Oxygen 6.2.0) |
 | Site-wide writes (global settings, CSS variables, selectors, stylesheets, home page) and the bug-report ability | Not offered — no undo here; the report ability sends data to the vendor (BA3) |
 | Oxygen 4 (classic) | Not started |
 
