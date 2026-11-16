@@ -63,6 +63,8 @@ trait CallsTools {
 	/**
 	 * Successful call's structured result, validated against the tool's output schema.
 	 *
+	 * @phpstan-impure Two calls with the same arguments may return different results (the site changed in between).
+	 *
 	 * @param string               $tool Tool.
 	 * @param array<string, mixed> $args Arguments.
 	 * @return array<string, mixed>

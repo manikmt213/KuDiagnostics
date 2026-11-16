@@ -1143,7 +1143,7 @@ Scope `kuduy:read` · read only
 
 ### `kuduy-kirki-get` — Read a Kirki page
 
-Returns the structure of a page built with Kirki: its blocks as a tree with id, name, HTML tag and text. include_properties: true adds each block's stored properties. Read only: change the layout in Kirki, and title, status and other post fields with the post tools.
+Returns the structure of a page built with Kirki: its blocks as a tree with id, name, HTML tag and text. include_properties: true adds each block's stored properties. Kirki saves edits as versions and shows visitors the published one: version "published" (default) reads that, "latest" the newest saved version not yet published; unpublished_changes says whether one exists. Read only: change the layout in Kirki, and title, status and other post fields with the post tools.
 
 Scope `kuduy:read` · read only
 
@@ -1151,6 +1151,7 @@ Scope `kuduy:read` · read only
 |---|---|---|---|
 | `id` | integer | yes |  |
 | `include_properties` | boolean |  | default false |
+| `version` | string (published, latest) |  | default "published" |
 
 ## Bricks
 

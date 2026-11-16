@@ -177,7 +177,7 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 
 | Feature | Status |
 |---|---|
-| Kirki builder (6.x): status, list pages, block structure (`kuduy-kirki-status`, `-pages`, `-get`) | Tested (KK1–KK3; Kirki 6.4.2, real plugin, WP 6.9 + 7.1) |
+| Kirki builder (6.x): status, list pages, block structure of the published or the newest unpublished version (`kuduy-kirki-status`, `-pages`, `-get`) | Tested (KK1–KK4; Kirki 6.4.2, real plugin, WP 6.9 + 7.1; status and pages also live on 6.4.2, 2026-11-16) |
 | Kirki: change layouts | Not started — a page is saved as blocks, style blocks, used styles and staged versions together (`save_kirki_data_to_db()`) |
 | Brizy: status, list pages, page structure (`kuduy-brizy-status`, `-pages`, `-get`) | Tested (BZ1–BZ3 against a stand-in; read live on Brizy 2.8.26 free, 2026-11-16, a page built in Brizy's editor) (Brizy cannot boot on the SQLite test site) |
 | Brizy: change layouts | Not offered — Brizy compiles the public page in its own editor; editor data changed elsewhere would not reach the site |

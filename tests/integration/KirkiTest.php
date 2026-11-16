@@ -126,6 +126,53 @@ final class KirkiTest extends TestCase {
 		$this->assertSame( 'yes', $full['root']['children'][0]['children'][1]['properties']['attributes']['data-kuduy'] );
 	}
 
+	/**
+	 * Save in Kirki's builder adds an unpublished staged version (seen on Kirki 6.4.2 on a live site); visitors still
+	 * see the published one. The fixture saves a new version through Kirki's own staging code.
+	 */
+	public function test_kk4_unpublished_version(): void {
+		$this->assertFalse( $this->ok( 'kuduy-kirki-get', array( 'id' => self::$page ) )['unpublished_changes'] );
+		\Kirki\Staging::save_page_staging_data_to_db(
+			self::$page,
+			array(
+				'blocks' => array(
+					'root'    => array(
+						'id'         => 'root',
+						'name'       => 'body',
+						'parentId'   => false,
+						'children'   => array( 'newhead' ),
+						'properties' => array( 'tag' => 'div' ),
+					),
+					'newhead' => array(
+						'id'         => 'newhead',
+						'name'       => 'heading',
+						'parentId'   => 'root',
+						'children'   => array(),
+						'properties' => array(
+							'tag'      => 'h1',
+							'contents' => array( 'Unpublished heading' ),
+						),
+					),
+				),
+			)
+		);
+		$published = $this->ok( 'kuduy-kirki-get', array( 'id' => self::$page ) );
+		$this->assertSame( 'published', $published['version'] );
+		$this->assertTrue( $published['unpublished_changes'] );
+		$this->assertSame( 'Kirki heading text', $published['root']['children'][0]['children'][0]['text'], 'Visitors still see the published version.' );
+
+		$latest = $this->ok(
+			'kuduy-kirki-get',
+			array(
+				'id'      => self::$page,
+				'version' => 'latest',
+			)
+		);
+		$this->assertSame( 'latest', $latest['version'] );
+		$this->assertSame( 2, $latest['block_count'] );
+		$this->assertSame( 'Unpublished heading', $latest['root']['children'][0]['text'] );
+	}
+
 	public function test_kk3_refusals_and_nothing_changes(): void {
 		$before = get_post_meta( self::$page );
 

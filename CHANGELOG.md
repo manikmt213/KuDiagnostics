@@ -4,6 +4,8 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Changed: `kuduy-kirki-get` tells whether a page has unpublished changes and reads them with `version: latest` (Kirki saves edits as versions; visitors see the published one).
+- Checked: Kirki 6.4.2 on the owner's test site (status, pages, a page saved but not yet published).
 - Fixed: `kuduy-brizy-get` ran the paragraphs of a text together; `kuduy-brizy-status` listed post types twice.
 - Checked: Brizy 2.8.26 on the owner's test site (read tools on a page built in Brizy's editor).
 - Fixed: empty objects in tool results (for example a popup with no triggers yet) were sent as `[]`; they are sent as `{}`, as the tools' output schemas say.

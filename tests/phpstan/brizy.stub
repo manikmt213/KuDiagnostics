@@ -51,3 +51,16 @@ namespace {
 		public function edit_url() {}
 	}
 }
+
+namespace Kirki {
+
+	/** Kirki 6.4.2 includes/Staging.php (tests save a staged version through it). */
+	class Staging {
+		/**
+		 * @param int|string           $post_id   Post id.
+		 * @param array<string, mixed> $page_data Blocks, styles, …
+		 * @return array<string, mixed>
+		 */
+		public static function save_page_staging_data_to_db( $post_id, $page_data ) {}
+	}
+}

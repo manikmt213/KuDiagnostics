@@ -23,6 +23,11 @@ final class KirkiRead implements Tool {
 
 	private const HELPER = '\Kirki\HelperFunctions';
 
+	/**
+	 * Kirki's page facade (Kirki 6.4.2 app/Supports/Facades/Page.php over App\Managers\PageManager): staged versions.
+	 */
+	private const PAGES = '\Kirki\App\Supports\Facades\Page';
+
 	private const MAX_TEXT = 200;
 
 	private const MAX_DEPTH = 40;
@@ -59,7 +64,7 @@ final class KirkiRead implements Tool {
 		return match ( $this->mode ) {
 			'status' => 'Kirki (the visual page builder, version 6 and later) on this site: version, whether your account may use the builder, and what these tools can do. Kirki pages are read only here.',
 			'pages'  => 'Lists pages, posts and Kirki templates built with the Kirki builder: id, title, post type, status, link.',
-			default  => 'Returns the structure of a page built with Kirki: its blocks as a tree with id, name, HTML tag and text. include_properties: true adds each block\'s stored properties. Read only: change the layout in Kirki, and title, status and other post fields with the post tools.',
+			default  => 'Returns the structure of a page built with Kirki: its blocks as a tree with id, name, HTML tag and text. include_properties: true adds each block\'s stored properties. Kirki saves edits as versions and shows visitors the published one: version "published" (default) reads that, "latest" the newest saved version not yet published; unpublished_changes says whether one exists. Read only: change the layout in Kirki, and title, status and other post fields with the post tools.',
 		};
 	}
 
@@ -83,9 +88,14 @@ final class KirkiRead implements Tool {
 					'type'    => 'boolean',
 					'default' => false,
 				),
+				'version'            => array(
+					'type'    => 'string',
+					'enum'    => array( 'published', 'latest' ),
+					'default' => 'published',
+				),
 			),
 			default => array(),
-		};
+		};//end match
 		return array(
 			'type'                 => 'object',
 			'properties'           => $props,
@@ -163,7 +173,7 @@ final class KirkiRead implements Tool {
 				'not_supported' => 'Changing layouts: a Kirki page is saved as blocks, style blocks and staged versions together; that is not built yet.',
 			),
 			'pages'  => self::pages( $input ),
-			default  => self::get( (int) $input['id'], ! empty( $input['include_properties'] ) ),
+			default  => self::get( (int) $input['id'], ! empty( $input['include_properties'] ), 'latest' === ( $input['version'] ?? 'published' ) ),
 		};
 	}
 
@@ -211,28 +221,51 @@ final class KirkiRead implements Tool {
 	 *
 	 * @param int  $id              Post id.
 	 * @param bool $with_properties Include stored properties.
+	 * @param bool $latest          Read the newest unpublished version instead of the published one.
 	 * @return array<string, mixed>
 	 * @throws ToolError When the post is not built with Kirki.
 	 */
-	private static function get( int $id, bool $with_properties ): array {
+	private static function get( int $id, bool $with_properties, bool $latest = false ): array {
 		$post = $id > 0 ? get_post( $id ) : null;
-		$data = $post instanceof \WP_Post ? call_user_func( array( self::HELPER, 'is_kirki_type_data' ), $post->ID ) : false;
-		if ( ! $post instanceof \WP_Post || ! is_array( $data ) ) {
+		if ( ! $post instanceof \WP_Post || ! is_array( call_user_func( array( self::HELPER, 'is_kirki_type_data' ), $post->ID ) ) ) {
 			throw new ToolError( 'No Kirki page with this id. See kuduy-kirki-pages.' );
 		}
-		$blocks = is_array( $data['blocks'] ?? null ) ? $data['blocks'] : array();
-		$seen   = array();
-		$root   = isset( $blocks['root'] ) ? 'root' : (string) ( array_key_first( $blocks ) ?? '' );
-		$tree   = '' !== $root ? self::tree( $blocks, $root, $with_properties, $seen, 0 ) : null;
+		// Kirki saves each edit as a staged version and publishes one of them (seen on Kirki 6.4.2: Save in the builder
+		// adds an unpublished version, the published one can be empty).
+		$published = self::facade( 'get_published_stage_version', $post->ID );
+		$unpub     = self::facade( 'get_most_recent_unpublished_stage_version', $post->ID );
+		$newer     = $unpub > 0 && $unpub > $published;
+		$data      = call_user_func( array( self::HELPER, 'is_kirki_type_data' ), $post->ID, $latest && $newer ? $unpub : false );
+		$data      = is_array( $data ) ? $data : array();
+		$blocks    = is_array( $data['blocks'] ?? null ) ? $data['blocks'] : array();
+		$seen      = array();
+		$root      = isset( $blocks['root'] ) ? 'root' : (string) ( array_key_first( $blocks ) ?? '' );
+		$tree      = '' !== $root ? self::tree( $blocks, $root, $with_properties, $seen, 0 ) : null;
 		return array(
-			'id'          => $post->ID,
-			'title'       => $post->post_title,
-			'status'      => $post->post_status,
-			'block_count' => count( $blocks ),
-			'root'        => $tree,
-			'link'        => (string) get_permalink( $post ),
-			'read_only'   => true,
+			'id'                  => $post->ID,
+			'title'               => $post->post_title,
+			'status'              => $post->post_status,
+			'version'             => $latest && $newer ? 'latest' : 'published',
+			'unpublished_changes' => $newer,
+			'block_count'         => count( $blocks ),
+			'root'                => $tree,
+			'link'                => (string) get_permalink( $post ),
+			'read_only'           => true,
 		);
+	}
+
+	/**
+	 * A staged version number from Kirki's page facade, or 0 when there is none (or the facade is missing).
+	 *
+	 * @param string $method get_published_stage_version | get_most_recent_unpublished_stage_version.
+	 * @param int    $post_id Post id.
+	 */
+	private static function facade( string $method, int $post_id ): int {
+		if ( ! class_exists( ltrim( self::PAGES, '\\' ) ) || ! is_callable( array( self::PAGES, $method ) ) ) {
+			return 0;
+		}
+		$version = call_user_func( array( self::PAGES, $method ), $post_id );
+		return is_numeric( $version ) ? (int) $version : 0;
 	}
 
 	/**
