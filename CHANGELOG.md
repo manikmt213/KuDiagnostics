@@ -4,6 +4,10 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+## 1.3.7 — 2026-11-16
+
+Blocksy: changed theme settings reach the site's CSS. Distributed as a ZIP for manual upload.
+
 - Checked: theme settings live on GeneratePress 3.6.1, OceanWP 4.2.8, Kadence 1.6.0, Ollie 1.6.6 and Spectra One 1.2.6 (change, page CSS, undo).
 - Fixed: with Blocksy, a changed theme setting was saved but the site's CSS kept the old value until the next save in the Customizer (Blocksy caches theme settings per request; its cache is now cleared before it rebuilds its CSS).
 ## 1.3.6 — 2026-11-16
