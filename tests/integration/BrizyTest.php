@@ -60,7 +60,7 @@ final class BrizyTest extends TestCase {
 											'type'  => 'RichText',
 											'value' => array(
 												'_id'  => 'text1',
-												'text' => '<p class="brz-tp-paragraph">Brizy body text</p>',
+												'text' => '<p class="brz-tp-paragraph">Brizy body</p><p class="brz-tp-paragraph">text</p>',
 											),
 										),
 										array(
@@ -96,6 +96,7 @@ final class BrizyTest extends TestCase {
 		$this->assertSame( BRIZY_VERSION, $status['version'] );
 		$this->assertSame( 'free', $status['edition'] );
 		$this->assertContains( 'page', $status['post_types'] );
+		$this->assertSame( array_values( array_unique( $status['post_types'] ) ), $status['post_types'], 'Each post type once (Brizy 2.8.26 lists its own twice).' );
 		$this->assertTrue( $status['can_build'] );
 		$this->assertStringContainsString( 'Changing layouts', $status['not_supported'] );
 
@@ -115,7 +116,7 @@ final class BrizyTest extends TestCase {
 		$this->assertSame( 'sec1', $page['items'][0]['id'] );
 		$leaves = $page['items'][0]['children'][0]['children'];
 		$this->assertSame( array( 'RichText', 'Button' ), array_column( $leaves, 'type' ) );
-		$this->assertSame( 'Brizy body text', $leaves[0]['text'], 'Text is returned without markup.' );
+		$this->assertSame( 'Brizy body text', $leaves[0]['text'], 'Text without markup; paragraphs keep a space between them (Brizy 2.8.26 stores rich text as several <p>).' );
 		$this->assertSame( 'https://example.org/', $leaves[1]['linkExternal'] );
 		$this->assertArrayNotHasKey( 'values', $leaves[1] );
 

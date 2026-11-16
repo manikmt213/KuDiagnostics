@@ -147,7 +147,19 @@ final class BrizyRead implements Tool {
 	 * @return list<string>
 	 */
 	private static function post_types(): array {
-		return array_values( array_map( 'strval', (array) \Brizy_Editor::get()->supported_post_types() ) );
+		// Brizy 2.8.26 lists its own types twice.
+		return array_values( array_unique( array_map( 'strval', (array) \Brizy_Editor::get()->supported_post_types() ) ) );
+	}
+
+	/**
+	 * Text of a Brizy value: paragraphs and line breaks become spaces (Brizy 2.8.26 rich text is "<p>Title</p><p>Text</p>"),
+	 * tags are removed, spaces collapsed.
+	 *
+	 * @param string $html Stored value.
+	 */
+	private static function plain( string $html ): string {
+		$spaced = (string) preg_replace( '#<br\s*/?>|</(p|div|h[1-6]|li)>#i', '$0 ', $html );
+		return trim( (string) preg_replace( '/\s+/u', ' ', wp_strip_all_tags( $spaced ) ) );
 	}
 
 	/**
@@ -292,7 +304,7 @@ final class BrizyRead implements Tool {
 			);
 			foreach ( array( 'text', 'title', 'linkExternal', 'imageSrc' ) as $key ) {
 				if ( isset( $value[ $key ] ) && is_string( $value[ $key ] ) && '' !== $value[ $key ] ) {
-					$row[ $key ] = mb_substr( trim( wp_strip_all_tags( $value[ $key ] ) ), 0, self::MAX_TEXT );
+					$row[ $key ] = mb_substr( self::plain( $value[ $key ] ), 0, self::MAX_TEXT );
 				}
 			}
 			if ( $with_values ) {

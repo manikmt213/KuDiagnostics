@@ -97,7 +97,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Breakdance | 3.0.0-beta.4 (owner's test site, 2026-11-15) | **Verified on 3.0.0-beta.4**: abilities list, reads, create-post, edit-post, undo (data and rendered page), refusals, over real HTTP; stand-in in CI (BA1–BA4) | Paid; to be checked by the owner |
 | Oxygen | 6.2.0 (owner's test site, 2026-11-15) | **Verified on 6.2.0**: abilities list, reads, create-post, edit-post, undo (data and rendered page), refusals, over real HTTP; stand-in in CI | Paid; Oxygen 4 is a different product and not supported |
 | Kirki (builder) | 6.4.2 | **Tested** in Playground 2026-11-15 (WP 6.9.11 + 7.1.4): KK1–KK3, read only | CI: Kirki job |
-| Brizy | 2.8.26 | **Not verified** — read-only tools built from the source, tested against a stand-in (BZ1–BZ3); Brizy cannot boot on the SQLite test site | CI: stand-in jobs |
+| Brizy | 2.8.26 (free) | **Verified live** on the owner's test site 2026-11-16 (KuDiagnostics 1.3.5): status, pages, structure and values of a page built in Brizy's editor, read only; stand-in in CI (BZ1–BZ3, Brizy cannot boot on SQLite); Brizy Pro not checked | CI: stand-in jobs |
 | Ollie, Spectra One (block themes) | 1.6.6, 1.2.6 | **Tested** in Playground 2026-11-15: TH1 and S1–S5 | CI: one theme job each |
 | Block themes (Site Editor) | Twenty Twenty-Five | **Tested** in Playground 2026-11-10 (WP 6.9.11 + 7.1.4): S1–S5 | Hybrid/classic themes with widget areas: widgets tested with a registered test area |
 | CF7, WPForms, Gravity, Fluent, WPML, Polylang | — | Not tested | Phase 7 |

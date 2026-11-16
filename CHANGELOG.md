@@ -4,6 +4,8 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Fixed: `kuduy-brizy-get` ran the paragraphs of a text together; `kuduy-brizy-status` listed post types twice.
+- Checked: Brizy 2.8.26 on the owner's test site (read tools on a page built in Brizy's editor).
 - Fixed: empty objects in tool results (for example a popup with no triggers yet) were sent as `[]`; they are sent as `{}`, as the tools' output schemas say.
 - Checked: Elementor Pro popups end to end on Elementor Pro 4.0.4 (owner's test site).
 

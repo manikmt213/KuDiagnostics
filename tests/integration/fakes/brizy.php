@@ -24,7 +24,8 @@ class Brizy_Editor {
 		return $instance ?? ( $instance = new self() );
 	}
 	public function supported_post_types() {
-		return apply_filters( 'brizy_supported_post_types', array( 'page', 'post' ) );
+		// Brizy 2.8.26 returns its own types twice (seen on a live site).
+		return apply_filters( 'brizy_supported_post_types', array( 'page', 'post', 'brizy-global-block', 'brizy-global-block' ) );
 	}
 }
 
