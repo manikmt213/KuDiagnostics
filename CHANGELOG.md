@@ -4,6 +4,10 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+## 1.3.5 — 2026-11-16
+
+Elementor Pro popups, and the results of live checks on Elementor 4.4 and Elementor Pro 4.0.4.
+
 - Added: Elementor Pro popups. `kuduy-elementor-popup-settings` and `kuduy-elementor-popup-settings-update` read and change when a popup opens (triggers) and for whom (timing), checked against Pro's own settings, with undo; popups can be created with `kuduy-elementor-create` (`template_type: popup`), listed and placed with the Theme Builder tools.
 - Fixed: `kuduy-elementor-theme-templates` returned template titles as HTML (`&#8211;`), and Theme Builder refusals showed `&quot;`.
 - Checked: Elementor 4.4.0 + Pro 4.0.4 on the owner's test site: create, read, verify, edit, undo, Theme Builder conditions and conflicts.
