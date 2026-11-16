@@ -150,7 +150,7 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 | Customizer settings: list with label, section, control, choices, default and value; change through the setting's own sanitizer and validator; undo (`kuduy-theme-settings`, `kuduy-theme-settings-update`) | Tested (TH2–TH4: Kadence 1.6.0, GeneratePress 3.6.1, OceanWP 4.2.8; core settings on every theme) |
 | Astra settings through Astra's own abilities: list, read, write, undo (`kuduy-astra-abilities`, `-ability-get`, `-ability-run`) | Tested (TH5–TH7: Astra 4.14.2). Works only when the site owner has switched abilities on in Astra > Settings |
 | Block themes Ollie 1.6.6 and Spectra One 1.2.6 with the Site Editor tools | Tested (S1–S5 run on both themes) |
-| Blocksy settings | Tested 2026-11-15 (TH1, TH2, TH4: Blocksy 2.1.61; `maxSiteWidth` lands in its theme mod and undo restores it). Blocksy loads its Customizer registration only when the manager exists at theme load, so that file is included when the tools build the manager |
+| Blocksy settings | Tested 2026-11-15 (TH1, TH2, TH4: Blocksy 2.1.61; TH5 2026-11-16 on 2.1.62: the CSS Blocksy rebuilds after a change has the new value; `maxSiteWidth` lands in its theme mod and undo restores it). Blocksy loads its Customizer registration only when the manager exists at theme load, so that file is included when the tools build the manager |
 | Astra settings without the abilities switch; child themes; header/footer builders of Kadence and OceanWP beyond their registered settings | Not started |
 
 ## Bricks, Divi 5, Etch — added 2026-11-15 (D41)

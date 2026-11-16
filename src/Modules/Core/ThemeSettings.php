@@ -312,6 +312,24 @@ final class ThemeSettings implements Tool, Snapshottable {
 			}
 		}
 		// Themes rebuild their generated CSS on this hook, as after a Customizer publish.
+		self::saved( $manager );
+	}
+
+	/**
+	 * After saving: "customize_save_after", the hook themes rebuild their generated CSS on. Blocksy reads theme mods
+	 * through its own Database class, which keeps them for the whole request outside the admin, the Customizer and
+	 * admin-ajax (Blocksy 2.1.62 inc/classes/database.php) - an MCP call is a REST request, so its CSS rebuild saw the
+	 * old values (seen on a live site). Its public wipe_cache() is called first.
+	 *
+	 * @param \WP_Customize_Manager $manager Manager.
+	 */
+	private static function saved( \WP_Customize_Manager $manager ): void {
+		if ( function_exists( 'blocksy_manager' ) ) {
+			$blocksy = call_user_func( 'blocksy_manager' );
+			if ( is_object( $blocksy ) && isset( $blocksy->db ) && is_object( $blocksy->db ) && method_exists( $blocksy->db, 'wipe_cache' ) ) {
+				$blocksy->db->wipe_cache();
+			}
+		}
 		/** This action is documented in wp-includes/class-wp-customize-manager.php */
 		do_action( 'customize_save_after', $manager ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core's hook.
 	}
@@ -507,8 +525,7 @@ final class ThemeSettings implements Tool, Snapshottable {
 		foreach ( array_keys( $values ) as $id ) {
 			$settings[ (string) $id ]->save();
 		}
-		/** This action is documented in wp-includes/class-wp-customize-manager.php */
-		do_action( 'customize_save_after', $manager ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core's hook.
+		self::saved( $manager );
 		$now = array();
 		foreach ( array_keys( $values ) as $id ) {
 			$now[ (string) $id ] = $settings[ (string) $id ]->value();

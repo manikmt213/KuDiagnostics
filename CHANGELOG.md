@@ -4,6 +4,7 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Fixed: with Blocksy, a changed theme setting was saved but the site's CSS kept the old value until the next save in the Customizer (Blocksy caches theme settings per request; its cache is now cleared before it rebuilds its CSS).
 ## 1.3.6 — 2026-11-16
 
 Fixes from the live checks of Brizy and Kirki, and {} for empty objects in results. Distributed as a ZIP for manual upload (the GitHub repository is not reachable).

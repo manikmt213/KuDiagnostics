@@ -202,4 +202,25 @@ final class ThemeSettingsTest extends TestCase {
 		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $update['_snapshot_id'] ) );
 		$this->assertEquals( $before, $this->root( $id, $type ), 'Undo puts the stored value back exactly.' );
 	}
+
+	/**
+	 * Blocksy keeps theme mods for the whole request outside the admin, so its CSS rebuilt on customize_save_after
+	 * used the old value (Blocksy 2.1.62 on a live site: stored 760, page CSS 750).
+	 */
+	public function test_th5_blocksy_rebuilds_its_css_with_the_new_value(): void {
+		if ( 'blocksy' !== get_stylesheet() || ! function_exists( 'blocksy_get_theme_mod' ) ) {
+			$this->markTestSkipped( 'Blocksy is not the active theme in this run.' );
+		}
+		blocksy_get_theme_mod( 'maxSiteWidth', 1290 ); // Fill Blocksy's per-request cache, as a REST request does.
+		$update = $this->ok( 'kuduy-theme-settings-update', array( 'settings' => array( 'maxSiteWidth' => 1234 ) ) );
+		$styles = get_transient( 'blocksy_dynamic_styles_descriptor' );
+		if ( ! is_array( $styles ) || empty( $styles['styles']['desktop'] ) ) {
+			$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $update['_snapshot_id'] ) );
+			$this->markTestSkipped( 'Blocksy writes its CSS to files on this site.' );
+		}
+		$this->assertStringContainsString( '1234px', (string) $styles['styles']['desktop'], 'The rebuilt CSS has the new width.' );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $update['_snapshot_id'] ) );
+		$styles = get_transient( 'blocksy_dynamic_styles_descriptor' );
+		$this->assertStringNotContainsString( '1234px', (string) ( $styles['styles']['desktop'] ?? '' ), 'Undo rebuilds it with the old width.' );
+	}
 }
