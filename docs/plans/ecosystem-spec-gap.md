@@ -222,3 +222,9 @@ Process per phase is unchanged (memory `v1-round-workflow`): research from sourc
 - Free and testable here: about 30 of the 38 spec integrations. Paid and blocked until a copy arrives: Gravity Forms, JetEngine, JetElements, DCE, Bricksforge, Dynamic Shortcodes, WPML, plus Pro editions (WPForms, ACF, ASE, Formidable, SEO plugins).
 - The final matrix (spec Part 23) is produced from `kuduy-integrations` with the spec's states (`IMPLEMENTED_AND_TESTED`, `REQUIRES_PRO`, `UNSUPPORTED_BY_PLUGIN`, …) mapped from the existing support classes.
 - Each large phase is several working sessions; every phase is useful on its own.
+
+## 7. Research notes (2026-11-16)
+
+- **D54 settled:** wordpress.org lists two separate plugins: `spectra-blocks` (Spectra Blocks 1.0.15) and `ultimate-addons-for-gutenberg` (Spectra Legacy 2.20.6). They get two catalogue rows and two adapters.
+- Free copies confirmed on wordpress.org today: GenerateBlocks 2.5.1, Kadence Blocks 3.9.1, WPForms Lite 2.0.4, Contact Form 7 6.2.5, Flamingo 2.6.4, Fluent Forms 6.2.17, Ninja Forms 3.16.1, Formidable 7.0, ACF 6.8.11, Meta Box 5.15.5 (+ MB Custom Post Types 2.13.1), Pods 3.3.9.2, ACPT Lite 2.1.2, ASE 9.3.3, Element Pack Lite 10.0.8, Happy Addons 3.51.3, HT Mega 3.2.9, Piotnet 2.4.37, PowerPack Lite 3.2.1, Qi Addons 1.11.2, Ultimate Addons for Elementor 2.9.7, Unlimited Elements 2.0.28, Xpro 1.7.11, Code Snippets 4.1.0, Yoast 28.8, Rank Math 1.0.282, AIOSEO 5.0.5.1, SEOPress 10.4, Weglot 6.4.3, UpdraftPlus 1.26.14.
+- Not on wordpress.org (paid or closed): JetEngine, JetElements, Dynamic Content for Elementor, Dynamic Shortcodes (listing closed), Bricksforge, WPML, Gravity Forms.
