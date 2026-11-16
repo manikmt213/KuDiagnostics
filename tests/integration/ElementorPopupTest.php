@@ -90,6 +90,8 @@ final class ElementorPopupTest extends TestCase {
 		$read = $this->ok( 'kuduy-elementor-popup-settings', array( 'id' => $id ) );
 		$this->assertSame( 'Kuduy popup - one', $read['title'], 'Plain text title.' );
 		$this->assertSame( array(), (array) $read['triggers'] );
+		$json = (string) $this->call( 'kuduy-elementor-popup-settings', array( 'id' => $id ) )['content'][0]['text'];
+		$this->assertStringContainsString( '"triggers":{}', $json, 'Empty settings are a JSON object, as the output schema says.' );
 		$triggers = array_column( $read['controls']['triggers'], null, 'name' );
 		$this->assertSame( 'switcher', $triggers['page_load']['type'] );
 		$this->assertSame( 'number', $triggers['page_load_delay']['type'] );

@@ -55,7 +55,8 @@ final class Redactor {
 		if ( $depth > 32 ) {
 			return self::MASK;
 		}
-		if ( is_object( $value ) ) {
+		$was_object = is_object( $value );
+		if ( $was_object ) {
 			$value = get_object_vars( $value );
 		}
 		if ( is_array( $value ) ) {
@@ -69,7 +70,8 @@ final class Redactor {
 					? self::MASK
 					: self::redact( $item, $depth + 1 );
 			}
-			return $out;
+			// An empty object stays an object, so it is sent as {} (a tool's output schema may say "object"), not [].
+			return $was_object && ! $out ? new \stdClass() : $out;
 		}
 		if ( is_string( $value ) ) {
 			foreach ( self::SECRET_VALUE as $pattern ) {

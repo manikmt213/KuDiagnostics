@@ -4,6 +4,9 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Fixed: empty objects in tool results (for example a popup with no triggers yet) were sent as `[]`; they are sent as `{}`, as the tools' output schemas say.
+- Checked: Elementor Pro popups end to end on Elementor Pro 4.0.4 (owner's test site).
+
 ## 1.3.5 — 2026-11-16
 
 Elementor Pro popups, and the results of live checks on Elementor 4.4 and Elementor Pro 4.0.4.
