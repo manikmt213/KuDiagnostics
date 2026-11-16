@@ -543,7 +543,7 @@ final class BeaverWrite implements Tool, Snapshottable {
 		if ( ! $type || ! in_array( $type->name, Beaver::post_types(), true ) || 'fl-builder-template' === $type->name ) {
 			throw new ToolError( 'Beaver Builder is not enabled for this post type. See kuduy-beaver-status.' );
 		}
-		if ( ! \FLBuilderUserAccess::current_user_can( 'builder_access' ) ) {
+		if ( ! Beaver::can_build() ) {
 			throw new ToolError( 'Beaver Builder does not allow your role to use the builder (Settings > Beaver Builder > User Access).' );
 		}
 		$status = (string) ( $input['status'] ?? 'draft' );

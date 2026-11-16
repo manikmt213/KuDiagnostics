@@ -442,4 +442,56 @@ final class BeaverTest extends TestCase {
 		}
 		$this->assertStringNotContainsString( '<script', (string) get_post_field( 'post_content', $page ) );
 	}
+
+	/**
+	 * Beaver caches its access settings on first read (on `init`), from get_editable_roles(). Over REST the user is
+	 * not known then, and WooCommerce's editable_roles filter drops "administrator" for a guest, so Beaver's own
+	 * check says no for an administrator for the rest of the request (Beaver Lite 2.11.1.2 + WooCommerce 11.3.0).
+	 */
+	public function test_bb7_builder_access_cached_before_the_user_was_known(): void {
+		$cache = new \ReflectionProperty( \FLBuilderUserAccess::class, 'settings' );
+		$cache->setAccessible( true );
+		$no_admin = static function ( array $roles ): array {
+			unset( $roles['administrator'] );
+			return $roles;
+		};
+		try {
+			$cache->setValue( null, null );
+			wp_set_current_user( 0 );
+			add_filter( 'editable_roles', $no_admin );
+			\FLBuilderUserAccess::current_user_can( 'builder_access' );
+			remove_filter( 'editable_roles', $no_admin );
+			wp_set_current_user( self::$admin );
+			$this->assertFalse( \FLBuilderUserAccess::current_user_can( 'builder_access' ), 'Precondition: the cache Beaver built for a guest refuses the administrator.' );
+
+			$status = $this->ok( 'kuduy-beaver-status' );
+			$this->assertTrue( $status['can_build'] );
+			$this->assertSame( array_values( array_unique( $status['post_types'] ) ), $status['post_types'], 'Each post type once.' );
+			$made = $this->ok(
+				'kuduy-beaver-create',
+				array(
+					'title' => 'Kuduy beaver access',
+					'rows'  => array(
+						array(
+							'columns' => array(
+								array(
+									array(
+										'module'   => 'heading',
+										'settings' => array( 'heading' => 'Access' ),
+									),
+								),
+							),
+						),
+					),
+				)
+			);
+			$this->assertGreaterThan( 0, $made['id'] );
+
+			wp_set_current_user( self::$author );
+			$this->assertFalse( $this->ok( 'kuduy-beaver-status' )['can_build'], 'Authors are not among the default Builder Access roles.' );
+		} finally {
+			remove_filter( 'editable_roles', $no_admin );
+			$cache->setValue( null, null );
+		}
+	}
 }

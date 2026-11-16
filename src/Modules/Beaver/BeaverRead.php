@@ -169,7 +169,7 @@ final class BeaverRead implements Tool {
 			'edition'    => defined( 'FL_BUILDER_LITE' ) && constant( 'FL_BUILDER_LITE' ) ? 'lite' : 'paid',
 			'post_types' => Beaver::post_types(),
 			'modules'    => count( (array) \FLBuilderModel::$modules ),
-			'can_build'  => (bool) \FLBuilderUserAccess::current_user_can( 'builder_access' ),
+			'can_build'  => Beaver::can_build(),
 		);
 	}
 

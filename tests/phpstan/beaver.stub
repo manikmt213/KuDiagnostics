@@ -11,6 +11,10 @@ namespace {
 
 	class FLBuilderUserAccess {
 		public static function current_user_can( string $key ): bool {}
+		/** @return array<string, array<string, mixed>> */
+		public static function get_registered_settings() {}
+		/** @return array<string, mixed> */
+		public static function get_raw_settings() {}
 	}
 
 	class FLBuilderModel {

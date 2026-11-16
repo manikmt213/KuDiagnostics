@@ -121,7 +121,7 @@ Reviewed while building, against Beaver Builder Lite 2.11.1.2.
 
 | Risk | Control |
 |---|---|
-| Editing without permission | `edit_post` per page, `create_posts` / `publish_posts` on create, plus Beaver Builder's own per-role `builder_access` |
+| Editing without permission | `edit_post` per page, `create_posts` / `publish_posts` on create, plus Beaver Builder's own per-role `builder_access`. When Beaver's cached answer is no (its cache can be built before a REST request's user is known), the same rule is applied to the actual user from Beaver's saved settings and registered defaults; a role saved as "no" stays refused, and users without `edit_posts` are refused (BB7) |
 | Unsafe markup or code | Beaver Builder's `verify_settings()` (kses) for users without `unfiltered_html`; such settings are refused, not silently changed (BB6) |
 | Destroying a layout | Operations run on the draft and publish once; a failed operation discards the draft (BB4); snapshot of layout data, layout settings and post content, undo with `kuduy-snapshot-restore` (BB3). The snapshot is PHP-serialized node data read back with `allowed_classes` limited to `stdClass` |
 | Overwriting someone's work | Layouts with unpublished changes in the builder are refused (BB5) |

@@ -4,6 +4,9 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Fixed: on sites with WooCommerce, the Beaver Builder tools refused administrators ("does not allow your role to use the builder"): Beaver works out builder access before a REST request's user is known. KuDiagnostics now checks Beaver's access rule for the actual user.
+- Fixed: `kuduy-beaver-status` listed the template post type twice.
+
 ## 1.3.3 — 2026-11-16
 
 Fixes from live checks on real Bricks 2.4.5 and Divi 5.19.0 sites.

@@ -186,7 +186,8 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 
 | Feature | Status |
 |---|---|
-| Status, modules and module settings (`kuduy-beaver-status`, `-modules`, `-module-schema`) | Tested (BB1; Beaver Builder Lite 2.11.1.2, WP 6.9 + 7.1) |
+| Status, modules and module settings (`kuduy-beaver-status`, `-modules`, `-module-schema`) | Tested (BB1; Beaver Builder Lite 2.11.1.2, WP 6.9 + 7.1; status and modules read live on 2.11.1.2, 2026-11-16) |
+| Builder access over REST with WooCommerce active (Beaver's access cache built before the user is known) | Tested (BB7, and a local HTTP repro with WooCommerce 11.3.0) |
 | List layouts; read a layout as a tree with changed settings (`kuduy-beaver-layouts`, `-get`) | Tested (BB2) |
 | Create a page from rows, columns and modules (`kuduy-beaver-create`) | Tested (BB2: layout, builder flag, text in `post_content`; nothing created when a module is invalid) |
 | Edit: add row / columns / module, update settings, move, duplicate, remove; all-or-nothing; undo (`kuduy-beaver-edit`) | Tested (BB3, BB4) |

@@ -46,7 +46,41 @@ final class Beaver {
 	 * @return list<string>
 	 */
 	public static function post_types(): array {
-		return array_values( array_map( 'strval', (array) \FLBuilderModel::get_post_types() ) );
+		// Beaver Builder Lite 2.11.1.2 lists fl-builder-template twice.
+		return array_values( array_unique( array_map( 'strval', (array) \FLBuilderModel::get_post_types() ) ) );
+	}
+
+	/**
+	 * Whether Beaver Builder lets the current user use the builder ("Builder Access" in its User Access settings).
+	 *
+	 * FLBuilderUserAccess caches its settings the first time they are read, which is on `init`, from the roles
+	 * get_editable_roles() returns at that moment. Over the REST API the user is not known yet then, and WooCommerce's
+	 * `editable_roles` filter drops "administrator" for a guest, so the cache has no entry for administrators and they
+	 * are refused for the rest of the request (Beaver Builder Lite 2.11.1.2 + WooCommerce 11.3.0, seen on a live site
+	 * and reproduced locally). When Beaver's answer is no, the same rule is applied to the actual user with Beaver's
+	 * public data: the saved value for each of the user's roles, else the registered default roles.
+	 */
+	public static function can_build(): bool {
+		if ( \FLBuilderUserAccess::current_user_can( 'builder_access' ) ) {
+			return true;
+		}
+		$user = wp_get_current_user();
+		// Beaver offers the builder only to roles that can edit posts (FLBuilderUserAccess::get_all_roles()).
+		if ( ! user_can( $user, 'edit_posts' ) ) {
+			return false;
+		}
+		$roles = (array) $user->roles;
+		if ( is_multisite() && is_super_admin() ) {
+			$roles[] = 'administrator';
+		}
+		$saved    = (array) ( \FLBuilderUserAccess::get_raw_settings()['builder_access'] ?? array() );
+		$defaults = (array) ( \FLBuilderUserAccess::get_registered_settings()['builder_access']['default'] ?? array() );
+		foreach ( $roles as $role ) {
+			if ( array_key_exists( $role, $saved ) ? (bool) $saved[ $role ] : in_array( $role, $defaults, true ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -61,7 +95,7 @@ final class Beaver {
 		if ( ! $post instanceof \WP_Post || ! in_array( $post->post_type, self::post_types(), true ) ) {
 			throw new ToolError( 'No Beaver Builder page with this id. See kuduy-beaver-layouts.' );
 		}
-		if ( ! \FLBuilderUserAccess::current_user_can( 'builder_access' ) ) {
+		if ( ! self::can_build() ) {
 			throw new ToolError( 'Beaver Builder does not allow your role to use the builder (Settings > Beaver Builder > User Access).' );
 		}
 		if ( $built && ! get_post_meta( $post->ID, '_fl_builder_enabled', true ) ) {
