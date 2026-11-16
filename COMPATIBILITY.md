@@ -67,6 +67,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Xpro Elementor Addons, Element Pack Lite, Piotnet Addons | 1.7.11, 10.0.5, 2.4.37 | **Tested** 2026-11-14 (EL9b) | CI: add-ons C job. Xpro and Piotnet publish no versioned ZIP, so CI takes their current release |
 | Unlimited Elements for Elementor | 2.0.28 | **Not tested** — a fresh install registers no Elementor widgets | |
 | JetElements | — | Not tested | Paid; not available |
+| Elementor Pro popups | 4.0.4 (source read on the owner's site) | **Built, not yet verified on Pro**: settings tools tested against a stand-in (EP1–EP4); live check after release (EP5) | CI: popup stand-in job on WP 7.1 |
 | Elementor Pro | 4.3.2 | **Tested** 2026-11-05 (EL8, Theme Builder) with Elementor 4.3.6 on WP 7.1.4/PHP 8.3.36 and WP 6.9.11/PHP 8.1.34. Needs Elementor core 4.0+ | Local tests only (licensed ZIP, never in CI or the repo) |
 | Elementor Pro | 4.0.4 | **Tested** on Hostinger staging (EL10, claude.ai connector): 2026-11-05 Pro widgets listed with `plugin`, Theme Builder templates listed, draft header created; 2026-11-09 (KUDUY 0.6.0, `kuduy:admin`) display conditions set, conflict with the live header refused, conditions cleared | Real host, with Elementor 4.3.6 |
 | WooCommerce | 11.2.1 | Coexists (smoke, tunnel site) | Before the Woo tools |

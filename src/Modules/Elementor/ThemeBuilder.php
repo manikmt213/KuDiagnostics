@@ -21,9 +21,11 @@ use Kuduy\Mcp\Mcp\ToolError;
 final class ThemeBuilder implements Tool, Snapshottable {
 
 	/**
-	 * Theme Builder template types in Elementor Pro 4.3.2 (modules/theme-builder/documents).
+	 * Theme Builder template types in Elementor Pro 4.3.2 (modules/theme-builder/documents), plus popup
+	 * (modules/popup: a Theme_Section_Document whose location allows several templates on one page, so Pro reports no
+	 * conflicts for it; read on Pro 4.0.4).
 	 */
-	public const TYPES = array( 'header', 'footer', 'single', 'single-post', 'single-page', 'archive', 'search-results', 'error-404', 'section' );
+	public const TYPES = array( 'header', 'footer', 'single', 'single-post', 'single-page', 'archive', 'search-results', 'error-404', 'section', 'popup' );
 
 	private const MODULE = '\ElementorPro\Modules\ThemeBuilder\Module';
 
@@ -79,8 +81,8 @@ final class ThemeBuilder implements Tool, Snapshottable {
 	 */
 	public function description(): string {
 		return 'templates' === $this->mode
-			? 'Lists Elementor Pro Theme Builder templates (header, footer, single, archive, 404, …) with their location, display conditions, whether they are live (published with an include condition) and conflicts with other templates of the same location. Create one with kuduy-elementor-create and template_type; edit its content with kuduy-elementor-edit.'
-			: 'Replaces the display conditions of a Theme Builder template, e.g. ["include/general"] (entire site), ["include/singular/page"], ["include/singular/page/42"], ["exclude/archive/category/5"]; [] removes them all. Format: include|exclude / condition / sub-condition / object id. Refuses a condition another template of the same location already uses unless allow_conflicts is true. Snapshot first; undo with kuduy-snapshot-restore.';
+			? 'Lists Elementor Pro Theme Builder templates (header, footer, single, archive, 404, popup, …) with their location, display conditions, whether they are live (published with an include condition) and conflicts with other templates of the same location. Create one with kuduy-elementor-create and template_type; edit its content with kuduy-elementor-edit.'
+			: 'Replaces the display conditions of a Theme Builder template, e.g. ["include/general"] (entire site), ["include/singular/page"], ["include/singular/page/42"], ["exclude/archive/category/5"]; [] removes them all. Format: include|exclude / condition / sub-condition / object id. Refuses a condition another template of the same location already uses unless allow_conflicts is true (popups may share conditions). Popup triggers and timing: kuduy-elementor-popup-settings-update. Snapshot first; undo with kuduy-snapshot-restore.';
 	}
 
 	/**
@@ -433,8 +435,8 @@ final class ThemeBuilder implements Tool, Snapshottable {
 		$includes = array_values( array_filter( $conditions, static fn( $c ) => str_starts_with( $c, 'include/' ) ) );
 		return array(
 			'id'         => $post->ID,
-			// get_the_title() is HTML (wptexturize turns "-" into &#8211;); the tools return plain text.
-			'title'      => html_entity_decode( get_the_title( $post ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
+			// The stored title: get_the_title() is HTML run through wptexturize ("-" becomes &#8211;).
+			'title'      => (string) $post->post_title,
 			'type'       => (string) get_post_meta( $post->ID, '_elementor_template_type', true ),
 			'status'     => $post->post_status,
 			'location'   => (string) $doc->get_location(),

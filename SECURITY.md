@@ -115,6 +115,14 @@ No high findings open.
 | Switching on features behind the owner's back | Astra's abilities switch is never changed by KuDiagnostics; when it is off the tools say so |
 | Secrets in settings | The redactor runs on every result as for all tools |
 
+## 4e. Elementor Pro popups (2026-11-16, D42)
+
+| Risk | Control |
+|---|---|
+| Changing popups without permission | `kuduy:write` + `edit_post` on the popup + Elementor's `is_editable_by_current_user()`; where a popup shows (conditions) stays behind `kuduy:admin` + `edit_theme_options` (kuduy-elementor-theme-conditions) |
+| Invalid values reaching visitors' browsers | Every value checked against Pro's own control (type, options, min/max, date form); text through `sanitize_text_field()`; hidden and label controls never set; one bad value saves nothing (EP3) |
+| No way back | Snapshot of the stored triggers and timing; undo saves them back through Pro's method (EP2) |
+
 ## 4d. Beaver Builder tools (2026-11-14, D37)
 
 Reviewed while building, against Beaver Builder Lite 2.11.1.2.

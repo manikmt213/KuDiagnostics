@@ -152,3 +152,24 @@ namespace ElementorPro\Modules\ThemeBuilder\Documents {
 		public function get_location() {}
 	}
 }
+
+namespace ElementorPro\Modules\Popup {
+
+	/** Elementor Pro 4.0.4 modules/popup/document.php (read on the owner's site, 2026-11-16). */
+	class Document extends \ElementorPro\Modules\ThemeBuilder\Documents\Theme_Document {
+		/** @return array<string, object> Triggers and Timing control stacks (Elementor\Controls_Stack). */
+		public function get_display_settings() {}
+		/** @return array<string, mixed>|false */
+		public function get_display_settings_data() {}
+		/** @param array<string, mixed> $display_settings_data Triggers and timing. */
+		public function save_display_settings_data( $display_settings_data ) {}
+	}
+}
+
+namespace Elementor\Core\Frontend {
+
+	/** Elementor 4.3.6 core/frontend/performance.php (tests reset its cached front-end flag). */
+	class Performance {
+		public static function should_optimize_controls(): bool {}
+	}
+}
