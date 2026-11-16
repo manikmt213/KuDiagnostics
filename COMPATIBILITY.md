@@ -56,7 +56,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 |---|---|---|---|
 | Elementor | 4.3.6 | **Tested** (EL1–EL7, EL11; EL10 with claude.ai on Hostinger staging, WP 7.1.4, 2026-11-05) | CI: WP 7.1 / PHP 8.3 |
 | Elementor | 3.35.9 (latest 3.x) | **Tested** (EL1–EL7; v4 tools report unavailable) | CI: WP 6.9 / PHP 8.1 |
-| Beaver Builder Lite | 2.11.1.2 | **Tested** in Playground 2026-11-14 (WP 6.9.11 + 7.1.4): BB1–BB7; with WooCommerce 11.3.0 over real HTTP (2026-11-16). Live site: status and modules read; writes refused on 1.3.3 (fixed on main, not yet re-run live) | CI: Beaver Builder job on both pairs. Paid versions not tested |
+| Beaver Builder Lite | 2.11.1.2 | **Tested** in Playground 2026-11-14 (WP 6.9.11 + 7.1.4): BB1–BB7; with WooCommerce 11.3.0 over real HTTP (2026-11-16). **Verified live on 2.11.1.2** with KuDiagnostics 1.3.4 and WooCommerce 11.3.0 (2026-11-16): status, create, read, edit, undo, rendered page | CI: Beaver Builder job on both pairs. Paid versions not tested |
 | WPBakery Page Builder | 9.1 (owner's test site, 2026-11-15) | **Verified on 9.1** for elements, create, tree, add/update element, validate and undo, over real HTTP; WB1–WB12 against a stand-in in CI; behaviour in WPBakery's own editor after a save still open (WB13) | CI: both pairs with `KUDUY_FAKES=wpbakery`; see `docs/WPBAKERY.md` |
 | Avada / Avada Builder / Avada Core | format and API read from 7.16.4 / 3.16.4 / 5.16.4 (2026-11-13) | **Tested** (AV1–AV10 against a stand-in; AV11 on real Avada 7.16.4 / Builder 3.16.4 / Core 5.16.3, staging, 2026-11-13) | CI: both pairs with `KUDUY_FAKES=avada`; see `docs/AVADA.md` |
 | Essential Addons for Elementor (lite) | 6.8.8 | **Tested** (EL9) | CI: WP 7.1 job |
