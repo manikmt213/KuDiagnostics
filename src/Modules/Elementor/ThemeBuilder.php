@@ -314,7 +314,8 @@ final class ThemeBuilder implements Tool, Snapshottable {
 		$conflicts = $this->conflicts( $id, $conditions );
 		if ( $conflicts && empty( $input['allow_conflicts'] ) ) {
 			$names = array_map( static fn( $c ) => '"' . $c['template_title'] . '" (id ' . $c['template_id'] . ', ' . $c['condition'] . ')', $conflicts );
-			throw new ToolError( 'Another template of this location already uses these conditions: ' . esc_html( implode( '; ', $names ) ) . '. Nothing was changed. Change or clear its conditions first, or pass allow_conflicts: true (Elementor then shows one of them).' );
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- returned as JSON text, never HTML; titles are tag-stripped.
+			throw new ToolError( 'Another template of this location already uses these conditions: ' . implode( '; ', $names ) . '. Nothing was changed. Change or clear its conditions first, or pass allow_conflicts: true (Elementor then shows one of them).' );
 		}
 		$this->store( $id, $conditions );
 		$fresh = self::module()->get_document( $id );
@@ -333,7 +334,8 @@ final class ThemeBuilder implements Tool, Snapshottable {
 		$config                              = (array) self::module()->get_conditions_manager()->get_conditions_config();
 		$top                                 = array_merge( array( 'general' ), array_map( 'strval', (array) ( $config['general']['sub_conditions'] ?? array() ) ) );
 		$fail                                = static function ( string $why ) use ( $condition ): void {
-			throw new ToolError( 'Condition "' . esc_html( $condition ) . '": ' . esc_html( $why ) . ' Known conditions: ' . esc_html( implode( ', ', array_keys( (array) self::module()->get_conditions_manager()->get_conditions_config() ) ) ) . '.' );
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- returned as JSON text, never HTML; the condition matched the input pattern.
+			throw new ToolError( 'Condition "' . $condition . '": ' . $why . ' Known conditions: ' . implode( ', ', array_keys( (array) self::module()->get_conditions_manager()->get_conditions_config() ) ) . '.' );
 		};
 		if ( ! in_array( $type, array( 'include', 'exclude' ), true ) ) {
 			$fail( 'must start with include or exclude.' );
@@ -431,7 +433,8 @@ final class ThemeBuilder implements Tool, Snapshottable {
 		$includes = array_values( array_filter( $conditions, static fn( $c ) => str_starts_with( $c, 'include/' ) ) );
 		return array(
 			'id'         => $post->ID,
-			'title'      => get_the_title( $post ),
+			// get_the_title() is HTML (wptexturize turns "-" into &#8211;); the tools return plain text.
+			'title'      => html_entity_decode( get_the_title( $post ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
 			'type'       => (string) get_post_meta( $post->ID, '_elementor_template_type', true ),
 			'status'     => $post->post_status,
 			'location'   => (string) $doc->get_location(),

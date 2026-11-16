@@ -54,6 +54,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 
 | Plugin | Version | Status | Notes |
 |---|---|---|---|
+| Elementor | 4.4.0 (+ Pro 4.0.4) | **Verified live** on the owner's test site 2026-11-16 with KuDiagnostics 1.3.4: create, get, verify, edit, undo, widgets, Theme Builder conditions and conflicts; popups not covered (no popup tools yet) | |
 | Elementor | 4.3.6 | **Tested** (EL1–EL7, EL11; EL10 with claude.ai on Hostinger staging, WP 7.1.4, 2026-11-05) | CI: WP 7.1 / PHP 8.3 |
 | Elementor | 3.35.9 (latest 3.x) | **Tested** (EL1–EL7; v4 tools report unavailable) | CI: WP 6.9 / PHP 8.1 |
 | Beaver Builder Lite | 2.11.1.2 | **Tested** in Playground 2026-11-14 (WP 6.9.11 + 7.1.4): BB1–BB7; with WooCommerce 11.3.0 over real HTTP (2026-11-16). **Verified live on 2.11.1.2** with KuDiagnostics 1.3.4 and WooCommerce 11.3.0 (2026-11-16): status, create, read, edit, undo, rendered page | CI: Beaver Builder job on both pairs. Paid versions not tested |

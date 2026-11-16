@@ -4,6 +4,9 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Fixed: `kuduy-elementor-theme-templates` returned template titles as HTML (`&#8211;`), and Theme Builder refusals showed `&quot;`.
+- Checked: Elementor 4.4.0 + Pro 4.0.4 on the owner's test site: create, read, verify, edit, undo, Theme Builder conditions and conflicts.
+
 ## 1.3.4 — 2026-11-16
 
 Beaver Builder on sites with WooCommerce: administrators can use the Beaver tools again.

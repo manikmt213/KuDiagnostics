@@ -106,8 +106,9 @@ final class ElementorThemeBuilderTest extends TestCase {
 		$this->assertTrue( $this->listed( $first['id'] )['live'] );
 
 		// Same location, same condition: refused unless allowed.
-		$second = $this->header( 'Kuduy header two' );
-		$text   = $this->fails(
+		$second = $this->header( 'Kuduy header - two' );
+		$this->assertSame( 'Kuduy header - two', $this->listed( $second['id'] )['title'], 'Plain text, not wptexturize HTML (&#8211;).' );
+		$text = $this->fails(
 			'kuduy-elementor-theme-conditions',
 			array(
 				'id'         => $second['id'],
@@ -116,6 +117,7 @@ final class ElementorThemeBuilderTest extends TestCase {
 			'a conflicting condition is refused'
 		);
 		$this->assertStringContainsString( (string) $first['id'], $text );
+		$this->assertStringContainsString( '"Kuduy header one"', $text, 'Quotes stay quotes in JSON text.' );
 		$this->assertSame( '', get_post_meta( $second['id'], '_elementor_conditions', true ), 'nothing saved on refusal' );
 
 		$allowed = $this->ok(
