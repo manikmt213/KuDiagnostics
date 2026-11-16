@@ -4,6 +4,10 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+## 1.3.3 — 2026-11-16
+
+Fixes from live checks on real Bricks 2.4.5 and Divi 5.19.0 sites.
+
 - Fixed: `kuduy-divi-get` shows the text of Divi 5 modules (Divi keeps it in the block attributes); `kuduy-divi-pages` no longer lists Divi's internal posts.
 - Checked: Divi 5.19.0 on the owner's test site with a page built in Divi's Visual Builder.
 - Changed: the Bricks tools no longer list bricks/update-popup-settings as runnable: it names the popup by template id and keeps its settings outside the page data KuDiagnostics saves for undo.
