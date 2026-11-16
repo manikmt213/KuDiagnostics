@@ -4,6 +4,10 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+## 1.3.6 — 2026-11-16
+
+Fixes from the live checks of Brizy and Kirki, and {} for empty objects in results. Distributed as a ZIP for manual upload (the GitHub repository is not reachable).
+
 - Changed: `kuduy-kirki-get` tells whether a page has unpublished changes and reads them with `version: latest` (Kirki saves edits as versions; visitors see the published one).
 - Checked: Kirki 6.4.2 on the owner's test site (status, pages, a page saved but not yet published).
 - Fixed: `kuduy-brizy-get` ran the paragraphs of a text together; `kuduy-brizy-status` listed post types twice.
