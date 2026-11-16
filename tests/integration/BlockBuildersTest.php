@@ -27,6 +27,8 @@ final class BlockBuildersTest extends TestCase {
 
 	private static int $etch;
 
+	private static int $internal;
+
 	public static function setUpBeforeClass(): void {
 		if ( ! \WP_Block_Type_Registry::get_instance()->is_registered( 'divi/section' ) ) {
 			self::markTestSkipped( 'The Divi / Etch block stand-in is not loaded in this run (KUDUY_FAKES=blockbuilders).' );
@@ -48,14 +50,29 @@ final class BlockBuildersTest extends TestCase {
 				)
 			)
 		);
-		self::$divi   = $make(
+		// As Divi 5.19.0 saved a page built in its Visual Builder (owner's site, 2026-11-16), plus a text module.
+		self::$divi = $make(
 			'Kuduy divi page',
-			'<!-- wp:divi/placeholder --><!-- wp:divi/section {"module":{"meta":{"adminLabel":{"desktop":{"value":"Hero"}}}}} --><!-- wp:divi/row --><!-- wp:divi/column -->'
-			. '<!-- wp:divi/text {"content":{"innerContent":{"desktop":{"value":"Divi text value"}}}} /-->'
-			. '<!-- /wp:divi/column --><!-- /wp:divi/row --><!-- /wp:divi/section --><!-- /wp:divi/placeholder -->'
+			'<!-- wp:divi/placeholder --><!-- wp:divi/section {"module":{"meta":{"adminLabel":{"desktop":{"value":"Hero"}}},"decoration":{"layout":{"desktop":{"value":{"display":"block"}}}}},"builderVersion":"5.0.0-public-alpha.18.2"} -->' . "\n"
+			. '<!-- wp:divi/row {"module":{"meta":{"adminLabel":{"desktop":{"value":"Row"}}}},"builderVersion":"5.0.0-public-alpha.18.2"} -->' . "\n"
+			. '<!-- wp:divi/column {"module":{"advanced":{"type":{"desktop":{"value":"4_4"}}}},"builderVersion":"5.0.0-public-alpha.18.2"} -->' . "\n"
+			. '<!-- wp:divi/text {"content":{"innerContent":{"desktop":{"value":"Divi text value"}}}} /-->' . "\n"
+			. '<!-- wp:divi/heading {"title":{"innerContent":{"desktop":{"value":"Divi live check heading"}}},"builderVersion":"5.19.0"} /-->' . "\n\n"
+			. '<!-- wp:divi/button {"button":{"innerContent":{"desktop":{"value":{"text":"Live check button"}}}},"builderVersion":"5.19.0"} /-->' . "\n"
+			. '<!-- /wp:divi/column -->' . "\n" . '<!-- /wp:divi/row -->' . "\n" . '<!-- /wp:divi/section --><!-- /wp:divi/placeholder -->'
 		);
-		self::$divi4  = $make( 'Kuduy divi4 page', '[et_pb_section][et_pb_row][et_pb_column type="4_4"][et_pb_text]Old Divi[/et_pb_text][/et_pb_column][/et_pb_row][/et_pb_section]' );
-		self::$etch   = $make(
+		// Divi 5 keeps an internal post with module markup (_et_pb_speculation, "Visual Builder Asset Prerender").
+		register_post_type( 'kuduy_internal', array( 'public' => false ) );
+		self::$internal = (int) wp_insert_post(
+			array(
+				'post_type'    => 'kuduy_internal',
+				'post_title'   => 'Kuduy internal',
+				'post_status'  => 'publish',
+				'post_content' => '<!-- wp:divi/section /-->',
+			)
+		);
+		self::$divi4    = $make( 'Kuduy divi4 page', '[et_pb_section][et_pb_row][et_pb_column type="4_4"][et_pb_text]Old Divi[/et_pb_text][/et_pb_column][/et_pb_row][/et_pb_section]' );
+		self::$etch     = $make(
 			'Kuduy etch page',
 			'<!-- wp:etch/element {"tag":"section","attributes":{"class":"hero"}} --><section class="hero"><!-- wp:etch/text --><p>Etch text</p><!-- /wp:etch/text --></section><!-- /wp:etch/element -->'
 		);
@@ -70,14 +87,20 @@ final class BlockBuildersTest extends TestCase {
 		$this->assertSame( 'blocks', $pages[ self::$divi ]['format'] );
 		$this->assertSame( 'divi4', $pages[ self::$divi4 ]['format'], 'Divi 4 pages are listed as such.' );
 		$this->assertArrayNotHasKey( self::$etch, $pages );
+		$this->assertArrayNotHasKey( self::$internal, $pages, 'Post types without an admin screen are the builder\'s own, not pages.' );
 
 		$page = $this->ok( 'kuduy-divi-get', array( 'id' => self::$divi ) );
 		$this->assertTrue( $page['read_only'] );
-		$this->assertSame( 5, $page['count'] );
+		$this->assertSame( 7, $page['count'] );
 		$this->assertSame( 'divi/placeholder', $page['blocks'][0]['name'] );
-		$text = $page['blocks'][0]['children'][0]['children'][0]['children'][0]['children'][0];
+		$modules = $page['blocks'][0]['children'][0]['children'][0]['children'][0]['children'];
+		$text    = $modules[0];
 		$this->assertSame( 'divi/text', $text['name'] );
+		$this->assertSame( 'Divi text value', $text['text'], 'Divi 5 keeps module text in attributes, not in the block HTML.' );
 		$this->assertArrayNotHasKey( 'attributes', $text );
+		$this->assertSame( array( 'divi/heading', 'Divi live check heading' ), array( $modules[1]['name'], $modules[1]['text'] ) );
+		$this->assertSame( array( 'divi/button', 'Live check button' ), array( $modules[2]['name'], $modules[2]['text'] ) );
+		$this->assertArrayNotHasKey( 'text', $page['blocks'][0]['children'][0], 'An admin label is not page text.' );
 
 		$full = $this->ok(
 			'kuduy-divi-get',

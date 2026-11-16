@@ -130,7 +130,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 		return match ( $this->mode ) {
 			'abilities'   => 'Lists what ' . $b . ' lets an assistant do through its own abilities (read a page as an element tree, edit elements, create pages, element schemas, …): name, label, description, read or write, and whether it can be run here. With name it returns that ability\'s input schema. They come with ' . $c['since'] . ' and are switched on with ' . $c['switch'] . '; the list says so when they are off.',
 			'ability-get' => 'Runs one of ' . $b . '\'s read abilities and returns its data, e.g. ' . $c['get'] . '. Names and inputs: kuduy-' . $n . '-abilities.',
-			default       => 'Runs one of ' . $b . '\'s write abilities with the input it declares, e.g. ' . $c['run'] . '. ' . $b . ' validates the input and checks its own permissions. Only abilities that work on one post (input post_id) or create something new are run; site-wide settings are left to the builder. Snapshot of that post\'s builder data first; undo with kuduy-snapshot-restore.',
+			default       => 'Runs one of ' . $b . '\'s write abilities with the input it declares, e.g. ' . $c['run'] . '. ' . $b . ' validates the input and checks its own permissions. Only abilities that work on one post named by its numeric id (post_id or postId) or create something new are run' . ( null !== $c['allow'] ? ', and only ' . $b . '\'s page-level ones (see kuduy-' . $n . '-abilities)' : '' ) . '; site-wide settings are left to the builder. Snapshot of that post\'s builder data first; undo with kuduy-snapshot-restore.',
 		};
 	}
 

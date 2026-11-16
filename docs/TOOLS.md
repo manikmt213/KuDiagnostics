@@ -664,7 +664,7 @@ Scope `kuduy:read` · read only
 
 ### `kuduy-breakdance-ability-run` — Change a Breakdance page
 
-Runs one of Breakdance's write abilities with the input it declares, e.g. breakdance/edit-post (element operations on one page, applied together) or breakdance/create-post. Breakdance validates the input and checks its own permissions. Only abilities that work on one post (input post_id) or create something new are run; site-wide settings are left to the builder. Snapshot of that post's builder data first; undo with kuduy-snapshot-restore.
+Runs one of Breakdance's write abilities with the input it declares, e.g. breakdance/edit-post (element operations on one page, applied together) or breakdance/create-post. Breakdance validates the input and checks its own permissions. Only abilities that work on one post named by its numeric id (post_id or postId) or create something new are run; site-wide settings are left to the builder. Snapshot of that post's builder data first; undo with kuduy-snapshot-restore.
 
 Scope `kuduy:admin` · changes data (undo where noted)
 
@@ -696,7 +696,7 @@ Scope `kuduy:read` · read only
 
 ### `kuduy-oxygen-ability-run` — Change a Oxygen page
 
-Runs one of Oxygen's write abilities with the input it declares, e.g. oxygen/edit-post (element operations on one page, applied together) or oxygen/create-post. Oxygen validates the input and checks its own permissions. Only abilities that work on one post (input post_id) or create something new are run; site-wide settings are left to the builder. Snapshot of that post's builder data first; undo with kuduy-snapshot-restore.
+Runs one of Oxygen's write abilities with the input it declares, e.g. oxygen/edit-post (element operations on one page, applied together) or oxygen/create-post. Oxygen validates the input and checks its own permissions. Only abilities that work on one post named by its numeric id (post_id or postId) or create something new are run; site-wide settings are left to the builder. Snapshot of that post's builder data first; undo with kuduy-snapshot-restore.
 
 Scope `kuduy:admin` · changes data (undo where noted)
 
@@ -728,7 +728,7 @@ Scope `kuduy:read` · read only
 
 ### `kuduy-bricks-ability-run` — Change a Bricks page
 
-Runs one of Bricks's write abilities with the input it declares, e.g. bricks/set-page-elements (the elements of one page). Bricks validates the input and checks its own permissions. Only abilities that work on one post (input post_id) or create something new are run; site-wide settings are left to the builder. Snapshot of that post's builder data first; undo with kuduy-snapshot-restore.
+Runs one of Bricks's write abilities with the input it declares, e.g. bricks/update-element {"postId": 12, "elementId": "abc123", "settings": {…}} or bricks/set-page-elements (all elements of one page). Bricks validates the input and checks its own permissions. Only abilities that work on one post named by its numeric id (post_id or postId) or create something new are run, and only Bricks's page-level ones (see kuduy-bricks-abilities); site-wide settings are left to the builder. Snapshot of that post's builder data first; undo with kuduy-snapshot-restore.
 
 Scope `kuduy:admin` · changes data (undo where noted)
 

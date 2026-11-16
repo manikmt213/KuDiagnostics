@@ -233,7 +233,7 @@ final class BlockBuilderRead implements Tool {
 		$sql .= ' ORDER BY post_modified DESC LIMIT 500';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- read only; the builder marker is in post_content, which WP_Query cannot search; every value is a placeholder.
 		$ids = array_map( 'intval', (array) $wpdb->get_col( $wpdb->prepare( $sql, $args ) ) );
-		$ids = array_values( array_filter( $ids, static fn( int $id ): bool => current_user_can( 'edit_post', $id ) ) );
+		$ids = array_values( array_filter( $ids, array( self::class, 'listed' ) ) );
 		$out = array();
 		foreach ( array_slice( $ids, ( $page - 1 ) * $per, $per ) as $id ) {
 			$post = get_post( $id );
@@ -288,6 +288,41 @@ final class BlockBuilderRead implements Tool {
 	}
 
 	/**
+	 * Whether a post goes in the pages list: one the user may edit, of a post type with an admin screen (Divi 5 also
+	 * keeps module markup in its own internal post type, _et_pb_speculation, seen on Divi 5.19.0).
+	 *
+	 * @param int $id Post id.
+	 */
+	private static function listed( int $id ): bool {
+		$type = get_post_type_object( (string) get_post_type( $id ) );
+		return null !== $type && $type->show_ui && current_user_can( 'edit_post', $id );
+	}
+
+	/**
+	 * Text a block keeps in its attributes rather than its HTML. Divi 5 stores a module's text as
+	 * {"<field>": {"innerContent": {"desktop": {"value": "…" or {"text": "…"}}}}} (Divi 5.19.0, heading and button
+	 * saved by its Visual Builder); admin labels sit under module.meta and are not page text.
+	 *
+	 * @param array<string, mixed> $attrs Block attributes.
+	 */
+	private static function attribute_text( array $attrs ): string {
+		$parts = array();
+		foreach ( $attrs as $key => $field ) {
+			if ( 'module' === $key || ! is_array( $field ) ) {
+				continue;
+			}
+			$value = $field['innerContent']['desktop']['value'] ?? null;
+			if ( is_array( $value ) ) {
+				$value = $value['text'] ?? null;
+			}
+			if ( is_string( $value ) ) {
+				$parts[] = wp_strip_all_tags( $value );
+			}
+		}
+		return trim( implode( ' ', $parts ) );
+	}
+
+	/**
 	 * Blocks as a tree, without empty whitespace blocks.
 	 *
 	 * @param array<int, array<string, mixed>> $blocks          Parsed blocks.
@@ -309,6 +344,9 @@ final class BlockBuilderRead implements Tool {
 			++$count;
 			$row  = array( 'name' => $name );
 			$text = trim( wp_strip_all_tags( (string) ( $block['innerHTML'] ?? '' ) ) );
+			if ( '' === $text ) {
+				$text = self::attribute_text( is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array() );
+			}
 			if ( '' !== $text ) {
 				$row['text'] = mb_substr( preg_replace( '/\s+/', ' ', $text ) ?? $text, 0, self::MAX_TEXT );
 			}
