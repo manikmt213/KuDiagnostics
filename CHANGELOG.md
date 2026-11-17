@@ -42,6 +42,17 @@ Phase G2 — SEO (`docs/plans/phase-g2-seo.md`):
 - Added: each plugin's title templates and archive settings, read only (`kuduy-yoast-settings`, `kuduy-rank-math-settings`, `kuduy-seopress-settings`).
 - Added: `kuduy-seo-audit` can now find noindexed posts (`check: "noindex"`) and duplicate SEO titles or descriptions (`check: "duplicates"`).
 
+Phase Q (`docs/plans/phase-q.md`):
+
+- Added: `kuduy-site-template-create` (templates and template parts) and `kuduy-synced-pattern-get`, `-save`, `-trash` (patterns saved on the site, with where they are used).
+- Added: `kuduy-kirki-edit` — change text and attributes, remove, move and duplicate blocks of a Kirki page, saved as an unpublished version or published, with undo.
+- Added: `kuduy-bricks-site-ability-run`, `kuduy-breakdance-site-ability-run`, `kuduy-oxygen-site-ability-run` — the builders' site-wide abilities (global settings and similar) in two steps with a confirmation, with the builder's options saved for undo. Code, delete, import and upload abilities stay refused.
+- Added: Elementor Pro forms — `kuduy-elementor-forms`, `kuduy-elementor-form-submissions`, `-form-submission-get`, `-form-submission-update` (mark read, trash, with undo; personal data masked).
+- Added: WPBakery templates — `kuduy-wpbakery-templates`, `-template-get`, `-template-save`, `-template-delete`.
+- Added: `kuduy-avada-global-options-update` and `kuduy-spectra-settings-update`.
+- Changed: `kuduy-block-edit` edits Divi 5 and other block-based builder pages; `merge` merges nested settings. Content writes refuse Divi 4 shortcode pages.
+- Changed: integration catalogue notes brought up to date with the live checks.
+
 Phase G3 (`docs/plans/phase-g3-code.md`):
 
 - Added: Code Snippets tools — list snippets, read one with a syntax check and a list of risky calls, save HTML/CSS/JavaScript snippets (two steps with a confirmation token, admin access level), switch a snippet off or trash it (with undo). PHP snippets have their own tool that exists only when the site allows code execution and needs the code access level, also in two steps. A clean check does not make code safe, and every preview says so.

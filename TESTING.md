@@ -520,6 +520,26 @@ Run 2026-11-17: `CodeAndJobsTest` with Code Snippets 4.1.0 on WordPress 6.9.11 /
 | SC1 | Shortcodes listed with source: gallery from core, a test shortcode from the kuduy-mcp plugin folder; search | I — `test_shortcodes` |
 | JR1 | Retry refused while queued; after a run with one failed item, retry starts a job with only that item; run by a site manager it succeeds; nothing left to retry afterwards | I — `test_job_retry` |
 
+## Phase Q — builders and themes completion
+
+Run 2026-11-18: full bare suites 262 tests, 0 failures on WordPress 6.9.11 / PHP 8.1.34 and 7.1.4 / PHP 8.3.36; Kirki 6.4.2 and Spectra Legacy 2.20.6 suites on both pairs; real-HTTP smoke 26/26; each suite below on WordPress 7.1.4 / PHP 8.3.36 — `SiteEditorTest` (bare), `BlockPluginsTest` with Spectra Legacy 2.20.6, `KirkiTest` with Kirki 6.4.2 (real plugin), `BuilderAbilitiesTest` / `BricksTest` with the Breakdance, Oxygen and Bricks stand-ins, `ElementorFormsTest` with the Elementor Pro forms stand-in, `WpBakeryTest` and `AvadaTest` with their stand-ins, `BlockBuildersTest` / `BlockEditTest` with the Divi/Etch stand-in: 0 failures. Not yet checked against the paid products on the owner's site.
+
+| # | Feature | Type |
+|---|---|---|
+| TP1 | Template part created with area (custom, not a theme copy), listed; same slug, unknown area and a slug the theme has refused; template created using the part; editor refused | I — `SiteEditorTest::test_create_template_part_and_template` |
+| SP1 | Synced pattern created, used_in counts only exact references, changed (unsynced) and undone, sync toggled, trashed with used_in and undone; refusals (no content, not a pattern, contributor) | I — `test_synced_patterns_create_change_trash_with_undo` |
+| SL1 | Spectra Legacy settings listed (no secrets), changed and undone (option removed again), unknown/secret/bad values refused, maintenance needs a published page, coming soon set with its page and undone | I — `BlockPluginsTest::test_spectra_legacy_settings` |
+| KK5 | Kirki edit: text, attributes, duplicate (inline span gets a new id), move saved as an unpublished version (published blocks unchanged); publish refused while unpublished changes exist; undo removes the version; publish writes the published blocks; undoing a publish puts them back | I — `KirkiTest::test_kk5_edit_as_unpublished_version_and_undo` (Kirki 6.4.2) |
+| KK6 | Kirki edit refusals (root, unknown block, event handler, javascript: URL, text with inline elements, move into itself); nothing saved; author refused | I — `test_kk6_edit_refusals` |
+| BA5 | Site-wide ability with confirmation: preview changes nothing, confirmed run changes the builder option, token used once, undo removes the new options, keys neither saved nor restored; report-bug, page-level and read abilities refused; editor refused | I — `BuilderAbilitiesTest::test_ba5_site_wide_writes_with_confirmation_and_undo` (Breakdance and Oxygen stand-ins) |
+| BR5 | Bricks global settings through the site tool with confirmation and undo; execute-php, delete-post and page-level abilities refused | I — `BricksTest::test_br5_site_wide_settings_with_confirmation_and_undo` |
+| EF1 | Elementor Pro form widgets listed from page data (fields, options, required, actions, submission count); editors see forms without counts | I — `ElementorFormsTest::test_ef1_forms_listed_from_page_data` (stand-in) |
+| EF2 | Submissions listed by form with personal data masked (email and name fields, IP), full with include_pii, action log, search; editor refused | I — `test_ef2_submissions_masked_and_read` |
+| EF3 | Submission marked read and trashed, both undone; nothing to change and unknown id refused | I — `test_ef3_mark_read_trash_and_undo` |
+| WB13 | WPBakery template saved from shortcodes and from a page, listed and searched, renamed and undone, deleted and undone; broken or empty layouts refused; subscriber refused | I — `WpBakeryTest::test_templates_save_read_delete_with_undo` (stand-in) |
+| AO1 | Avada Global Options changed (sub-values merged, other settings kept), caches reset, undo; secrets, unknown names, wrong kinds refused; author refused | I — `AvadaTest::test_global_options_update_with_undo` (stand-in) |
+| BK4 | Divi 5 text module updated with merge (other breakpoints kept), undo; Divi 4 page refused by kuduy-block-edit and kuduy-post-update | I — `BlockBuildersTest::test_bk4_divi5_block_edit_with_merge_and_divi4_refused` (stand-in) |
+
 ## SEO + Image SEO
 
 | # | Feature | Type |
