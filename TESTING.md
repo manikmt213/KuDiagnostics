@@ -141,6 +141,48 @@ Notes from the run: claude.ai showed the new tools only after its connector tool
 | Phase 6 with a real client (claude.ai web → Hostinger staging, 0.5.0, WP 7.1.4 / PHP 8.3.36, Yoast 28.8, 2026-11-08 15:24–15:26 UTC) | **8 / 8 steps pass**: 74 tools listed; `kuduy-seo-status` yoast, no conflict; `kuduy-seo-update` + `-get` (stored = rendered); `kuduy-seo-verify` live 200, no mismatches (S4 E); image shown to Claude (S6 M); job run by WP-Cron (S9 E); `kuduy-seo-audit` did not list the post (it had all fields); cleanup by snapshots 3–5 and trash (snapshot 6 kept). Open: robots mismatch (S4 note). `kuduy-seo-audit` returns `total` = posts checked next to an empty `posts`, which reads like a count of problems. Claude Code desktop sessions could not run it: their Kuduy connector stayed at 42 tools (the pre-0.5.0 list) after reconnecting, revoking and toggling it, while `kuduy-site-info` reported 0.5.0 |
 | Real host after release (Hostinger, 0.2.0, from outside) | Unauthenticated `initialize` → 401 + challenge; root AS metadata 200; token with `rest_route` override → 401; plain HTTP → 301 to HTTPS |
 
+## 3d. Tool list size (phase K, 2026-11-17)
+
+`node scripts/measure-tools.mjs` registers every tool in Playground (WordPress 7.1, PHP 8.3) and measures the JSON each one adds to `tools/list`. Sites are built from the areas a site of that kind activates; the code-execution tools are left out (they exist only with `KUDUY_MCP_ALLOW_CODE_EXEC`).
+
+Measured 2026-11-17 on 244 tools (code-execution tools left out). Bytes are the exact JSON of each tool's `tools/list` entry; tokens are estimated as bytes / 4.
+
+| Site | Tools | List size | Est. tokens |
+|---|---:|---:|---:|
+| Bare WordPress (block theme) | 93 | 97.2 KB | 24,883 |
+| Blog: + one SEO plugin + forms + cache | 111 | 119.0 KB | 30,470 |
+| Elementor site: + Elementor + SEO + forms + cache | 132 | 142.8 KB | 36,559 |
+| Shop: + WooCommerce + Elementor + SEO + forms + ACF + cache | 169 | 198.8 KB | 50,898 |
+| Everything registered (never happens on one site) | 244 | 290.6 KB | 74,399 |
+
+| Area | Tools | List size | Avg per tool | Description | Input schema | Output schema |
+|---|---:|---:|---:|---:|---:|---:|
+| Core | 67 | 69.8 KB | 1067 B | 22% | 25% | 33% |
+| Woo | 33 | 52.7 KB | 1635 B | 16% | 36% | 35% |
+| Avada | 20 | 32.1 KB | 1643 B | 29% | 37% | 20% |
+| WpBakery | 16 | 28.4 KB | 1817 B | 27% | 42% | 19% |
+| Elementor | 21 | 23.8 KB | 1160 B | 28% | 28% | 24% |
+| Blocks | 19 | 14.8 KB | 800 B | 27% | 26% | 20% |
+| Seo | 12 | 12.7 KB | 1088 B | 25% | 30% | 26% |
+| Forms | 9 | 12.3 KB | 1404 B | 26% | 43% | 16% |
+| Media | 9 | 10.3 KB | 1174 B | 28% | 21% | 32% |
+| Beaver | 7 | 6.8 KB | 995 B | 27% | 40% | 10% |
+| Dev | 6 | 5.0 KB | 854 B | 29% | 25% | 22% |
+| Jobs | 3 | 4.1 KB | 1391 B | 18% | 15% | 52% |
+| Multilingual | 5 | 4.0 KB | 820 B | 19% | 28% | 28% |
+| Types | 3 | 3.3 KB | 1141 B | 26% | 36% | 19% |
+| Acf | 4 | 3.3 KB | 847 B | 29% | 22% | 25% |
+| Kirki | 3 | 2.0 KB | 680 B | 37% | 28% | 5% |
+| Brizy | 3 | 1.9 KB | 645 B | 38% | 25% | 5% |
+| Cache | 2 | 1.8 KB | 937 B | 34% | 23% | 20% |
+| Bricks | 2 | 1.4 KB | 704 B | 31% | 35% | 5% |
+
+Across all tools: descriptions 24%, input schemas 31%, output schemas 27% of the list.
+
+Ten largest entries: `kuduy-woo-product-update` 3.9 KB, `kuduy-woo-product-create` 3.8 KB, `kuduy-wpbakery-add-column` 3.0 KB, `kuduy-wpbakery-add-row` 3.0 KB, `kuduy-avada-add-column` 2.9 KB, `kuduy-woo-product-get` 2.8 KB, `kuduy-avada-add-container` 2.8 KB, `kuduy-wpbakery-create` 2.5 KB, `kuduy-woo-variation-create` 2.5 KB, `kuduy-woo-variation-update` 2.5 KB.
+
+Reading: a client sees only the tools of active plugins, so a bare site costs about 25k tokens of tool list and a WooCommerce + Elementor shop about 51k. Descriptions are only a quarter of that; input and output schemas are the rest. The largest single entries are the WooCommerce product tools and the WPBakery/Avada layout tools. Decision D56 (no trimming yet; measure again with each new tool set) is in `ARCHITECTURE.md`.
+
 ## 4. Feature test matrix
 
 Legend: **U** unit, **I** integration (Playground), **E** end-to-end with a real Claude client, **M** manual check. Feature status per row lives in `FEATURES.md`.
