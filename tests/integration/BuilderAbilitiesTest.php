@@ -76,11 +76,11 @@ final class BuilderAbilitiesTest extends TestCase {
 		$this->assertSame( $this->tool( 'ability-get' ), $rows[ "$ns/get-post-tree" ]['run_with'] );
 		$this->assertSame( $this->tool( 'ability-run' ), $rows[ "$ns/edit-post" ]['run_with'] );
 		$this->assertSame( $this->tool( 'ability-run' ), $rows[ "$ns/create-post" ]['run_with'] );
-		$this->assertSame( 'not run here', $rows[ "$ns/set-global-settings" ]['run_with'] );
+		$this->assertSame( "kuduy-$ns-site-ability-run", $rows[ "$ns/set-global-settings" ]['run_with'] );
 		$this->assertSame( 'not run here', $rows[ "$ns/report-bug" ]['run_with'] );
 		$this->assertStringContainsString( 'outside services', $rows[ "$ns/report-bug" ]['why_not'] );
 		$this->assertSame( 'read', $rows[ "$ns/report-bug" ]['kind'], 'Breakdance marks it read-only; it is refused anyway.' );
-		$this->assertSame( 'not run here', $rows[ "$ns/set-home-page" ]['run_with'], 'Takes a post but changes the whole site.' );
+		$this->assertSame( "kuduy-$ns-site-ability-run", $rows[ "$ns/set-home-page" ]['run_with'], 'Takes a post but changes the whole site.' );
 
 		$one = $this->ok( $this->tool( 'abilities' ), array( 'name' => "$ns/edit-post" ) )['ability'];
 		$this->assertContains( 'operations', $one['input_schema']['required'] );
@@ -158,6 +158,35 @@ final class BuilderAbilitiesTest extends TestCase {
 		$this->assertFalse( get_option( 'kuduy_fake_bd_ran_set-home-page' ) );
 		$this->assertFalse( get_option( 'kuduy_fake_bd_ran_set-global-settings' ) );
 		$this->assertFalse( get_option( 'kuduy_fake_bd_ran_report-bug' ) );
+	}
+
+	public function test_ba5_site_wide_writes_with_confirmation_and_undo(): void {
+		$ns   = self::$ns;
+		$tool = "kuduy-$ns-site-ability-run";
+		update_option( $ns . '_license_key', 'original-key' );
+		$args    = array( 'name' => "$ns/set-global-settings" );
+		$preview = $this->ok( $tool, $args );
+		$this->assertTrue( $preview['confirmation_required'] );
+		$this->assertSame( "$ns/set-global-settings", $preview['preview']['ability'] );
+		$this->assertGreaterThan( 0, $preview['preview']['saved_options'] );
+		$this->assertFalse( get_option( 'kuduy_fake_bd_ran_set-global-settings' ), 'The first call changes nothing.' );
+
+		$done = $this->ok( $tool, $args + array( 'confirm_token' => $preview['confirm_token'] ) );
+		$this->assertSame( array( 'changed' => true ), get_option( $ns . '_fake_global_settings' ) );
+		$this->fails( $tool, $args + array( 'confirm_token' => $preview['confirm_token'] ), 'a token is used once' );
+
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $done['_snapshot_id'] ) );
+		$this->assertFalse( get_option( $ns . '_fake_global_settings' ), 'Undo removes the setting the change made.' );
+		$this->assertFalse( get_option( $ns . '_fake_new_option' ) );
+		$this->assertSame( 'changed-key', get_option( $ns . '_license_key' ), 'Keys are neither saved nor restored.' );
+		delete_option( 'kuduy_fake_bd_ran_set-global-settings' );
+
+		$this->fails( $tool, array( 'name' => "$ns/report-bug" ), 'no data is sent out' );
+		$this->fails( $tool, array( 'name' => "$ns/edit-post" ), 'page-level abilities go through ability-run' );
+		$this->fails( $tool, array( 'name' => "$ns/get-post-tree" ), 'reads go through ability-get' );
+		wp_set_current_user( self::$editor );
+		$this->fails( $tool, $args, 'site managers only' );
+		$this->assertFalse( get_option( 'kuduy_fake_bd_ran_set-global-settings' ) );
 	}
 
 	public function test_ba4_refusals(): void {

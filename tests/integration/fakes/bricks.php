@@ -135,6 +135,7 @@ add_action(
 			array( 'type' => 'object' ),
 			static function () {
 				update_option( 'kuduy_fake_bricks_global', 1 );
+				update_option( 'bricks_global_settings', array( 'kuduy' => 'changed' ) );
 				return array( 'success' => true );
 			},
 			false,

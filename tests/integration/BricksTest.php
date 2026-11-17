@@ -132,11 +132,11 @@ final class BricksTest extends TestCase {
 		$this->assertSame( 'read', $rows['bricks/start-here']['kind'], 'Without annotations, start-here is read by its name.' );
 		$this->assertSame( 'read', $rows['bricks/get-page-elements']['kind'] );
 		$this->assertSame( 'kuduy-bricks-ability-run', $rows['bricks/set-page-elements']['run_with'] );
-		$this->assertSame( 'not run here', $rows['bricks/set-global-settings']['run_with'] );
+		$this->assertSame( 'kuduy-bricks-site-ability-run', $rows['bricks/set-global-settings']['run_with'] );
 		$this->assertSame( 'not run here', $rows['bricks/execute-php']['run_with'] );
 		$this->assertSame( 'not run here', $rows['bricks/delete-post']['run_with'], 'Takes a post, but deletes it: not on the page-level list.' );
 		$this->assertStringContainsString( 'runs code', $rows['bricks/execute-php']['why_not'] );
-		$this->assertSame( 'not run here', $rows['bricks/regenerate-css-files']['run_with'], 'Bricks declares no-input abilities with an object for properties.' );
+		$this->assertSame( 'kuduy-bricks-site-ability-run', $rows['bricks/regenerate-css-files']['run_with'], 'Bricks declares no-input abilities with an object for properties.' );
 		$one = $this->ok( 'kuduy-bricks-abilities', array( 'name' => 'bricks/regenerate-css-files' ) )['ability'];
 		$this->assertSame( 'object', $one['input_schema']['type'] );
 		$this->assertStringContainsString( 'live output is still inline', $one['description'], 'An unclosed tag in a description keeps the text.' );
@@ -181,6 +181,23 @@ final class BricksTest extends TestCase {
 
 		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $set['_snapshot_id'] ) );
 		$this->assertEquals( $before, get_post_meta( $page, '_bricks_page_content_2', true ), 'Undo puts the Bricks elements back.' );
+	}
+
+	public function test_br5_site_wide_settings_with_confirmation_and_undo(): void {
+		update_option( 'bricks_global_settings', array( 'kuduy' => 'before' ) );
+		$args    = array( 'name' => 'bricks/set-global-settings' );
+		$preview = $this->ok( 'kuduy-bricks-site-ability-run', $args );
+		$this->assertTrue( $preview['confirmation_required'] );
+		$this->assertSame( array( 'kuduy' => 'before' ), get_option( 'bricks_global_settings' ) );
+		$done = $this->ok( 'kuduy-bricks-site-ability-run', $args + array( 'confirm_token' => $preview['confirm_token'] ) );
+		$this->assertSame( array( 'kuduy' => 'changed' ), get_option( 'bricks_global_settings' ) );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $done['_snapshot_id'] ) );
+		$this->assertSame( array( 'kuduy' => 'before' ), get_option( 'bricks_global_settings' ), 'Undo puts the global settings back.' );
+		delete_option( 'kuduy_fake_bricks_global' );
+		$this->fails( 'kuduy-bricks-site-ability-run', array( 'name' => 'bricks/execute-php' ), 'PHP abilities are never run' );
+		$this->fails( 'kuduy-bricks-site-ability-run', array( 'name' => 'bricks/delete-post' ), 'deleting is never run' );
+		$this->fails( 'kuduy-bricks-site-ability-run', array( 'name' => 'bricks/set-page-elements' ), 'page-level abilities go through ability-run' );
+		$this->assertFalse( get_option( 'kuduy_fake_bricks_php' ) );
 	}
 
 	public function test_br4_refusals(): void {

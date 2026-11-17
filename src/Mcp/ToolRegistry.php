@@ -12,6 +12,7 @@ use Kuduy\Mcp\Modules\Bricks\BricksRead;
 use Kuduy\Mcp\Modules\Brizy\BrizyRead;
 use Kuduy\Mcp\Modules\Core\AstraAbilities;
 use Kuduy\Mcp\Modules\Core\BuilderAbilities;
+use Kuduy\Mcp\Modules\Core\BuilderSiteAbilities;
 use Kuduy\Mcp\Modules\Core\CheckUpdate;
 use Kuduy\Mcp\Modules\Core\Comments;
 use Kuduy\Mcp\Modules\Core\Diagnostics;
@@ -170,6 +171,9 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'abilities', 'ability-get', 'ability-run' ) as $mode ) {
 			$registry->register( new AstraAbilities( $mode ) );
+		}
+		foreach ( BuilderSiteAbilities::BUILDERS as $builder ) {
+			$registry->register( new BuilderSiteAbilities( $builder ) );
 		}
 		foreach ( array_keys( BuilderAbilities::BUILDERS ) as $builder ) {
 			foreach ( array( 'abilities', 'ability-get', 'ability-run' ) as $mode ) {

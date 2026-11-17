@@ -181,8 +181,14 @@ namespace {
 							'type'       => 'object',
 							'properties' => new stdClass(),
 						),
-						'execute_callback'    => static function () use ( $slug ) {
+						'execute_callback'    => static function ( $input = null ) use ( $slug, $ns ) {
 							update_option( 'kuduy_fake_bd_ran_' . $slug, 1 );
+							if ( 'set-global-settings' === $slug ) {
+								// A builder option, as the real ability saves its global settings.
+								update_option( $ns . '_fake_global_settings', array( 'changed' => true ) );
+								update_option( $ns . '_fake_new_option', 'made by the change' );
+								update_option( $ns . '_license_key', 'changed-key' );
+							}
 							return array( 'success' => true );
 						},
 						'permission_callback' => 'kuduy_fake_bd_can',

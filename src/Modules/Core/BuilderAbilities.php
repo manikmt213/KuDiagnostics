@@ -8,6 +8,8 @@
 
 namespace Kuduy\Mcp\Modules\Core;
 
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- tool errors are returned to the MCP client as JSON text, never printed as HTML.
+
 use Kuduy\Mcp\Audit\AuditLog;
 use Kuduy\Mcp\Execution\Snapshottable;
 use Kuduy\Mcp\Mcp\Tool;
@@ -263,7 +265,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 *
 	 * @param \WP_Ability $ability Ability.
 	 */
-	private static function reads( \WP_Ability $ability ): bool {
+	public static function reads( \WP_Ability $ability ): bool {
 		$annotations = $ability->get_meta_item( 'annotations', array() );
 		if ( is_array( $annotations ) ) {
 			foreach ( array( 'readonly', 'readOnlyHint' ) as $key ) {
@@ -309,9 +311,12 @@ final class BuilderAbilities implements Tool, Snapshottable {
 		$short  = substr( $ability->get_name(), strlen( $this->builder ) + 1 );
 		$config = self::CONFIG[ $this->builder ];
 		if ( in_array( $short, $config['site'], true ) ) {
-			return 'This ability changes the whole site (not only the page given), which cannot be undone from here. Do it in ' . $this->label() . ' or with the WordPress settings tools.';
+			return 'This ability changes the whole site (not only the page given). ' . $this->site_hint( $ability );
 		}
 		if ( null !== $config['allow'] && ! in_array( $short, $config['allow'], true ) ) {
+			if ( '' === $this->site_why( $ability ) ) {
+				return 'This ability changes site-wide ' . $this->label() . ' data. ' . $this->site_hint( $ability );
+			}
 			return 'Only ' . $this->label() . '\'s page-level changes are run here (' . implode( ', ', $config['allow'] ) . '); this one deletes, restores or changes data shared across the site, which cannot be undone from here. Do it in ' . $this->label() . ' itself.';
 		}
 		if ( str_starts_with( $short, 'delete-' ) ) {
@@ -326,7 +331,68 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			// The page must be named by its id, so it can be snapshotted first (Bricks also accepts slug, path or title).
 			return $listing || self::post_id( $input ) > 0 ? '' : 'Name the page by its numeric id (' . ( isset( $props['postId'] ) ? 'postId' : ( isset( $props['popup_id'] ) ? 'popup_id' : 'post_id' ) ) . ') so it can be saved first and the change undone.';
 		}
-		return 'This ability changes site-wide ' . $this->label() . ' settings, which cannot be undone from here. Change them in ' . $this->label() . ' itself.';
+		return 'This ability changes site-wide ' . $this->label() . ' settings. ' . $this->site_hint( $ability );
+	}
+
+	/**
+	 * Where a site-wide write ability can be run instead.
+	 *
+	 * @param \WP_Ability $ability Ability.
+	 */
+	private function site_hint( \WP_Ability $ability ): string {
+		return '' === $this->site_why( $ability ) && in_array( $this->builder, BuilderSiteAbilities::BUILDERS, true )
+			? 'Run it with kuduy-' . $this->builder . '-site-ability-run (two steps with a confirmation; ' . $this->label() . '\'s options are saved first for undo).'
+			: 'Change it in ' . $this->label() . ' itself.';
+	}
+
+	/**
+	 * Why a write ability may not be run as a site-wide change (kuduy-…-site-ability-run), or '' when it may: a
+	 * write that is not refused, not a page-level one (those go through ability-run, with a page snapshot), and does
+	 * not delete, restore, import, upload files or run tools whose effect an options snapshot cannot undo.
+	 *
+	 * @param \WP_Ability $ability Ability.
+	 */
+	public function site_why( \WP_Ability $ability ): string {
+		$refused = $this->refused( $ability );
+		if ( '' !== $refused ) {
+			return $refused;
+		}
+		if ( self::reads( $ability ) ) {
+			return 'This is a read ability: use kuduy-' . $this->builder . '-ability-get.';
+		}
+		$short  = substr( $ability->get_name(), strlen( $this->builder ) + 1 );
+		$config = self::CONFIG[ $this->builder ];
+		if ( preg_match( '/^(delete|remove|restore|import|upload|execute|run|send|report|install|activate|deactivate)-/', $short ) ) {
+			return 'This ability deletes, restores, imports, uploads or runs something, which a snapshot of ' . $this->label() . '\'s options cannot undo. Do it in ' . $this->label() . ' itself.';
+		}
+		if ( in_array( $short, $config['site'], true ) ) {
+			return '';
+		}
+		if ( str_starts_with( $short, 'create-' ) || str_starts_with( $short, 'duplicate-' ) || ( null !== $config['allow'] && in_array( $short, $config['allow'], true ) ) ) {
+			return 'This ability works on one page or creates something new: use kuduy-' . $this->builder . '-ability-run.';
+		}
+		$props = (array) ( $ability->get_input_schema()['properties'] ?? array() );
+		if ( isset( $props['post_id'] ) || isset( $props['postId'] ) || isset( $props['popup_id'] ) || isset( $props['post_ids'] ) || isset( $props['templateId'] ) ) {
+			return 'This ability works on posts or templates, which a snapshot of ' . $this->label() . '\'s options cannot undo. ' . ( null === $config['allow'] ? 'Use kuduy-' . $this->builder . '-ability-run.' : 'Do it in ' . $this->label() . ' itself.' );
+		}
+		return '';
+	}
+
+	/**
+	 * A registered ability of this builder by name.
+	 *
+	 * @param string $name Ability name.
+	 * @throws ToolError When the builder's abilities are off or the name is unknown.
+	 */
+	public function ability( string $name ): \WP_Ability {
+		$all = $this->abilities();
+		if ( ! $all ) {
+			throw ToolError::of( ToolError::FEATURE_NOT_SUPPORTED, $this->label() . ' has not registered its abilities on this site. They are switched on with ' . self::CONFIG[ $this->builder ]['switch'] . '; KuDiagnostics does not change that setting.' );
+		}
+		if ( ! isset( $all[ $name ] ) ) {
+			throw ToolError::of( ToolError::RESOURCE_NOT_FOUND, $this->label() . ' has no ability "' . $name . '" on this site. See kuduy-' . $this->builder . '-abilities.' );
+		}
+		return $all[ $name ];
 	}
 
 	/**
@@ -512,7 +578,9 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			'label'       => wp_strip_all_tags( $ability->get_label() ),
 			'description' => wp_strip_all_tags( $ability->get_description() ),
 			'kind'        => $reads ? 'read' : 'write',
-			'run_with'    => '' !== $why ? 'not run here' : ( $reads ? 'kuduy-' . $this->builder . '-ability-get' : 'kuduy-' . $this->builder . '-ability-run' ),
+			'run_with'    => '' !== $why
+				? ( ! $reads && '' === $this->site_why( $ability ) && in_array( $this->builder, BuilderSiteAbilities::BUILDERS, true ) ? 'kuduy-' . $this->builder . '-site-ability-run' : 'not run here' )
+				: ( $reads ? 'kuduy-' . $this->builder . '-ability-get' : 'kuduy-' . $this->builder . '-ability-run' ),
 		);
 		if ( '' !== $why ) {
 			$row['why_not'] = $why;
