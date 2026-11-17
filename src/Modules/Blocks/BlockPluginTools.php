@@ -37,6 +37,45 @@ final class BlockPluginTools implements Tool, Snapshottable {
 	/**
 	 * Kadence settings whose values are secrets or credentials: never returned, never changed here.
 	 */
+	/**
+	 * Spectra Legacy settings its Settings screen saves one option each (admin-core/ajax/common-settings.php, 2.20.6):
+	 * option => [allowed values or a kind, default]. Kinds: int (whole number of pixels), padding (int or "default"),
+	 * page (a published page id), key (a public reCAPTCHA site key). Secrets, social logins, Instagram accounts, font
+	 * lists and global block styles (which also writes files) are not offered.
+	 *
+	 * @var array<string, array{0: list<string>|string, 1: string}>
+	 */
+	private const SPECTRA_SETTINGS = array(
+		'uag_enable_animations_extension'   => array( array( 'enabled', 'disabled' ), 'enabled' ),
+		'uag_enable_dynamic_content'        => array( array( 'enabled', 'disabled' ), 'enabled' ),
+		'uag_dynamic_content_mode'          => array( array( 'popup', 'sidebar' ), 'popup' ),
+		'uag_enable_block_condition'        => array( array( 'enabled', 'disabled' ), 'disabled' ),
+		'uag_enable_block_responsive'       => array( array( 'enabled', 'disabled' ), 'enabled' ),
+		'uag_enable_masonry_gallery'        => array( array( 'enabled', 'disabled' ), 'enabled' ),
+		'uag_enable_quick_action_sidebar'   => array( array( 'enabled', 'disabled' ), 'enabled' ),
+		'uag_enable_templates_button'       => array( array( 'yes', 'no' ), 'yes' ),
+		'uag_enable_on_page_css_button'     => array( array( 'yes', 'no' ), 'yes' ),
+		'uag_enable_legacy_blocks'          => array( array( 'yes', 'no' ), 'no' ),
+		'uag_collapse_panels'               => array( array( 'enabled', 'disabled' ), 'enabled' ),
+		'uag_copy_paste'                    => array( array( 'enabled', 'disabled' ), 'enabled' ),
+		'uag_auto_block_recovery'           => array( array( 'enabled', 'disabled' ), 'disabled' ),
+		'uag_btn_inherit_from_theme'        => array( array( 'enabled', 'disabled' ), 'disabled' ),
+		'uag_load_font_awesome_5'           => array( array( 'enabled', 'disabled' ), 'disabled' ),
+		'uag_load_select_font_globally'     => array( array( 'enabled', 'disabled' ), 'disabled' ),
+		'uag_load_fse_font_globally'        => array( array( 'enabled', 'disabled' ), 'disabled' ),
+		'uag_load_gfonts_locally'           => array( array( 'enabled', 'disabled' ), 'disabled' ),
+		'uag_preload_local_fonts'           => array( array( 'enabled', 'disabled' ), 'disabled' ),
+		'_uagb_allow_file_generation'       => array( array( 'enabled', 'disabled' ), 'enabled' ),
+		'uag_content_width'                 => array( 'int', '' ),
+		'uag_container_global_padding'      => array( 'padding', 'default' ),
+		'uag_container_global_elements_gap' => array( 'int', '20' ),
+		'uag_blocks_editor_spacing'         => array( 'int', '0' ),
+		'uag_visibility_mode'               => array( array( 'disabled', 'comingsoon', 'maintenance' ), 'disabled' ),
+		'uag_visibility_page'               => array( 'page', '' ),
+		'uag_recaptcha_site_key_v2'         => array( 'key', '' ),
+		'uag_recaptcha_site_key_v3'         => array( 'key', '' ),
+	);
+
 	private const KADENCE_SECRET = '/secret|_api|api_key|api_base|_cloud|prophecy|turnstile_site|license/';
 
 	/**
@@ -100,7 +139,8 @@ final class BlockPluginTools implements Tool, Snapshottable {
 			'kuduy-generateblocks-settings-update' => 'Changes GenerateBlocks settings through its own settings route, which checks and cleans every value: container_width (pixels), sync_responsive_previews, disable_google_fonts (true/false; Pro may add more keys, see kuduy-generateblocks-status). Unknown keys are refused. Needs a site manager. Snapshot first; undo with kuduy-snapshot-restore.',
 			'kuduy-kadence-blocks-status'          => 'Kadence Blocks on this site: version, whether Kadence Blocks Pro is active, its registered blocks, the blocks it hides from the inserter, and its settings (block defaults, visibility, colour palette, global settings, …) with type and value. Settings holding API keys or secrets show only whether they are set. Place and edit its blocks with kuduy-block-schema and kuduy-block-edit.',
 			'kuduy-kadence-blocks-settings-update' => 'Changes Kadence Blocks settings the way its settings screen saves them (WordPress settings API with Kadence\'s own sanitizers): give settings as key => value with keys from kuduy-kadence-blocks-status. Several are JSON text (e.g. kadence_blocks_config_blocks, kadence_blocks_colors): send the complete JSON string. API keys and secrets are not changed here. Needs a site manager. Snapshot first; undo with kuduy-snapshot-restore.',
-			'kuduy-spectra-status'                 => 'Spectra Legacy (the older Spectra plugin, ultimate-addons-for-gutenberg) on this site: version, whether Spectra Pro is active, every Spectra block with whether it is switched on, its extensions (animations, dynamic content, display conditions, responsive conditions, masonry gallery, global block styles), CSS file generation, and how many popups exist (kuduy-spectra-popups). Not Spectra Blocks, which is a different plugin.',
+			'kuduy-spectra-status'                 => 'Spectra Legacy (the older Spectra plugin, ultimate-addons-for-gutenberg) on this site: version, whether Spectra Pro is active, every Spectra block with whether it is switched on, its settings (extensions such as animations, dynamic content, display and responsive conditions, masonry gallery, global block styles; editor options; fonts; container width, padding and gap; coming soon / maintenance mode and its page; CSS file generation; public reCAPTCHA site keys) and how many popups exist (kuduy-spectra-popups). Not Spectra Blocks, which is a different plugin.',
+			'kuduy-spectra-settings-update'        => 'Changes Spectra Legacy settings the way its Settings screen saves them, one option each: give settings as option => value with option names from kuduy-spectra-status (e.g. {"uag_enable_block_condition":"enabled","uag_content_width":"1200"}). Switches take "enabled"/"disabled" (or "yes"/"no" where the status shows them); uag_visibility_mode takes disabled, comingsoon or maintenance and sends visitors who are not logged in to uag_visibility_page (a published page id; maintenance also answers 503) — set the page first. reCAPTCHA secret keys, social login and Instagram settings, global block styles and font lists are not changed here. Needs a site manager. Snapshot first; undo with kuduy-snapshot-restore.',
 			default                                => 'Switches ' . $b . ' blocks on or off, as its Blocks dashboard does: enable and disable are lists of block names (e.g. "uagb/advanced-heading" or "advanced-heading", see kuduy-spectra-status). A switched-off block disappears from the inserter; blocks already on pages keep their content. Needs a site manager. Snapshot first; undo with kuduy-snapshot-restore.',
 		};
 	}
@@ -219,7 +259,9 @@ final class BlockPluginTools implements Tool, Snapshottable {
 		return match ( $this->plugin ) {
 			'generateblocks' => array( 'generateblocks' ),
 			'kadence-blocks' => array_map( 'strval', array_keys( (array) ( $input['settings'] ?? array() ) ) ),
-			default          => array( '_uagb_blocks' ),
+			default          => 'settings-update' === $this->mode
+				? array_values( array_intersect( array_merge( array_map( 'strval', array_keys( (array) ( $input['settings'] ?? array() ) ) ), array( 'uag_btn_inherit_from_theme_fallback' ) ), array_merge( array_keys( self::SPECTRA_SETTINGS ), array( 'uag_btn_inherit_from_theme_fallback' ) ) ) )
+				: array( '_uagb_blocks' ),
 		};
 	}
 
@@ -276,6 +318,7 @@ final class BlockPluginTools implements Tool, Snapshottable {
 		return match ( $this->name() ) {
 			'kuduy-generateblocks-status'          => $this->generateblocks_status(),
 			'kuduy-generateblocks-settings-update' => $this->generateblocks_update( (array) $input['settings'] ),
+			'kuduy-spectra-settings-update'        => $this->spectra_update( (array) $input['settings'] ),
 			'kuduy-kadence-blocks-status'          => $this->kadence_status(),
 			'kuduy-kadence-blocks-settings-update' => $this->kadence_update( (array) $input['settings'] ),
 			'kuduy-spectra-status'                 => $this->spectra_status(),
@@ -457,8 +500,10 @@ final class BlockPluginTools implements Tool, Snapshottable {
 		foreach ( array( 'uag_enable_animations_extension', 'uag_enable_dynamic_content', 'uag_enable_block_condition', 'uag_enable_block_responsive', 'uag_enable_masonry_gallery', 'uag_enable_gbs_extension' ) as $option ) {
 			$extensions[ $option ] = (string) \UAGB_Admin_Helper::get_admin_settings_option( $option, 'enabled' );
 		}
-		$extensions['_uagb_allow_file_generation'] = (string) \UAGB_Admin_Helper::get_admin_settings_option( '_uagb_allow_file_generation', 'disabled' );
-		$popups                                    = wp_count_posts( 'spectra-popup' );
+		foreach ( self::SPECTRA_SETTINGS as $option => $rule ) {
+			$extensions[ $option ] = (string) \UAGB_Admin_Helper::get_admin_settings_option( $option, $rule[1] );
+		}
+		$popups = wp_count_posts( 'spectra-popup' );
 		return array(
 			'version'  => (string) constant( 'UAGB_VER' ),
 			'pro'      => defined( 'SPECTRA_PRO_VER' ),
@@ -509,6 +554,65 @@ final class BlockPluginTools implements Tool, Snapshottable {
 		return array(
 			'changed' => array_map( static fn( string $key ): string => 'uagb/' . $key, array_merge( $enable, $disable ) ),
 			'blocks'  => array_values( array_filter( $now, static fn( array $b ): bool => in_array( str_replace( 'uagb/', '', $b['name'] ), array_merge( $enable, $disable ), true ) ) ),
+		);
+	}
+
+	/**
+	 * Change Spectra Legacy settings, one option each, as its Settings screen does.
+	 *
+	 * @param array<string, mixed> $settings Option => value.
+	 * @return array<string, mixed>
+	 * @throws ToolError When an option or value is refused; nothing is saved then.
+	 */
+	private function spectra_update( array $settings ): array {
+		$clean = array();
+		foreach ( $settings as $option => $value ) {
+			$option = (string) $option;
+			if ( ! isset( self::SPECTRA_SETTINGS[ $option ] ) ) {
+				throw ToolError::of( ToolError::VALIDATION_FAILED, 'Spectra Legacy setting ' . $option . ' cannot be changed here (see kuduy-spectra-status for the options). Nothing was changed.' );
+			}
+			$rule  = self::SPECTRA_SETTINGS[ $option ][0];
+			$value = is_bool( $value ) ? ( $value ? 'enabled' : 'disabled' ) : ( is_scalar( $value ) ? trim( (string) $value ) : null );
+			$ok    = match ( true ) {
+				null === $value                                 => false,
+				is_array( $rule )                               => in_array( $value, $rule, true ),
+				'int' === $rule                                 => '' === $value || ( ctype_digit( $value ) && (int) $value <= 10000 ),
+				'padding' === $rule                             => 'default' === $value || ( ctype_digit( $value ) && (int) $value <= 1000 ),
+				'page' === $rule                                => '' === $value || ( ctype_digit( $value ) && 'page' === get_post_type( (int) $value ) && 'publish' === get_post_status( (int) $value ) ),
+				default                                         => strlen( $value ) <= 200 && (bool) preg_match( '/^[A-Za-z0-9_-]*$/', $value ),
+			};
+			if ( ! $ok ) {
+				$allowed = is_array( $rule ) ? implode( ', ', $rule ) : match ( $rule ) {
+					'int'     => 'a whole number of pixels (or empty)',
+					'padding' => '"default" or a whole number of pixels',
+					'page'    => 'the id of a published page (or empty)',
+					default   => 'a reCAPTCHA site key (letters, digits, - and _)',
+				};
+				throw ToolError::of( ToolError::VALIDATION_FAILED, 'Spectra Legacy setting ' . $option . ' takes ' . $allowed . '. Nothing was changed.' );
+			}
+			$clean[ $option ] = (string) $value;
+		}//end foreach
+		$mode = $clean['uag_visibility_mode'] ?? (string) \UAGB_Admin_Helper::get_admin_settings_option( 'uag_visibility_mode', 'disabled' );
+		$page = $clean['uag_visibility_page'] ?? (string) \UAGB_Admin_Helper::get_admin_settings_option( 'uag_visibility_page', '' );
+		if ( 'disabled' !== $mode && '' === $page ) {
+			throw ToolError::of( ToolError::VALIDATION_FAILED, 'Coming soon / maintenance mode needs uag_visibility_page (a published page) first. Nothing was changed.' );
+		}
+		AuditLog::target( 'option', implode( ',', array_keys( $clean ) ) );
+		foreach ( $clean as $option => $value ) {
+			if ( 'uag_btn_inherit_from_theme' === $option && false !== get_option( 'uag_btn_inherit_from_theme_fallback' ) ) {
+				// As Spectra's own handler: the user's choice replaces the fallback kept for older sites.
+				\UAGB_Admin_Helper::delete_admin_settings_option( 'uag_btn_inherit_from_theme_fallback' );
+			}
+			\UAGB_Admin_Helper::update_admin_settings_option( $option, sanitize_text_field( $value ) );
+		}
+		self::spectra_rebuild_css();
+		$out = array();
+		foreach ( array_keys( $clean ) as $option ) {
+			$out[ $option ] = (string) \UAGB_Admin_Helper::get_admin_settings_option( $option, self::SPECTRA_SETTINGS[ $option ][1] );
+		}
+		return array(
+			'changed'  => array_keys( $clean ),
+			'settings' => (object) $out,
 		);
 	}
 

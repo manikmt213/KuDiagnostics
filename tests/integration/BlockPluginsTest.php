@@ -114,6 +114,61 @@ final class BlockPluginsTest extends TestCase {
 		$this->assertTrue( array_column( $this->ok( 'kuduy-spectra-status' )['blocks'], 'enabled', 'name' )['uagb/advanced-heading'] );
 	}
 
+	public function test_spectra_legacy_settings(): void {
+		$this->needs( 'UAGB_VER', 'Spectra Legacy' );
+		$status = $this->ok( 'kuduy-spectra-status' )['settings'];
+		$this->assertSame( 'disabled', $status['uag_visibility_mode'] );
+		$this->assertSame( 'disabled', $status['uag_enable_block_condition'] );
+		$this->assertArrayNotHasKey( 'uag_recaptcha_secret_key_v2', $status, 'Secrets are not shown.' );
+
+		$changed = $this->ok(
+			'kuduy-spectra-settings-update',
+			array(
+				'settings' => array(
+					'uag_enable_block_condition' => 'enabled',
+					'uag_content_width'          => '1200',
+					'uag_dynamic_content_mode'   => 'sidebar',
+				),
+			)
+		);
+		$this->assertSame( 'enabled', $changed['settings']['uag_enable_block_condition'] );
+		$this->assertSame( '1200', get_option( 'uag_content_width' ) );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $changed['_snapshot_id'] ) );
+		$this->assertFalse( get_option( 'uag_content_width' ), 'Undo removes an option that was not set before.' );
+		$this->assertSame( 'disabled', $this->ok( 'kuduy-spectra-status' )['settings']['uag_enable_block_condition'] );
+
+		$this->fails( 'kuduy-spectra-settings-update', array( 'settings' => array( 'uag_recaptcha_secret_key_v2' => 'x' ) ), 'secrets are not written' );
+		$this->fails( 'kuduy-spectra-settings-update', array( 'settings' => array( 'uag_copy_paste' => 'maybe' ) ), 'unknown value' );
+		$this->fails( 'kuduy-spectra-settings-update', array( 'settings' => array( 'uag_visibility_mode' => 'maintenance' ) ), 'maintenance needs a page' );
+		$post = (int) wp_insert_post(
+			array(
+				'post_title'  => 'Not a page',
+				'post_status' => 'publish',
+			)
+		);
+		$this->fails( 'kuduy-spectra-settings-update', array( 'settings' => array( 'uag_visibility_page' => (string) $post ) ), 'a post is not a page' );
+		$page = (int) wp_insert_post(
+			array(
+				'post_title'  => 'Kuduy coming soon',
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		$mode = $this->ok(
+			'kuduy-spectra-settings-update',
+			array(
+				'settings' => array(
+					'uag_visibility_page' => (string) $page,
+					'uag_visibility_mode' => 'comingsoon',
+				),
+			)
+		);
+		$this->assertSame( 'comingsoon', get_option( 'uag_visibility_mode' ) );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $mode['_snapshot_id'] ) );
+		$this->assertFalse( get_option( 'uag_visibility_mode' ) );
+		$this->assertSame( 'kuduy:admin', \Kuduy\Mcp\Mcp\ToolRegistry::create()->get( 'kuduy-spectra-settings-update' )->scope() );
+	}
+
 	/**
 	 * Popup tools of one Spectra plugin.
 	 *

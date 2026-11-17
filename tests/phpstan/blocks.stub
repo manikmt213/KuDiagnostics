@@ -34,6 +34,13 @@ namespace {
 		public static function update_admin_settings_option( $key, $value, $network = false ) {}
 
 		/**
+		 * @param string $key
+		 * @param bool   $network_override
+		 * @return void
+		 */
+		public static function delete_admin_settings_option( $key, $network_override = false ) {}
+
+		/**
 		 * @return void
 		 */
 		public static function create_specific_stylesheet() {}

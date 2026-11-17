@@ -1,11 +1,14 @@
 <?php
 /**
- * Tools: kuduy-site-templates, kuduy-site-template-get, kuduy-site-template-update, kuduy-site-template-revert.
+ * Tools: kuduy-site-templates, kuduy-site-template-get, kuduy-site-template-create, kuduy-site-template-update,
+ * kuduy-site-template-revert.
  *
  * @package Kuduy\Mcp
  */
 
 namespace Kuduy\Mcp\Modules\Blocks;
+
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- tool errors are returned to the MCP client as JSON text, never printed as HTML.
 
 use Kuduy\Mcp\Audit\AuditLog;
 use Kuduy\Mcp\Execution\Snapshottable;
@@ -25,7 +28,7 @@ final class TemplateTools implements Tool, Snapshottable {
 	/**
 	 * Mode.
 	 *
-	 * @param string $mode list | get | update | revert.
+	 * @param string $mode list | get | create | update | revert.
 	 */
 	public function __construct( private string $mode ) {}
 
@@ -43,6 +46,7 @@ final class TemplateTools implements Tool, Snapshottable {
 		return match ( $this->mode ) {
 			'list'   => __( 'Site Editor templates', 'kuduy-mcp' ),
 			'get'    => __( 'Read a template', 'kuduy-mcp' ),
+			'create' => __( 'Create a template or template part', 'kuduy-mcp' ),
 			'update' => __( 'Change a template', 'kuduy-mcp' ),
 			default  => __( 'Revert a template to the theme', 'kuduy-mcp' ),
 		};
@@ -55,6 +59,7 @@ final class TemplateTools implements Tool, Snapshottable {
 		return match ( $this->mode ) {
 			'list'   => 'Lists the templates (type "template", default) or template parts (type "part": header, footer, …) of the active block theme: id ("theme//slug"), slug, title, source (theme = the theme file, custom = saved on the site), customized (a theme template changed on the site), area for parts.',
 			'get'    => 'Returns one template or template part with its block markup (content), title, description and source.',
+			'create' => 'Creates a new template (type "template", e.g. slug "single-product" or "page-landing") or template part (type "part", with area header, footer or uncategorized) in the active block theme, as the Site Editor does: slug, title, content (block markup), description. Refuses a slug the theme or site already has (change that one with kuduy-site-template-update). Use a part in a template with <!-- wp:template-part {"slug":"…","area":"…"} /-->. Returns the new id ("theme//slug"). Remove it again in the Site Editor.',
 			'update' => 'Changes a template or template part like the Site Editor does: content (block markup), title, description. A theme template is saved as a site copy; the theme file is not changed. Snapshot first; undo with kuduy-snapshot-restore (a copy made by this change is removed again, so the theme file is used).',
 			default  => 'Puts a customized theme template or part back to the theme file: WordPress moves the site copy to the trash. Only for templates the theme provides. Snapshot first; undo with kuduy-snapshot-restore brings the copy back.',
 		};
@@ -79,14 +84,40 @@ final class TemplateTools implements Tool, Snapshottable {
 	public function input_schema(): array {
 		$properties = array( 'type' => self::type_input() );
 		$required   = array();
-		if ( 'list' !== $this->mode ) {
+		if ( 'create' === $this->mode ) {
+			$properties += array(
+				'slug'        => array(
+					'type'      => 'string',
+					'pattern'   => '^[a-z0-9][a-z0-9_-]*$',
+					'maxLength' => 100,
+				),
+				'title'       => array(
+					'type'      => 'string',
+					'maxLength' => 200,
+				),
+				'content'     => array(
+					'type'      => 'string',
+					'maxLength' => 500000,
+				),
+				'description' => array(
+					'type'      => 'string',
+					'maxLength' => 1000,
+				),
+				'area'        => array(
+					'type'        => 'string',
+					'maxLength'   => 50,
+					'description' => 'Template parts only: header, footer or uncategorized (default), or an area the theme registers.',
+				),
+			);
+			$required    = array( 'slug', 'content' );
+		} elseif ( 'list' !== $this->mode ) {
 			$properties['id'] = array(
 				'type'        => 'string',
 				'pattern'     => '^[^/]+//[^/]+$',
 				'description' => 'Template id: "theme//slug", as kuduy-site-templates lists it.',
 			);
 			$required[]       = 'id';
-		}
+		}//end if
 		if ( 'update' === $this->mode ) {
 			$properties += array(
 				'content'     => array(
@@ -146,6 +177,14 @@ final class TemplateTools implements Tool, Snapshottable {
 	public function annotations(): array {
 		if ( in_array( $this->mode, array( 'list', 'get' ), true ) ) {
 			return Content::read_only();
+		}
+		if ( 'create' === $this->mode ) {
+			return array(
+				'readOnlyHint'    => false,
+				'destructiveHint' => false,
+				'idempotentHint'  => false,
+				'openWorldHint'   => false,
+			);
 		}
 		return array(
 			'readOnlyHint'    => false,
@@ -264,6 +303,52 @@ final class TemplateTools implements Tool, Snapshottable {
 	}
 
 	/**
+	 * Create a template or part through core's controller.
+	 *
+	 * @param array<string, mixed> $input Arguments.
+	 * @param string               $route REST base.
+	 * @param string               $type  wp_template | wp_template_part.
+	 * @return array<string, mixed>
+	 * @throws ToolError When the slug is taken, the area unknown or core refuses.
+	 */
+	private static function create( array $input, string $route, string $type ): array {
+		$slug = (string) $input['slug'];
+		$id   = get_stylesheet() . '//' . $slug;
+		if ( get_block_template( $id, $type ) instanceof \WP_Block_Template ) {
+			throw ToolError::of( ToolError::DUPLICATE_RESOURCE, 'The active theme already has a ' . ( 'wp_template' === $type ? 'template' : 'template part' ) . ' "' . $slug . '"; change it with kuduy-site-template-update. Nothing was created.' );
+		}
+		$body = array(
+			'slug'    => $slug,
+			'title'   => (string) ( $input['title'] ?? $slug ),
+			'content' => (string) $input['content'],
+		);
+		if ( isset( $input['description'] ) ) {
+			$body['description'] = (string) $input['description'];
+		}
+		if ( 'wp_template_part' === $type ) {
+			$area  = (string) ( $input['area'] ?? WP_TEMPLATE_PART_AREA_UNCATEGORIZED );
+			$areas = array_column( get_allowed_block_template_part_areas(), 'area' );
+			if ( ! in_array( $area, $areas, true ) ) {
+				throw ToolError::of( ToolError::VALIDATION_FAILED, 'Unknown template part area "' . $area . '". This theme has: ' . implode( ', ', $areas ) . '. Nothing was created.' );
+			}
+			$body['area'] = $area;
+		} elseif ( isset( $input['area'] ) ) {
+			throw ToolError::of( ToolError::VALIDATION_FAILED, 'area is for template parts (type "part"). Nothing was created.' );
+		}
+		AuditLog::target( $type, $id );
+		CoreRest::call( 'POST', $route, $body );
+		return self::shape(
+			self::template(
+				array(
+					'id'   => $id,
+					'type' => 'wp_template_part' === $type ? 'part' : 'template',
+				)
+			),
+			true
+		);
+	}
+
+	/**
 	 * Only a customized theme template can be reverted (anything else would be a delete).
 	 *
 	 * @param \WP_Block_Template $template Template.
@@ -335,6 +420,9 @@ final class TemplateTools implements Tool, Snapshottable {
 				$out[] = self::shape( $template, false );
 			}
 			return array( 'templates' => $out );
+		}
+		if ( 'create' === $this->mode ) {
+			return self::create( $input, $route, $type );
 		}
 		$template = self::template( $input );
 		AuditLog::target( $type, (string) $template->id );

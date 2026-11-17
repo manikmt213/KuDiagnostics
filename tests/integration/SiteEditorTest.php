@@ -138,6 +138,159 @@ final class SiteEditorTest extends TestCase {
 		);
 	}
 
+	public function test_create_template_part_and_template(): void {
+		$this->needs_block_theme();
+		$part = $this->ok(
+			'kuduy-site-template-create',
+			array(
+				'type'    => 'part',
+				'slug'    => 'kuduy-promo-bar',
+				'title'   => 'Kuduy promo bar',
+				'area'    => 'header',
+				'content' => '<!-- wp:paragraph --><p>Kuduy promo</p><!-- /wp:paragraph -->',
+			)
+		);
+		$this->assertSame( get_stylesheet() . '//kuduy-promo-bar', $part['id'] );
+		$this->assertSame( 'header', $part['area'] );
+		$this->assertSame( 'custom', $part['source'] );
+		$this->assertFalse( $part['customized'], 'Made on the site, not a theme file.' );
+		$this->assertArrayHasKey( $part['id'], array_column( $this->ok( 'kuduy-site-templates', array( 'type' => 'part' ) )['templates'], null, 'id' ) );
+		$this->fails(
+			'kuduy-site-template-create',
+			array(
+				'type'    => 'part',
+				'slug'    => 'kuduy-promo-bar',
+				'content' => 'x',
+			),
+			'slug taken'
+		);
+		$this->fails(
+			'kuduy-site-template-create',
+			array(
+				'type'    => 'part',
+				'slug'    => 'kuduy-other',
+				'area'    => 'nowhere',
+				'content' => 'x',
+			),
+			'unknown area'
+		);
+		$this->fails(
+			'kuduy-site-template-create',
+			array(
+				'slug'    => 'index',
+				'content' => 'x',
+			),
+			'the theme already has index'
+		);
+		$template = $this->ok(
+			'kuduy-site-template-create',
+			array(
+				'slug'    => 'page-kuduy-landing',
+				'title'   => 'Kuduy landing',
+				'content' => '<!-- wp:template-part {"slug":"kuduy-promo-bar","area":"header"} /-->',
+			)
+		);
+		$this->assertStringContainsString( 'kuduy-promo-bar', $template['content'] );
+		wp_set_current_user( self::$editor );
+		$this->fails(
+			'kuduy-site-template-create',
+			array(
+				'slug'    => 'page-kuduy-editor',
+				'content' => 'x',
+			),
+			'editor lacks edit_theme_options'
+		);
+	}
+
+	public function test_synced_patterns_create_change_trash_with_undo(): void {
+		$made = $this->ok(
+			'kuduy-synced-pattern-save',
+			array(
+				'title'   => 'Kuduy call to action',
+				'content' => '<!-- wp:paragraph --><p>Buy now</p><!-- /wp:paragraph -->',
+			)
+		);
+		$this->assertSame( 'synced', $made['sync'] );
+		$this->assertSame( 'publish', $made['status'] );
+		$id   = $made['id'];
+		$page = (int) wp_insert_post(
+			array(
+				'post_title'   => 'Kuduy uses pattern',
+				'post_status'  => 'publish',
+				'post_content' => '<!-- wp:block {"ref":' . $id . '} /-->',
+			)
+		);
+		wp_insert_post(
+			array(
+				'post_title'   => 'Kuduy other ref',
+				'post_status'  => 'publish',
+				'post_content' => '<!-- wp:block {"ref":' . $id . '9} /-->',
+			)
+		);
+		$got = $this->ok( 'kuduy-synced-pattern-get', array( 'id' => $id ) );
+		$this->assertSame( array( $page ), array_column( $got['used_in'], 'id' ), 'Only exact references count.' );
+		$this->assertContains( $id, array_column( $this->ok( 'kuduy-patterns' )['synced'], 'id' ) );
+
+		$changed = $this->ok(
+			'kuduy-synced-pattern-save',
+			array(
+				'id'      => $id,
+				'content' => '<!-- wp:paragraph --><p>Buy today</p><!-- /wp:paragraph -->',
+				'sync'    => 'unsynced',
+			)
+		);
+		$this->assertSame( 'unsynced', $changed['sync'] );
+		$this->assertSame( 'Kuduy call to action', $changed['title'], 'Fields not given stay.' );
+		$this->assertStringContainsString( 'Buy today', $changed['content'] );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $changed['_snapshot_id'] ) );
+		$back = $this->ok( 'kuduy-synced-pattern-get', array( 'id' => $id ) );
+		$this->assertSame( 'synced', $back['sync'] );
+		$this->assertStringContainsString( 'Buy now', $back['content'] );
+
+		$this->assertSame(
+			'unsynced',
+			$this->ok(
+				'kuduy-synced-pattern-save',
+				array(
+					'id'   => $id,
+					'sync' => 'unsynced',
+				)
+			)['sync']
+		);
+		$this->ok(
+			'kuduy-synced-pattern-save',
+			array(
+				'id'   => $id,
+				'sync' => 'synced',
+			)
+		);
+		$this->assertSame( 'synced', $this->ok( 'kuduy-synced-pattern-get', array( 'id' => $id ) )['sync'] );
+
+		$trash = $this->ok( 'kuduy-synced-pattern-trash', array( 'id' => $id ) );
+		$this->assertSame( 'trash', $trash['status'] );
+		$this->assertCount( 1, $trash['used_in'] );
+		$this->fails( 'kuduy-synced-pattern-get', array( 'id' => $id ), 'trashed' );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $trash['_snapshot_id'] ) );
+		$this->assertSame( 'publish', $this->ok( 'kuduy-synced-pattern-get', array( 'id' => $id ) )['status'] );
+
+		$this->fails( 'kuduy-synced-pattern-save', array( 'title' => 'No content' ), 'new pattern needs content' );
+		$this->fails( 'kuduy-synced-pattern-get', array( 'id' => $page ), 'not a pattern' );
+		wp_set_current_user( self::make_user( 'contributor' ) );
+		$this->fails(
+			'kuduy-synced-pattern-save',
+			array(
+				'title'   => 'Contributor',
+				'content' => 'x',
+			),
+			'contributors cannot publish patterns'
+		);
+		$this->fails(
+			'kuduy-synced-pattern-trash',
+			array( 'id' => $id ),
+			'nor trash patterns of others'
+		);
+	}
+
 	public function test_global_styles_patch_undo_and_css_permission(): void {
 		if ( ! wp_theme_has_theme_json() ) {
 			$this->markTestSkipped( 'The active theme has no theme.json.' );

@@ -58,6 +58,7 @@ use Kuduy\Mcp\Modules\Blocks\SpectraPopups;
 use Kuduy\Mcp\Modules\Blocks\BlockTools;
 use Kuduy\Mcp\Modules\Blocks\GlobalStyles;
 use Kuduy\Mcp\Modules\Blocks\NavigationTools;
+use Kuduy\Mcp\Modules\Blocks\SyncedPatterns;
 use Kuduy\Mcp\Modules\Blocks\TemplateTools;
 use Kuduy\Mcp\Modules\Blocks\WidgetTools;
 use Kuduy\Mcp\Modules\Cache\CacheTools;
@@ -306,7 +307,7 @@ final class ToolRegistry {
 		foreach ( array(
 			'generateblocks' => array( 'status', 'settings-update' ),
 			'kadence-blocks' => array( 'status', 'settings-update' ),
-			'spectra'        => array( 'status', 'block-toggle' ),
+			'spectra'        => array( 'status', 'settings-update', 'block-toggle' ),
 		) as $plugin => $modes ) {
 			foreach ( $modes as $mode ) {
 				$registry->register( new BlockPluginTools( $plugin, $mode ) );
@@ -317,8 +318,11 @@ final class ToolRegistry {
 				$registry->register( new SpectraPopups( $plugin, $mode ) );
 			}
 		}
-		foreach ( array( 'list', 'get', 'update', 'revert' ) as $mode ) {
+		foreach ( array( 'list', 'get', 'create', 'update', 'revert' ) as $mode ) {
 			$registry->register( new TemplateTools( $mode ) );
+		}
+		foreach ( array( 'get', 'save', 'trash' ) as $mode ) {
+			$registry->register( new SyncedPatterns( $mode ) );
 		}
 		foreach ( array( 'get', 'update' ) as $mode ) {
 			$registry->register( new GlobalStyles( $mode ) );
