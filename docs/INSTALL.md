@@ -15,7 +15,7 @@ Plugins KuDiagnostics works with (each only when active): Elementor (+ Pro), Woo
 
 ## Install
 
-1. Download `kuduy-mcp.zip` from the latest release: <https://github.com/kuduyDigital/KuDiagnostics/releases/latest>. Optionally check it against `kuduy-mcp.zip.sha256` from the same release.
+1. Download `kuduy-mcp.zip` from the latest release: <https://github.com/manikmt213/KuDiagnostics/releases/latest>. Optionally check it against `kuduy-mcp.zip.sha256` from the same release.
 2. In WP admin go to **Plugins → Add New → Upload Plugin**, choose the ZIP, **Install Now**, then **Activate**.
 3. Open **Tools → KuDiagnostics**. It shows the address Claude connects to, for example `https://example.com/wp-json/kuduy-mcp/v1/mcp`.
 4. If WordPress shows "KuDiagnostics needs pretty permalinks", go to **Settings → Permalinks** and choose any option except "Plain".

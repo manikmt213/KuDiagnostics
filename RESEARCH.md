@@ -7,7 +7,7 @@ First research pass: 2026-11-04 (Phase 1). Re-inspected: 2026-11-05 (reference r
 | Item | Found (2026-11-05) | Notes |
 |---|---|---|
 | OS | Windows 10 Pro 19045 | Scripts work in Git Bash and PowerShell |
-| Project | `D:\NewIdea\KuDiagnostics`, git, public repo `kuduyDigital/KuDiagnostics` | Repo root = plugin root |
+| Project | `D:\NewIdea\KuDiagnostics`, git, public repo `manikmt213/KuDiagnostics` | Repo root = plugin root |
 | PHP | 8.3.36 (winget, user scope) | Not on the Bash PATH by default — see `CLAUDE.md` |
 | Composer | 2.11.1 (official installer, signature checked) | `composer.bat` strips `^` under cmd; use `php composer.phar` or quotes |
 | Node / npm | 24.18.0 / 11.7.0 | Runs WordPress Playground CLI 3.1.62 (WASM PHP + WordPress, no Docker) |
