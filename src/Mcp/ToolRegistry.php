@@ -45,6 +45,7 @@ use Kuduy\Mcp\Modules\Beaver\BeaverRead;
 use Kuduy\Mcp\Modules\Beaver\BeaverWrite;
 use Kuduy\Mcp\Modules\Elementor\ElementorAbilities;
 use Kuduy\Mcp\Modules\Elementor\ElementorDocs;
+use Kuduy\Mcp\Modules\Elementor\ElementorForms;
 use Kuduy\Mcp\Modules\Elementor\ElementorPopup;
 use Kuduy\Mcp\Modules\Elementor\ElementorRead;
 use Kuduy\Mcp\Modules\Elementor\ElementorVerify;
@@ -201,6 +202,9 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'settings', 'settings-update' ) as $mode ) {
 			$registry->register( new ElementorPopup( $mode ) );
+		}
+		foreach ( array( 'forms', 'submissions', 'submission-get', 'submission-update' ) as $mode ) {
+			$registry->register( new ElementorForms( $mode ) );
 		}
 		foreach ( array( 'status', 'layouts', 'get', 'modules', 'module-schema' ) as $mode ) {
 			$registry->register( new BeaverRead( $mode ) );

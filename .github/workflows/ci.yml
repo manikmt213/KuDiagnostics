@@ -124,6 +124,7 @@ jobs:
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'breakdance', label: '+ Breakdance (stand-in)' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'oxygen', label: '+ Oxygen 6 (stand-in)' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'elementor-popup', label: '+ Elementor Pro popup (stand-in)' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'elementor-forms', label: '+ Elementor Pro forms (stand-in)' }
           # Bricks, Divi 5, Etch (D41): paid, so stand-ins (tests/integration/fakes/bricks.php, blockbuilders.php).
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'bricks,blockbuilders', label: '+ Bricks, Divi 5, Etch (stand-ins)' }
           # Beaver Builder Lite (upgrade phase H, D37): the real plugin; Elementor stays active to prove the builders coexist.
