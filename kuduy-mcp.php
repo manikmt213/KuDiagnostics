@@ -9,7 +9,7 @@
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       kuduy-mcp
- * Update URI:        https://github.com/kuduyDigital/KuDiagnostics
+ * Update URI:        https://github.com/manikmt213/KuDiagnostics
  *
  * @package Kuduy\Mcp
  */

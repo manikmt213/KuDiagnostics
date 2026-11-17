@@ -4,7 +4,7 @@ Covers v0.4.0 (Phase 3 foundation, all Phase 4 WordPress core tools and the Phas
 
 ## Reporting a vulnerability
 
-Please do not open a public issue. Report privately to the maintainer (KUDUY Digital). GitHub's private vulnerability reporting is **not enabled yet** on `kuduyDigital/KuDiagnostics` (checked 2026-11-05); once the maintainer turns it on under Settings → Security, use **Security → Report a vulnerability**. Fixes ship as a GitHub release, which installed sites pick up through the built-in updater.
+Please do not open a public issue. Report privately to the maintainer (KUDUY Digital). GitHub's private vulnerability reporting is **UNVERIFIED** on `manikmt213/KuDiagnostics` (moved from `kuduyDigital/KuDiagnostics` 2026-11-17; was not enabled on the old repo, checked 2026-11-05); once the maintainer turns it on under Settings → Security, use **Security → Report a vulnerability**. Fixes ship as a GitHub release, which installed sites pick up through the built-in updater.
 
 ## 1. What we protect
 

@@ -58,7 +58,7 @@ file_put_contents( '/check-out/post.json', json_encode( $out ) );`;
 writeFileSync(join(dir, 'blueprint.json'), JSON.stringify({
   preferredVersions: { php: '8.3', wp: '7.1' },
   steps: [
-    { step: 'installPlugin', pluginData: { resource: 'url', url: `https://github.com/kuduyDigital/KuDiagnostics/releases/download/v${from}/kuduy-mcp.zip` }, options: { activate: true } },
+    { step: 'installPlugin', pluginData: { resource: 'url', url: `https://github.com/manikmt213/KuDiagnostics/releases/download/v${from}/kuduy-mcp.zip` }, options: { activate: true } },
     { step: 'runPHP', code: pre },
     { step: 'runPHP', code: post },
   ],

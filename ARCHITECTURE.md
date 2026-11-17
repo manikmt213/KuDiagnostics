@@ -7,7 +7,7 @@ Approved 2026-11-04 (decisions D1–D6); D1 and D2 changed by user decision duri
 - Native PHP WordPress plugin, GPL-2.0-or-later, no KUDUY cloud service, no Node.js on the WordPress host.
 - MCP **2026-07-28 and 2025-11-25** (dual-era) over Streamable HTTP at `https://<site>/wp-json/kuduy-mcp/v1/mcp`.
 - OAuth 2.1 authorization server inside WordPress; every tool runs **as the WordPress user who approved the connection**, limited by that user's capabilities and the granted scopes.
-- Self-update from GitHub Releases of `kuduyDigital/KuDiagnostics`.
+- Self-update from GitHub Releases of `manikmt213/KuDiagnostics`.
 - Non-goals for v1: arbitrary shell execution by default; network-wide multisite administration (see §12).
 
 ## 2. Decisions
@@ -100,7 +100,7 @@ flowchart LR
   X --> L
   X --> K
   Modules --> J
-  U -->|releases API| GH[("github.com/kuduyDigital/KuDiagnostics")]
+  U -->|releases API| GH[("github.com/manikmt213/KuDiagnostics")]
 ```
 
 ## 4. Folder structure (as built)
@@ -250,8 +250,8 @@ All layers must pass:
 
 ## 11. GitHub self-update (built)
 
-- Header `Update URI: https://github.com/kuduyDigital/KuDiagnostics`; core filter `update_plugins_github.com` for our file only; fallback on `site_transient_update_plugins` because core skips Update URI plugins when wordpress.org is unreachable.
-- `GET /repos/kuduyDigital/KuDiagnostics/releases/latest` (beta channel: `/releases?per_page=10`), cached 12 h in a site transient with ETag; 1 h retry after failures. "Check again" on Dashboard → Updates bypasses the cache (only for users who can `update_plugins`).
+- Header `Update URI: https://github.com/manikmt213/KuDiagnostics`; core filter `update_plugins_github.com` for our file only; fallback on `site_transient_update_plugins` because core skips Update URI plugins when wordpress.org is unreachable.
+- `GET /repos/manikmt213/KuDiagnostics/releases/latest` (beta channel: `/releases?per_page=10`), cached 12 h in a site transient with ETag; 1 h retry after failures. "Check again" on Dashboard → Updates bypasses the cache (only for users who can `update_plugins`).
 - Release contract: tag `vX.Y.Z`, assets `kuduy-mcp.zip` (top folder `kuduy-mcp/`) and `kuduy-mcp.zip.sha256`. `upgrader_pre_download` downloads both and refuses a mismatch. `plugins_api` fills the details modal (escaped notes). Tool `kuduy-check-update` (cap `update_plugins`) reports, never installs.
 - Limit: the checksum comes from the same release, so it proves integrity, not authorship. Later option: Ed25519 signature with an embedded public key.
 

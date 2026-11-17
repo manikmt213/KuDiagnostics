@@ -15,7 +15,7 @@ use Kuduy\Mcp\Plugin;
  */
 final class GitHubUpdater {
 
-	public const REPO = 'kuduyDigital/KuDiagnostics';
+	public const REPO = 'manikmt213/KuDiagnostics';
 
 	public const CACHE = 'kuduy_mcp_release';
 

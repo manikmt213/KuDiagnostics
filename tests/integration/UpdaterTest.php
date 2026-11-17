@@ -17,7 +17,7 @@ final class UpdaterTest extends TestCase {
 
 	private const FILE = 'kuduy-mcp/kuduy-mcp.php';
 
-	private const DL = 'https://github.com/kuduyDigital/KuDiagnostics/releases/download/';
+	private const DL = 'https://github.com/manikmt213/KuDiagnostics/releases/download/';
 
 	/**
 	 * Requests seen: list of [url, args].
@@ -105,7 +105,7 @@ final class UpdaterTest extends TestCase {
 			'tag_name'     => $tag,
 			'name'         => $tag,
 			'body'         => "Fixes <script>alert(1)</script> and adds things.\n- item",
-			'html_url'     => 'https://github.com/kuduyDigital/KuDiagnostics/releases/tag/' . $tag,
+			'html_url'     => 'https://github.com/manikmt213/KuDiagnostics/releases/tag/' . $tag,
 			'draft'        => false,
 			'prerelease'   => $pre,
 			'published_at' => '2026-11-05T10:00:00Z',
@@ -121,7 +121,7 @@ final class UpdaterTest extends TestCase {
 	private function latest_is( array $release ): void {
 		$this->routes = array_merge(
 			array(
-				'api.github.com/repos/kuduyDigital/KuDiagnostics/releases/latest' => array(
+				'api.github.com/repos/manikmt213/KuDiagnostics/releases/latest' => array(
 					200,
 					(string) wp_json_encode( $release ),
 					array( 'etag' => '"abc"' ),
@@ -142,7 +142,7 @@ final class UpdaterTest extends TestCase {
 		$data = get_plugin_data( WP_PLUGIN_DIR . '/' . self::FILE, false, false );
 
 		$this->assertSame( Plugin::VERSION, $data['Version'] );
-		$this->assertSame( 'https://github.com/kuduyDigital/KuDiagnostics', $data['UpdateURI'] );
+		$this->assertSame( 'https://github.com/manikmt213/KuDiagnostics', $data['UpdateURI'] );
 		$this->assertSame( self::FILE, GitHubUpdater::basename() );
 	}
 
@@ -192,7 +192,7 @@ final class UpdaterTest extends TestCase {
 		$calls = array_values( array_filter( $this->seen, static fn( $r ) => str_contains( $r[0], 'api.github.com' ) ) );
 		$this->assertCount( 1, $calls, 'second check served from cache' );
 
-		$this->routes = array( 'api.github.com/repos/kuduyDigital/KuDiagnostics/releases/latest' => array( 304, '' ) );
+		$this->routes = array( 'api.github.com/repos/manikmt213/KuDiagnostics/releases/latest' => array( 304, '' ) );
 		$this->assertSame( '9.9.9', GitHubUpdater::latest( true )['version'] ?? null, '304 keeps the cached release' );
 		$last = end( $this->seen );
 		$this->assertSame( '"abc"', $last[1]['headers']['If-None-Match'] ?? null );
@@ -227,7 +227,7 @@ final class UpdaterTest extends TestCase {
 	public function test_beta_channel_takes_prereleases(): void {
 		add_filter( 'kuduy_mcp_update_channel', static fn() => 'beta' );
 		$this->routes = array(
-			'api.github.com/repos/kuduyDigital/KuDiagnostics/releases?' => array(
+			'api.github.com/repos/manikmt213/KuDiagnostics/releases?' => array(
 				200,
 				(string) wp_json_encode( array( self::release( 'v9.10.0-beta.1', true, true ), self::release( 'v9.9.9' ) ) ),
 			),

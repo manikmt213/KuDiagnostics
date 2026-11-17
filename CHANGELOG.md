@@ -4,6 +4,8 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+- Repository moved to `github.com/manikmt213/KuDiagnostics` (2026-11-17). The updater (`GitHubUpdater::REPO`), the `Update URI` header, install links and the update check script now point there. Sites on 1.3.7 or older still poll `kuduyDigital/KuDiagnostics` until they install a release that contains this change.
+
 ## 1.3.7 — 2026-11-16
 
 Blocksy: changed theme settings reach the site's CSS. Distributed as a ZIP for manual upload.
