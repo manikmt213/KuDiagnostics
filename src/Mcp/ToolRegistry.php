@@ -70,6 +70,7 @@ use Kuduy\Mcp\Modules\Types\TypeTools;
 use Kuduy\Mcp\Modules\Forms\Cf7Save;
 use Kuduy\Mcp\Modules\Forms\FormEntries;
 use Kuduy\Mcp\Modules\Forms\FormsTools;
+use Kuduy\Mcp\Modules\Kirki\KirkiEdit;
 use Kuduy\Mcp\Modules\Kirki\KirkiRead;
 use Kuduy\Mcp\Modules\Media\MediaDelete;
 use Kuduy\Mcp\Modules\Media\MediaFiles;
@@ -209,6 +210,7 @@ final class ToolRegistry {
 		foreach ( array( 'status', 'pages', 'get' ) as $mode ) {
 			$registry->register( new KirkiRead( $mode ) );
 		}
+		$registry->register( new KirkiEdit() );
 		foreach ( array( 'pages', 'get' ) as $mode ) {
 			$registry->register( new BricksRead( $mode ) );
 		}

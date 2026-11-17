@@ -12,12 +12,12 @@ use Kuduy\Mcp\Mcp\ToolError;
 use Kuduy\Mcp\Modules\Core\Content;
 
 /**
- * Kirki 6 (the visual builder), read only (D39; source of Kirki 6.4.2). A page built with Kirki has the editor mode
+ * Kirki 6 (the visual builder), read tools (D39; source of Kirki 6.4.2). A page built with Kirki has the editor mode
  * "kirki" and its data is a map of blocks (id => name, children ids, properties: tag, attributes, contents) under the
  * root block, plus style blocks stored separately, staged versions and collaboration records. Reading goes through
  * Kirki's own helper (Kirki\HelperFunctions::is_kirki_type_data()). Saving a page correctly means writing blocks,
- * style blocks, used style ids and fonts together (save_kirki_data_to_db()), which is not built yet, so these tools
- * change nothing.
+ * style blocks, used style ids and fonts together (save_kirki_data_to_db()); KirkiEdit changes blocks only, through
+ * Kirki's page manager.
  */
 final class KirkiRead implements Tool {
 
@@ -62,9 +62,9 @@ final class KirkiRead implements Tool {
 	 */
 	public function description(): string {
 		return match ( $this->mode ) {
-			'status' => 'Kirki (the visual page builder, version 6 and later) on this site: version, whether your account may use the builder, and what these tools can do. Kirki pages are read only here.',
+			'status' => 'Kirki (the visual page builder, version 6 and later) on this site: version, whether your account may use the builder, and what these tools can do (kuduy-kirki-edit changes block text and attributes and removes, moves and duplicates blocks).',
 			'pages'  => 'Lists pages, posts and Kirki templates built with the Kirki builder: id, title, post type, status, link.',
-			default  => 'Returns the structure of a page built with Kirki: its blocks as a tree with id, name, HTML tag and text. include_properties: true adds each block\'s stored properties. Kirki saves edits as versions and shows visitors the published one: version "published" (default) reads that, "latest" the newest saved version not yet published; unpublished_changes says whether one exists. Read only: change the layout in Kirki, and title, status and other post fields with the post tools.',
+			default  => 'Returns the structure of a page built with Kirki: its blocks as a tree with id, name, HTML tag and text. include_properties: true adds each block\'s stored properties. Kirki saves edits as versions and shows visitors the published one: version "published" (default) reads that, "latest" the newest saved version not yet published; unpublished_changes says whether one exists. Change text and attributes, remove, move or duplicate blocks with kuduy-kirki-edit (block ids from version "latest"); styles in Kirki; title, status and other post fields with the post tools.',
 		};
 	}
 
@@ -169,8 +169,8 @@ final class KirkiRead implements Tool {
 			'status' => array(
 				'version'       => (string) constant( 'KIRKI_VERSION' ),
 				'can_build'     => (bool) call_user_func( array( self::HELPER, 'user_has_builder_access' ) ),
-				'supports'      => array( 'list pages', 'read page structure' ),
-				'not_supported' => 'Changing layouts: a Kirki page is saved as blocks, style blocks and staged versions together; that is not built yet.',
+				'supports'      => array( 'list pages', 'read page structure', 'change text and attributes, remove, move and duplicate blocks (kuduy-kirki-edit), saved as an unpublished version or published' ),
+				'not_supported' => 'Changing styles, classes and fonts, and adding new elements: style blocks are kept apart from the page and are changed in Kirki.',
 			),
 			'pages'  => self::pages( $input ),
 			default  => self::get( (int) $input['id'], ! empty( $input['include_properties'] ), 'latest' === ( $input['version'] ?? 'published' ) ),
@@ -250,7 +250,7 @@ final class KirkiRead implements Tool {
 			'block_count'         => count( $blocks ),
 			'root'                => $tree,
 			'link'                => (string) get_permalink( $post ),
-			'read_only'           => true,
+			'read_only'           => true !== ( new KirkiEdit() )->is_available(),
 		);
 	}
 
