@@ -51,7 +51,8 @@ One row per integration in the upgrade brief (58), plus what KuDiagnostics suppo
 | Native Gutenberg blocks | core | **Partial** | Block types, blocks of a post (read), templates, Global Styles. Missing: block-level add/update/move/delete, patterns | C |
 | GenerateBlocks | free 2.5.1 | Detection | Its blocks appear in `kuduy-block-types` when active; untested | C |
 | Kadence Blocks | free 3.9.0 | Detection | same | C |
-| Spectra / Spectra Blocks | free 2.20.6 (`ultimate-addons-for-gutenberg`; one plugin under two names) | Detection | same | C |
+| Spectra Legacy | free 2.20.6 (`ultimate-addons-for-gutenberg`) | Detection | same | C |
+| Spectra Blocks | free 1.0.15 (`spectra-blocks`; a separate plugin, checked on wordpress.org 2026-11-16) | Detection | same | C |
 
 ## D. Store
 

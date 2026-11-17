@@ -26,6 +26,7 @@ use Kuduy\Mcp\Modules\Core\PostTypes;
 use Kuduy\Mcp\Modules\Core\PostUpdate;
 use Kuduy\Mcp\Modules\Core\Revisions;
 use Kuduy\Mcp\Modules\Core\Settings;
+use Kuduy\Mcp\Modules\Core\IntegrationDetail;
 use Kuduy\Mcp\Modules\Core\Integrations;
 use Kuduy\Mcp\Modules\Core\SiteInfo;
 use Kuduy\Mcp\Modules\Core\SnapshotList;
@@ -61,6 +62,7 @@ use Kuduy\Mcp\Modules\Forms\Cf7Save;
 use Kuduy\Mcp\Modules\Forms\FormEntries;
 use Kuduy\Mcp\Modules\Forms\FormsTools;
 use Kuduy\Mcp\Modules\Kirki\KirkiRead;
+use Kuduy\Mcp\Modules\Media\MediaDelete;
 use Kuduy\Mcp\Modules\Media\MediaFiles;
 use Kuduy\Mcp\Modules\Avada\AvadaRead;
 use Kuduy\Mcp\Modules\Avada\AvadaWrite;
@@ -104,6 +106,8 @@ final class ToolRegistry {
 		$registry = new self();
 		$registry->register( new SiteInfo() );
 		$registry->register( new Integrations() );
+		$registry->register( new IntegrationDetail( 'get' ) );
+		$registry->register( new IntegrationDetail( 'diagnose' ) );
 		$registry->register( new SnapshotList() );
 		$registry->register( new SnapshotRestore() );
 		$registry->register( new CheckUpdate() );
@@ -208,6 +212,7 @@ final class ToolRegistry {
 		foreach ( array( 'replace', 'rename' ) as $mode ) {
 			$registry->register( new MediaFiles( $mode ) );
 		}
+		$registry->register( new MediaDelete() );
 		foreach ( array( 'start', 'status', 'cancel' ) as $mode ) {
 			$registry->register( new JobTools( $mode ) );
 		}

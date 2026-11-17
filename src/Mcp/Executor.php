@@ -53,8 +53,8 @@ final class Executor {
 	private static function run( Tool $tool, mixed $args, ?int &$snapshot ): array {
 		$available = $tool->is_available();
 		if ( true !== $available ) {
-			/* translators: %s: why the tool cannot run, e.g. "Elementor is not active". */
 			$category = false !== stripos( (string) $available, 'not active' ) ? ToolError::PLUGIN_NOT_ACTIVE : ToolError::FEATURE_NOT_SUPPORTED;
+			/* translators: %s: why the tool cannot run, e.g. "Elementor is not active". */
 			return self::error( sprintf( __( 'This tool is not available: %s', 'kuduy-mcp' ), (string) $available ), 'error', 'unavailable', $category );
 		}
 
@@ -96,7 +96,7 @@ final class Executor {
 				if ( ! Confirmation::consume( $token, $tool->name(), $input, $version ) ) {
 					return self::error( __( 'This confirmation is not valid: it expired, was already used, was made for other arguments or another account, or the item changed since the preview. Nothing was changed. Call again without confirm_token for a new preview.', 'kuduy-mcp' ), 'error', 'confirmation_invalid', ToolError::CONFLICT );
 				}
-			}
+			}//end if
 			if ( $tool instanceof Snapshottable && ( $tool->annotations()['destructiveHint'] ?? false ) ) {
 				$snap = $tool->snapshot( $input );
 				if ( null !== $snap ) {
@@ -111,7 +111,7 @@ final class Executor {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- operator diagnostics; arguments are never logged.
 			error_log( sprintf( 'KuDiagnostics: tool %s failed with %s in %s:%d', $tool->name(), get_class( $e ), $e->getFile(), $e->getLine() ) );
 			return self::error( __( 'The tool failed unexpectedly. Details are in the site error log.', 'kuduy-mcp' ), 'error', 'exception', ToolError::INTERNAL_ERROR );
-		}
+		}//end try
 
 		$extra = self::extra_content( $result['_content'] ?? array() );
 		unset( $result['_content'] );

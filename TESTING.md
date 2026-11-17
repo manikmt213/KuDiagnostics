@@ -394,6 +394,21 @@ Runs with `KUDUY_FAKES=wpbakery` (a stand-in for WPBakery's element registry, `t
 | IR2 | Reports what is on the site: WordPress itself, Elementor active with its version and tools; uninstalled ones only with `all`; an unimplemented builder is `none` with no tools; WPBakery is `partial` and its tools count as available only while the plugin is loaded; category and search filters | I — `test_reports_what_is_on_this_site` |
 | IR3 | Versions only for users who can manage plugins; subscriber refused; unknown category refused | I — `test_versions_only_for_those_who_manage_plugins` |
 
+## Tool contract, confirmation tokens, discovery (phase M, D44–D46, D52)
+
+Run 2026-11-17 on both pairs (WordPress 6.9.11 / PHP 8.1.34 and 7.1.4 / PHP 8.3.36): 236 tests, 0 failures; `ContractTest` 8 tests, 217 assertions; smoke 26/26.
+
+| # | Feature | Type |
+|---|---|---|
+| CT1 | Tool errors name their category in a second text block and `_meta`, first block unchanged, no `structuredContent`: invalid arguments → `INVALID_ARGUMENT`, missing object → `RESOURCE_NOT_FOUND`, capability → `PERMISSION_DENIED`; unknown categories fall back to `OPERATION_FAILED` | I — `ContractTest::test_errors_name_their_category` |
+| CT2 | A tool whose plugin is not loaded answers `PLUGIN_NOT_ACTIVE` or `FEATURE_NOT_SUPPORTED` | I — `test_unavailable_tool_names_its_category` (skipped only if every tool is available) |
+| CT3 | `kuduy-media-delete`: first call changes nothing and returns preview (uses listed) + token; with the token the attachment and its file are gone; the token is never in the audit log, a reference is | I — `test_media_delete_needs_a_confirmation` |
+| CT4 | A token is refused (`CONFLICT`, nothing deleted) for another item, on second use, for another account, after the item changed, after expiry; a malformed token is refused by the schema | I — `test_a_token_fits_one_call_only` |
+| CT5 | `kuduy-media-delete` needs `kuduy:admin`, is marked destructive, has no required output fields | I — `test_media_delete_is_an_admin_scope_tool` |
+| CT6 | `kuduy-integration-get`: live state, required integrations with their state, each tool with availability and scope; schemas only on request; versions only for those who manage plugins | I — `test_integration_get` |
+| CT7 | `kuduy-integration-diagnose`: one integration or all installed; findings with levels; refused without `activate_plugins` | I — `test_integration_diagnose` |
+| CT8 | Every required integration exists in the catalogue; Spectra Blocks and Spectra Legacy are separate rows | I — `test_catalogue_dependencies_exist` |
+
 ## SEO + Image SEO
 
 | # | Feature | Type |

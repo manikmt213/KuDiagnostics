@@ -184,6 +184,10 @@ interface Tool {
 
 Tools name the object they touch with `AuditLog::target( type, id )` (snapshots do it automatically), so audit rows carry `object_type` / `object_id`. Content tools share `Modules\Core\Content`: only post types and taxonomies with an admin UI (`show_ui`), attachments excluded until media tools, a post summary that never contains the post password, paging (1–100 per page).
 
+### Error categories and confirmation (phase M, built 2026-11-17)
+
+`ToolError` carries one of the 15 categories of D52; `Executor` maps its own failures (unavailable, invalid arguments, capability, exception) and returns the category as a second text block and `_meta["kuduy/error"]` — never as `structuredContent`. A tool implementing `Execution\Confirmable` runs in two calls (D45): `Executor` returns `preview()` with a token from `Execution\Confirmation` (transient, SHA-256 of the token → fingerprint of user, OAuth client, tool, arguments, target state), and executes only when the token is consumed successfully. First such tool: `kuduy-media-delete` (D46). `Core/IntegrationDetail` adds `kuduy-integration-get` and `-diagnose` on top of the catalogue (D44).
+
 ## 7. OAuth and authentication flow
 
 ```mermaid

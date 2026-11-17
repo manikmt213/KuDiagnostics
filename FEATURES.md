@@ -220,6 +220,10 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Feature | Status |
 |---|---|
 | Central integration registry with capability discovery: installed, active, version, support class, tools and whether they are available now | Tested 2026-11-10 (IR1–IR3: `kuduy-integrations`, `IntegrationsTest`) |
+| One integration in detail and diagnosis: required integrations, every tool with availability and scope (`kuduy-integration-get`, `kuduy-integration-diagnose`, D44) | Tested 2026-11-17 (CT6–CT8) |
+| Failure categories on tool errors (`PLUGIN_NOT_ACTIVE`, `PERMISSION_DENIED`, `RESOURCE_NOT_FOUND`, `CONFLICT`, …; D52). Existing tools report the general `OPERATION_FAILED` until they name a category | Tested 2026-11-17 (CT1, CT2) |
+| Two-step confirmation tokens for high-risk tools: single use, 10 minutes, bound to user, client, tool, arguments and the state of the target (D45) | Tested 2026-11-17 (CT3, CT4) |
+| Permanent delete of a media item with a usage preview (`kuduy-media-delete`, D46; first tool on confirmation tokens) | Tested 2026-11-17 (CT3–CT5) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |

@@ -62,7 +62,8 @@ final class IntegrationCatalog {
 		array( 'gutenberg', 'WordPress blocks and Site Editor', 'blocks', 'core', array(), 'partial', array( 'kuduy-block-types', 'kuduy-post-blocks', 'kuduy-site-template', 'kuduy-global-styles-', 'kuduy-nav-menu', 'kuduy-widget' ), 'core', 'C', 'Templates, Global Styles, navigation and widgets are managed. Blocks of a post are read; changing one block is not offered yet (the whole content is replaced with kuduy-post-update). Patterns not yet.' ),
 		array( 'generateblocks', 'GenerateBlocks', 'blocks', 'plugin', array( 'generateblocks' ), 'detection', array(), 'free', 'C', 'Its blocks show in kuduy-block-types; not tested.' ),
 		array( 'kadence-blocks', 'Kadence Blocks', 'blocks', 'plugin', array( 'kadence-blocks' ), 'detection', array(), 'free', 'C', 'Its blocks show in kuduy-block-types; not tested.' ),
-		array( 'spectra', 'Spectra (Spectra Blocks)', 'blocks', 'plugin', array( 'ultimate-addons-for-gutenberg' ), 'detection', array(), 'free', 'C', 'Its blocks show in kuduy-block-types; not tested.' ),
+		array( 'spectra', 'Spectra Legacy', 'blocks', 'plugin', array( 'ultimate-addons-for-gutenberg' ), 'detection', array(), 'free', 'C', 'The older Spectra plugin (a different plugin from Spectra Blocks). Its blocks show in kuduy-block-types; not tested.' ),
+		array( 'spectra-blocks', 'Spectra Blocks', 'blocks', 'plugin', array( 'spectra-blocks' ), 'detection', array(), 'free', 'C', 'The newer Spectra Blocks plugin (a different plugin from Spectra Legacy). Its blocks show in kuduy-block-types; not tested.' ),
 
 		array( 'woocommerce', 'WooCommerce', 'store', 'plugin', array( 'woocommerce' ), 'full', array( 'kuduy-woo-' ), 'free', 'G', 'Tested with order storage (HPOS) on and off. Not offered: refunds, permanent delete. Not yet: general store settings, attribute taxonomies.' ),
 
@@ -114,6 +115,55 @@ final class IntegrationCatalog {
 		array( 'wp-fastest-cache', 'WP Fastest Cache', 'cache', 'plugin', array( 'wp-fastest-cache' ), 'full', array( 'kuduy-cache-' ), 'free', '', '' ),
 		array( 'wp-rocket', 'WP Rocket', 'cache', 'plugin', array( 'wp-rocket' ), 'partial', array( 'kuduy-cache-' ), 'paid', 'L', 'Purge built from its documentation; not tested against the plugin.' ),
 	);
+
+	/**
+	 * Integrations that only work on top of another one: id => ids of the parents it needs (all of them).
+	 *
+	 * @var array<string, list<string>>
+	 */
+	private const REQUIRES = array(
+		'elementor-pro'              => array( 'elementor' ),
+		'ultimate-addons-elementor'  => array( 'elementor' ),
+		'essential-addons-elementor' => array( 'elementor' ),
+		'premium-addons-elementor'   => array( 'elementor' ),
+		'happy-addons'               => array( 'elementor' ),
+		'ht-mega'                    => array( 'elementor' ),
+		'powerpack'                  => array( 'elementor' ),
+		'qi-addons'                  => array( 'elementor' ),
+		'unlimited-elements'         => array( 'elementor' ),
+		'xpro-addons'                => array( 'elementor' ),
+		'element-pack'               => array( 'elementor' ),
+		'piotnet-addons'             => array( 'elementor' ),
+		'jet-elements'               => array( 'elementor' ),
+		'dynamic-content-elementor'  => array( 'elementor' ),
+		'bricksforge'                => array( 'bricks' ),
+		'avada-builder'              => array( 'avada' ),
+	);
+
+	/**
+	 * Ids of the integrations this one needs.
+	 *
+	 * @param string $id Integration id.
+	 * @return list<string>
+	 */
+	public static function requires( string $id ): array {
+		return self::REQUIRES[ $id ] ?? array();
+	}
+
+	/**
+	 * One catalogue row by id.
+	 *
+	 * @param string $id Integration id.
+	 * @return array{id: string, name: string, category: string, kind: string, folders: list<string>, support: string, prefixes: list<string>, copy: string, phase: string, note: string}|null
+	 */
+	public static function find( string $id ): ?array {
+		foreach ( self::all() as $row ) {
+			if ( $row['id'] === $id ) {
+				return $row;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Every catalogue row as a keyed array.

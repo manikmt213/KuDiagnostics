@@ -89,3 +89,9 @@ PHP 8.3 and Composer for static checks, Node for WordPress Playground (`npm inst
 | Release ZIP | `php scripts/build-release.php --expect-version=X.Y.Z`, then `npm run check:release` |
 
 Tests are PHPUnit classes in `tests/integration/` that call tools through the real MCP endpoint (`CallsTools::ok()` / `fails()`), validate results against the tool's output schema, and check WordPress state. A class that needs a plugin skips when it is not active; CI (`.github/workflows/ci.yml`) runs every plugin combination.
+
+## Error categories and confirmation (phase M)
+
+- **Error categories.** Throw `ToolError::of( ToolError::RESOURCE_NOT_FOUND, 'No such item.' )` (or `new ToolError( $message, $category )`) to tell the client what kind of failure it is; a plain `new ToolError( $message )` is `OPERATION_FAILED`. The executor adds the category as a second text block and in `_meta["kuduy/error"]`; the message stays the first block.
+- **High-risk tools.** Implement `Execution\Confirmable`: `preview( $input )` returns what would happen plus a `version` fingerprint of the target and changes nothing. Add `Confirmation::ARG => Confirmation::token_input()` to the input schema and `Confirmation::output_properties()` to the output schema, with no top-level `required` in the output. The executor does the rest: first call → preview + token; second call with the token → `execute()`. See `Modules/Media/MediaDelete`.
+- **Dependencies between integrations** go in `IntegrationCatalog::REQUIRES`; `kuduy-integration-get` and `-diagnose` read them.

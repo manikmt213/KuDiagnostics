@@ -207,16 +207,16 @@ final class MediaLibrary implements Tool {
 			throw new ToolError( 'No media item with this id.' );
 		}
 		AuditLog::target( 'post', (string) $post->ID );
-		return 'usage' === $this->mode ? $this->usage( $post ) : $this->regenerate( $post );
+		return 'usage' === $this->mode ? self::usage( $post ) : $this->regenerate( $post );
 	}
 
 	/**
-	 * Places that use the item.
+	 * Places that use the item (also the preview of kuduy-media-delete).
 	 *
 	 * @param \WP_Post $post Attachment.
 	 * @return array<string, mixed>
 	 */
-	private function usage( \WP_Post $post ): array {
+	public static function usage( \WP_Post $post ): array {
 		global $wpdb;
 		$id    = $post->ID;
 		$file  = (string) get_post_meta( $id, '_wp_attached_file', true );

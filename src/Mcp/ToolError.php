@@ -69,6 +69,16 @@ final class ToolError extends \RuntimeException {
 	}
 
 	/**
+	 * An error of one category: `throw ToolError::of( ToolError::RESOURCE_NOT_FOUND, 'No such item.' )`.
+	 *
+	 * @param string $category One of the category constants.
+	 * @param string $message  Message for the client.
+	 */
+	public static function of( string $category, string $message ): self {
+		return new self( $message, $category );
+	}
+
+	/**
 	 * Failure category.
 	 */
 	public function category(): string {

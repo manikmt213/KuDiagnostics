@@ -132,7 +132,7 @@ final class Integrations implements Tool {
 	 *
 	 * @return array<string, array{0: string, 1: string}>
 	 */
-	private static function plugin_folders(): array {
+	public static function plugin_folders(): array {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		$out = array();
 		foreach ( get_plugins() as $file => $data ) {
@@ -151,7 +151,7 @@ final class Integrations implements Tool {
 	 * @param array<string, array{0: string, 1: string}> $plugins Installed plugins by folder.
 	 * @return array{installed: bool, active: bool, version: string}
 	 */
-	private static function detect( array $row, array $plugins ): array {
+	public static function detect( array $row, array $plugins ): array {
 		if ( 'core' === $row['kind'] ) {
 			return array(
 				'installed' => true,
@@ -199,7 +199,7 @@ final class Integrations implements Tool {
 	 * @param array<string, bool> $available Tool name => available now.
 	 * @return array{count: int, available: bool, names: string}|null
 	 */
-	private static function tools( array $prefixes, array $available ): ?array {
+	public static function tools( array $prefixes, array $available ): ?array {
 		if ( ! $prefixes ) {
 			return null;
 		}

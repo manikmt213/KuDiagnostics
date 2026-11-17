@@ -4,6 +4,13 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+Phase M of the ecosystem plan (`docs/plans/phase-m-contract.md`).
+
+- Added: `kuduy-media-delete` — permanently deletes a media item and its files, in two steps: a preview that lists where the item is used, then a single-use confirmation token (valid 10 minutes, bound to the account, the arguments and the item's state). Needs the admin access level.
+- Added: `kuduy-integration-get` (one builder, theme or plugin in detail: what it needs, every tool behind it and whether it can run now) and `kuduy-integration-diagnose` (what stands in the way of using the integrations on the site).
+- Added: tool errors now name a failure category (`PERMISSION_DENIED`, `RESOURCE_NOT_FOUND`, `INVALID_ARGUMENT`, `PLUGIN_NOT_ACTIVE`, `CONFLICT`, …) next to the message. Messages and successful results are unchanged.
+- Changed: Spectra Blocks and Spectra Legacy are listed as two separate plugins.
+
 ## 1.3.8 — 2026-11-17
 
 The plugin moved to a new GitHub repository. No feature changes.

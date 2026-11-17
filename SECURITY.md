@@ -184,3 +184,17 @@ Also fixed while researching: `kuduy-dev-search` crashed when `path` named a sin
 ## 6. Planned controls (later phases)
 
 Built since: confirm-first for disruptive operations, object-level guards per tool, developer-mode path allow-lists and secret-file deny-list, D4 code execution with time limit and fatal-error audit, hidden-mode recovery, fuzzing (section 4a). Still planned: signed releases (Ed25519), an atomic rate limiter, a crash marker + safe-mode boot for files written with `kuduy-dev-file-write` (today WordPress's own recovery mode covers fatal errors in plugins).
+
+## Confirmation tokens (D45, 2026-11-17)
+
+High-risk tools (`Execution\Confirmable`; first: `kuduy-media-delete`) cannot run in one call. The executor returns the tool's preview with a random 192-bit token and runs the tool only when a second call carries it.
+
+| Threat | Control | Test |
+|---|---|---|
+| The model deletes without the user seeing what is affected | First call never executes; preview and instruction to ask the user | CT3 |
+| Token reused, or used for different arguments | Stored as SHA-256 with a fingerprint of tool and arguments; deleted on every use attempt | CT4 |
+| Token used by another account or OAuth client | User id and client id are part of the fingerprint | CT4 |
+| Target changed between preview and confirmation | The tool's state fingerprint is recomputed and compared | CT4 |
+| Token leaks through logs | The audit row stores a 12-hex reference of the token's hash, never the token | CT3 |
+
+Limits: the token proves a second call with the same arguments, not that a human read the preview — the client decides whether to ask. Tokens are transients: on a site with a persistent object cache they live there. `confirm: true` tools are unchanged.
