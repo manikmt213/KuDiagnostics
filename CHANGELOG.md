@@ -20,6 +20,14 @@ Phase C1 (`docs/plans/phase-c-blocks.md`):
 - Added: `kuduy-post-duplicate` — copy a post or page into a new draft.
 - Changed: GenerateBlocks, Kadence Blocks and Spectra Legacy are now partly supported (their blocks work through the block tools; their own settings come later).
 
+Phase C2 (`docs/plans/phase-c2-block-plugins.md`):
+
+- Added: `kuduy-generateblocks-status` / `-settings-update` and `kuduy-kadence-blocks-status` / `-settings-update` — each plugin's settings, changed through the plugin's own save path. Kadence API keys and secrets are never shown or changed.
+- Added: `kuduy-spectra-status` and `kuduy-spectra-block-toggle` for Spectra Legacy (switch its blocks on or off).
+- Added: popup tools for Spectra Legacy and Spectra Blocks (`kuduy-spectra-popups`, `-popup-get`, `-popup-save`, `-popup-trash`, and the same under `kuduy-spectra-blocks-`).
+- Added: Spectra Blocks' own abilities through `kuduy-spectra-blocks-abilities`, `-ability-get`, `-ability-run` (when the site owner has switched them on in Spectra Blocks).
+- Changed: builder abilities that delete something for good are no longer run through the abilities tools (Breakdance, Oxygen, Bricks, Spectra Blocks): a snapshot cannot bring it back.
+
 ## 1.3.8 — 2026-11-17
 
 The plugin moved to a new GitHub repository. No feature changes.

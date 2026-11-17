@@ -34,9 +34,10 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 * Builders: BREAKDANCE_MODE value => display name.
 	 */
 	public const BUILDERS = array(
-		'breakdance' => 'Breakdance',
-		'oxygen'     => 'Oxygen',
-		'bricks'     => 'Bricks',
+		'breakdance'     => 'Breakdance',
+		'oxygen'         => 'Oxygen',
+		'bricks'         => 'Bricks',
+		'spectra-blocks' => 'Spectra Blocks',
 	);
 
 	/**
@@ -50,7 +51,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 * @var array<string, array{since: string, switch: string, prefix: string, get: string, run: string, never: list<string>, site: list<string>, allow: list<string>|null}>
 	 */
 	private const CONFIG = array(
-		'breakdance' => array(
+		'breakdance'     => array(
 			'since'  => 'Breakdance 3',
 			'switch' => '"Agents & MCP" in the Breakdance settings (on unless switched off)',
 			'prefix' => '',
@@ -60,7 +61,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			'site'   => array( 'set-home-page' ),
 			'allow'  => null,
 		),
-		'oxygen'     => array(
+		'oxygen'         => array(
 			'since'  => 'Oxygen 6',
 			'switch' => '"Agents & MCP" in the Oxygen settings (on unless switched off)',
 			'prefix' => '',
@@ -70,7 +71,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			'site'   => array( 'set-home-page' ),
 			'allow'  => null,
 		),
-		'bricks'     => array(
+		'bricks'         => array(
 			'since'  => 'Bricks 2.4',
 			'switch' => '"Enable Bricks abilities" in Bricks > AI > Configuration (each ability can also be switched off in Bricks > AI > Abilities)',
 			'prefix' => '_bricks_page_',
@@ -82,12 +83,26 @@ final class BuilderAbilities implements Tool, Snapshottable {
 			// the _bricks_page_ data the snapshot keeps, so it could not be undone (Bricks 2.4.5, checked live).
 			'allow'  => array( 'set-page-elements', 'add-element', 'update-element', 'batch-update-elements', 'remove-element', 'set-page-settings', 'update-element-interactions', 'update-element-conditions', 'update-form-fields', 'update-form-actions', 'create-post', 'create-template', 'duplicate-post' ),
 		),
+		// Spectra Blocks 1.0.15 (phase C2): about fifty abilities under "spectra-blocks/" (create blocks on a page,
+		// update block attributes, move/remove/duplicate blocks, animations, display conditions, popups, settings,
+		// global styles). Blocks live in post_content, which the snapshot keeps; popup posts also keep their
+		// "spectra-blocks-popup-" fields. Abilities that change site-wide settings take no post and are refused.
+		'spectra-blocks' => array(
+			'since'  => 'Spectra Blocks 1.0',
+			'switch' => '"Abilities" in Spectra Blocks > Settings (off unless switched on; editing abilities can be switched off there separately)',
+			'prefix' => 'spectra-blocks-popup-',
+			'get'    => 'spectra-blocks/get-post-content {"post_id": 12}, spectra-blocks/list-available-blocks, spectra-blocks/get-block-config',
+			'run'    => 'spectra-blocks/update-block-attributes or spectra-blocks/create-container on one page (post_id)',
+			'never'  => array(),
+			'site'   => array(),
+			'allow'  => null,
+		),
 	);
 
 	/**
 	 * Builder and mode.
 	 *
-	 * @param string $builder breakdance | oxygen.
+	 * @param string $builder breakdance | oxygen | bricks | spectra-blocks.
 	 * @param string $mode    abilities | ability-get | ability-run.
 	 */
 	public function __construct( private string $builder, private string $mode ) {}
@@ -201,9 +216,11 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 * {@inheritDoc}
 	 */
 	public function is_available(): bool|string {
-		$active = 'bricks' === $this->builder
-			? defined( 'BRICKS_DB_PAGE_CONTENT' )
-			: defined( 'BREAKDANCE_MODE' ) && constant( 'BREAKDANCE_MODE' ) === $this->builder;
+		$active = match ( $this->builder ) {
+			'bricks'         => defined( 'BRICKS_DB_PAGE_CONTENT' ),
+			'spectra-blocks' => defined( 'SPECTRA_BLOCKS_VER' ),
+			default          => defined( 'BREAKDANCE_MODE' ) && constant( 'BREAKDANCE_MODE' ) === $this->builder,
+		};
 		return $active ? true : self::CONFIG[ $this->builder ]['since'] . ' or later is not active on this site.';
 	}
 
@@ -214,7 +231,7 @@ final class BuilderAbilities implements Tool, Snapshottable {
 	 */
 	private static function post_id( array $input ): int {
 		$args = (array) ( $input['input'] ?? array() );
-		foreach ( array( 'post_id', 'postId' ) as $key ) {
+		foreach ( array( 'post_id', 'postId', 'popup_id' ) as $key ) {
 			if ( isset( $args[ $key ] ) && is_numeric( $args[ $key ] ) ) {
 				return (int) $args[ $key ];
 			}
@@ -297,14 +314,17 @@ final class BuilderAbilities implements Tool, Snapshottable {
 		if ( null !== $config['allow'] && ! in_array( $short, $config['allow'], true ) ) {
 			return 'Only ' . $this->label() . '\'s page-level changes are run here (' . implode( ', ', $config['allow'] ) . '); this one deletes, restores or changes data shared across the site, which cannot be undone from here. Do it in ' . $this->label() . ' itself.';
 		}
+		if ( str_starts_with( $short, 'delete-' ) ) {
+			return 'This ability deletes for good, which cannot be undone from here. Trash it in ' . $this->label() . ' or with the KuDiagnostics trash tools instead.';
+		}
 		if ( str_starts_with( $short, 'create-' ) || str_starts_with( $short, 'duplicate-' ) ) {
 			return '';
 		}
 		// Bricks 2.4.5 declares an empty `properties` as an object (so it encodes as {}): read it as an array.
 		$props = (array) ( $ability->get_input_schema()['properties'] ?? array() );
-		if ( isset( $props['post_id'] ) || isset( $props['postId'] ) ) {
+		if ( isset( $props['post_id'] ) || isset( $props['postId'] ) || isset( $props['popup_id'] ) ) {
 			// The page must be named by its id, so it can be snapshotted first (Bricks also accepts slug, path or title).
-			return $listing || self::post_id( $input ) > 0 ? '' : 'Name the page by its numeric id (' . ( isset( $props['postId'] ) ? 'postId' : 'post_id' ) . ') so it can be saved first and the change undone.';
+			return $listing || self::post_id( $input ) > 0 ? '' : 'Name the page by its numeric id (' . ( isset( $props['postId'] ) ? 'postId' : ( isset( $props['popup_id'] ) ? 'popup_id' : 'post_id' ) ) . ') so it can be saved first and the change undone.';
 		}
 		return 'This ability changes site-wide ' . $this->label() . ' settings, which cannot be undone from here. Change them in ' . $this->label() . ' itself.';
 	}

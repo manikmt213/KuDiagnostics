@@ -469,6 +469,20 @@ Run 2026-11-17: full suite 247 tests, 0 failures on WordPress 6.9.11 / PHP 8.1.3
 | BK-E10 | `kuduy-post-duplicate`: draft copy with content, structured custom fields, current author; no edit lock; Elementor pages refused | I — `test_duplicate_a_post` |
 | BK-E11 | GenerateBlocks, Kadence Blocks and Spectra Legacy: schema, insert, validate and usage of one of their blocks | I — `test_block_plugins_when_active` (job "+ block plugins") |
 
+## Block plugins' own tools (phase C2)
+
+Run 2026-11-17 with GenerateBlocks 2.5.1, Kadence Blocks 3.9.1, Spectra Legacy 2.20.6 and Spectra Blocks 1.0.15 active (abilities switched on): 254 tests, 0 failures on WordPress 6.9.11 / PHP 8.1.34 and 7.1.4 / PHP 8.3.36, no `BlockPluginsTest` skips; bare suites 254 tests, 0 failures on both pairs; Breakdance, Oxygen and Bricks stand-in jobs green. Playground exited without a report on about one run in three on this machine (no failing test; a rerun of the same job passed each time) — noted under known limits.
+
+| # | Feature | Type |
+|---|---|---|
+| BP1 | GenerateBlocks: status (version, settings, blocks); settings changed through its route with its sanitizer; unknown key refused; undo; editor refused | I — `BlockPluginsTest::test_generateblocks_status_and_settings` |
+| BP2 | Kadence Blocks: status with blocks and settings; a secret shows only that it is set and never appears in the result; setting changed and undone; secret and unknown keys refused | I — `test_kadence_status_and_settings` |
+| BP3 | Spectra Legacy: status with blocks and switches; a block switched off and on again by undo; unknown block and contradictory lists refused | I — `test_spectra_status_and_block_switch` |
+| BP4 | Spectra Legacy popups: create (draft, fields), list, change content and switch, wrong content refused, undo, trash and undo, unknown popup, editor refused | I — `test_spectra_legacy_popups` |
+| BP5 | Spectra Blocks popups: same as BP4 | I — `test_spectra_blocks_popups` |
+| BP6 | Spectra Blocks abilities listed and read; delete-popup and update-plugin-setting are not run | I — `test_spectra_blocks_abilities` |
+| BP7 | Each plugin's tools are offered only while it is active | I — `test_tools_hidden_without_their_plugin` |
+
 ## SEO + Image SEO
 
 | # | Feature | Type |

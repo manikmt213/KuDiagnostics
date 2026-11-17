@@ -1,0 +1,55 @@
+<?php
+/**
+ * Block plugins are not dependencies; this declares only what KUDUY calls (GenerateBlocks 2.5.1, Kadence Blocks
+ * 3.9.1, Spectra Legacy 2.20.6 classes/class-uagb-admin-helper.php, class-uagb-block-module.php,
+ * class-uagb-helper.php; Spectra Blocks 1.0.15).
+ */
+
+namespace {
+	define( 'GENERATEBLOCKS_VERSION', '2.5.1' );
+	define( 'KADENCE_BLOCKS_VERSION', '3.9.1' );
+	define( 'UAGB_VER', '2.20.6' );
+	define( 'SPECTRA_BLOCKS_VER', '1.0.15' );
+
+	/**
+	 * @return array<string, mixed>
+	 */
+	function generateblocks_get_option_defaults() {}
+
+	class UAGB_Admin_Helper {
+		/**
+		 * @param string $key
+		 * @param mixed  $default
+		 * @param bool   $network_override
+		 * @return mixed
+		 */
+		public static function get_admin_settings_option( $key, $default = false, $network_override = false ) {}
+
+		/**
+		 * @param string $key
+		 * @param mixed  $value
+		 * @param bool   $network
+		 * @return void
+		 */
+		public static function update_admin_settings_option( $key, $value, $network = false ) {}
+
+		/**
+		 * @return void
+		 */
+		public static function create_specific_stylesheet() {}
+	}
+
+	class UAGB_Block_Module {
+		/**
+		 * @return array<string, array<string, mixed>>
+		 */
+		public static function get_blocks_info() {}
+	}
+
+	class UAGB_Helper {
+		/**
+		 * @var string
+		 */
+		public static $file_generation = 'disabled';
+	}
+}

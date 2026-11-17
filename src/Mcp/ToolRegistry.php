@@ -50,6 +50,8 @@ use Kuduy\Mcp\Jobs\JobTools;
 use Kuduy\Mcp\Modules\Acf\AcfTools;
 use Kuduy\Mcp\Modules\Blocks\BlockEdit;
 use Kuduy\Mcp\Modules\Blocks\BlockInfo;
+use Kuduy\Mcp\Modules\Blocks\BlockPluginTools;
+use Kuduy\Mcp\Modules\Blocks\SpectraPopups;
 use Kuduy\Mcp\Modules\Blocks\BlockTools;
 use Kuduy\Mcp\Modules\Blocks\GlobalStyles;
 use Kuduy\Mcp\Modules\Blocks\NavigationTools;
@@ -270,6 +272,20 @@ final class ToolRegistry {
 		$registry->register( new BlockEdit() );
 		foreach ( array( 'schema', 'validate', 'patterns', 'usage' ) as $mode ) {
 			$registry->register( new BlockInfo( $mode ) );
+		}
+		foreach ( array(
+			'generateblocks' => array( 'status', 'settings-update' ),
+			'kadence-blocks' => array( 'status', 'settings-update' ),
+			'spectra'        => array( 'status', 'block-toggle' ),
+		) as $plugin => $modes ) {
+			foreach ( $modes as $mode ) {
+				$registry->register( new BlockPluginTools( $plugin, $mode ) );
+			}
+		}
+		foreach ( array( 'spectra', 'spectra-blocks' ) as $plugin ) {
+			foreach ( array( 'popups', 'popup-get', 'popup-save', 'popup-trash' ) as $mode ) {
+				$registry->register( new SpectraPopups( $plugin, $mode ) );
+			}
 		}
 		foreach ( array( 'list', 'get', 'update', 'revert' ) as $mode ) {
 			$registry->register( new TemplateTools( $mode ) );

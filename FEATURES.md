@@ -228,6 +228,9 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Exact block type schemas, validation of posts or markup, patterns, block usage search (`kuduy-block-schema`, `kuduy-block-validate`, `kuduy-patterns`, `kuduy-block-usage`) | Tested 2026-11-17 (BK-E7–BK-E9) |
 | Duplicate a post or page as a draft (`kuduy-post-duplicate`) | Tested 2026-11-17 (BK-E10) |
 | GenerateBlocks, Kadence Blocks, Spectra Legacy blocks through the core block tools | Tested 2026-11-17 (BK-E11) |
+| Block plugins' own settings: GenerateBlocks and Kadence Blocks settings read and changed through their own save paths, secrets never shown (`kuduy-generateblocks-*`, `kuduy-kadence-blocks-*`) | Tested 2026-11-17 (BP1, BP2) |
+| Spectra Legacy blocks switched on or off; Spectra Legacy and Spectra Blocks popups listed, read, created, changed, trashed (`kuduy-spectra-*`, `kuduy-spectra-blocks-popup*`) | Tested 2026-11-17 (BP3–BP5) |
+| Spectra Blocks' own abilities run page by page with undo (`kuduy-spectra-blocks-abilities`, `-ability-get`, `-ability-run`) | Tested 2026-11-17 (BP6) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |

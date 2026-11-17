@@ -197,4 +197,6 @@ High-risk tools (`Execution\Confirmable`; first: `kuduy-media-delete`) cannot ru
 | Target changed between preview and confirmation | The tool's state fingerprint is recomputed and compared | CT4 |
 | Token leaks through logs | The audit row stores a 12-hex reference of the token's hash, never the token | CT3 |
 
+Block plugins (phase C2): Kadence Blocks settings whose names hold API keys, secrets or credentials are never returned (only `has_value`) and are refused for writes; settings changes need `kuduy:admin` and `manage_options` and go through each plugin's own save path. Builder abilities named `delete-…` are never run (a snapshot cannot restore a deleted post).
+
 Limits: the token proves a second call with the same arguments, not that a human read the preview — the client decides whether to ask. Tokens are transients: on a site with a persistent object cache they live there. `confirm: true` tools are unchanged.

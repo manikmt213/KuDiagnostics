@@ -49,10 +49,10 @@ One row per integration in the upgrade brief (58), plus what KuDiagnostics suppo
 | Integration | Copy | Support today | What exists | Phase |
 |---|---|---|---|---|
 | Native Gutenberg blocks | core | **Partial** | Block types and exact schemas, blocks of a post, block-level insert/replace/update/move/duplicate/remove with validation, patterns, usage search, templates, Global Styles. Missing: creating or changing template parts and synced patterns | C |
-| GenerateBlocks | free 2.5.1 | **Partial** (BK-E11, 2026-11-17) | Blocks with exact schemas, inserted, changed and checked through `kuduy-block-*`. Not yet: plugin settings, enabled blocks | C2 |
-| Kadence Blocks | free 3.9.1 | **Partial** (BK-E11, 2026-11-17) | Blocks with exact schemas, inserted, changed and checked through `kuduy-block-*`. Not yet: plugin settings, enabled blocks | C2 |
-| Spectra Legacy | free 2.20.6 (`ultimate-addons-for-gutenberg`) | **Partial** (BK-E11, 2026-11-17) | Same as GenerateBlocks. Not yet: plugin settings, enabled blocks, popups | C2 |
-| Spectra Blocks | free 1.0.15 (`spectra-blocks`; a separate plugin, checked on wordpress.org 2026-11-16) | Detection | same | C |
+| GenerateBlocks | free 2.5.1 | **Partial** (BK-E11, BP1, 2026-11-17) | Blocks through `kuduy-block-*`; settings through its own route (`kuduy-generateblocks-*`). Not yet: Pro features | L (Pro) |
+| Kadence Blocks | free 3.9.1 | **Partial** (BK-E11, BP2, 2026-11-17) | Blocks through `kuduy-block-*`; registered settings (`kuduy-kadence-blocks-*`), secrets write-only. Not yet: Pro features | L (Pro) |
+| Spectra Legacy | free 2.20.6 (`ultimate-addons-for-gutenberg`) | **Partial** (BK-E11, BP3, BP4, 2026-11-17) | Blocks, block switches, popups (`kuduy-spectra-*`). Not yet: its other settings screens, Pro | C |
+| Spectra Blocks | free 1.0.15 (`spectra-blocks`; a separate plugin) | **Partial** (BP5, BP6, 2026-11-17) | Blocks through `kuduy-block-*`; popups; its own abilities page by page with undo (`kuduy-spectra-blocks-*`). Not yet: site-wide settings and global styles (its abilities for them are not run here) | C |
 
 ## D. Store
 
