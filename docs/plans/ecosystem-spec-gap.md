@@ -201,6 +201,7 @@ Owner's standing order (2026-11-14): builders and themes first, then C → G →
 | 1 | **M. Contract and discovery** | D43–D45, D52 decided; spec error codes; `kuduy-integration-get`, `-diagnose`; edition/requires in catalogue; cursor helper; per-plugin state test helper (not installed/inactive/active/no-permission); D45 confirmation tokens in the executor | Token tests (expiry, replay, changed object, other user); all 243 existing tools unchanged in schema | Medium |
 | 2 | **C. Blocks** (as planned + spec 5, 16) | Block-level editing, patterns, validation, usage; GenerateBlocks, Kadence Blocks, Spectra in CI; Spectra popups/settings (after D54); duplicate post; media delete (D46) | Unchanged posts round-trip byte for byte | Medium |
 | 3 | **G. Store, SEO, code** (+ spec 6, 10–12) | WooCommerce gaps in §4.2; SEO term/settings/audits; Code Snippets; shortcodes; job retry | Tests per item | Large |
+| 3b | **Q. Builders and themes completion** (owner-approved 2026-11-17, §8) | The ten builder and theme gaps in §8 | Live check on the owner's test site per item | Large |
 | 4 | **B2. Form editing** (+ spec 7) | Shared form/field/notification tools for CF7, Fluent, Ninja, Formidable, WPForms Lite | CI per plugin | Large |
 | 5 | **E. Fields** (+ spec 8) | ACF CRUD; Meta Box, Pods, ACPT adapters; ASE settings; content-model audit | CI per plugin | Large |
 | 6 | **F2. Add-on extras** | Elementor usage search, extensions, module toggles, Unlimited Elements | EL9 extended | Small–medium |
@@ -228,3 +229,22 @@ Process per phase is unchanged (memory `v1-round-workflow`): research from sourc
 - **D54 settled:** wordpress.org lists two separate plugins: `spectra-blocks` (Spectra Blocks 1.0.15) and `ultimate-addons-for-gutenberg` (Spectra Legacy 2.20.6). They get two catalogue rows and two adapters.
 - Free copies confirmed on wordpress.org today: GenerateBlocks 2.5.1, Kadence Blocks 3.9.1, WPForms Lite 2.0.4, Contact Form 7 6.2.5, Flamingo 2.6.4, Fluent Forms 6.2.17, Ninja Forms 3.16.1, Formidable 7.0, ACF 6.8.11, Meta Box 5.15.5 (+ MB Custom Post Types 2.13.1), Pods 3.3.9.2, ACPT Lite 2.1.2, ASE 9.3.3, Element Pack Lite 10.0.8, Happy Addons 3.51.3, HT Mega 3.2.9, Piotnet 2.4.37, PowerPack Lite 3.2.1, Qi Addons 1.11.2, Ultimate Addons for Elementor 2.9.7, Unlimited Elements 2.0.28, Xpro 1.7.11, Code Snippets 4.1.0, Yoast 28.8, Rank Math 1.0.282, AIOSEO 5.0.5.1, SEOPress 10.4, Weglot 6.4.3, UpdraftPlus 1.26.14.
 - Not on wordpress.org (paid or closed): JetEngine, JetElements, Dynamic Content for Elementor, Dynamic Shortcodes (listing closed), Bricksforge, WPML, Gravity Forms.
+
+## 8. Phase Q — builders and themes completion (added 2026-11-17)
+
+Approved by the owner on 2026-11-17 ("Yes, send them"), relayed from the session that ran the live builder and theme checks of 2026-11-16/17. Built after phase G (G3). None of these is covered today. Each item is researched from the product's source first and checked live on the owner's test site with a temporary OAuth connection (revoked afterwards; the robsdogs.com connector is never touched).
+
+| # | Item | Today | Approach to verify first |
+|---|---|---|---|
+| Q1 | Divi 5: edit pages | Read only (`Blocks/BlockBuilderRead`) | Divi 5 pages are WordPress blocks: check whether the core block tools (`kuduy-block-edit`) can change them safely, and what Divi needs after a save |
+| Q2 | Kirki 6: edit pages | Read only (`Kirki/KirkiRead`) | Through Kirki's stages (`kirki_stages` / `kirki_stage_data`, its Page facade), never raw guessed writes |
+| Q3 | Etch: edit pages | Read only | As Q1 (block-based) |
+| Q4 | Avada theme: change Global Options | Design settings read only | Through Avada's own options API |
+| Q5 | Elementor Pro: forms (form widgets, submissions) and Pro dynamic tags | Popups done 2026-11-16 (live on Pro 4.0.4) | Pro's form and submissions APIs |
+| Q6 | WPBakery: templates | Not covered | WPBakery's template storage and API (live copy 9.1 on the test site) |
+| Q7 | Site Editor: create and change template parts and synced patterns | Templates only | Core REST controllers in process |
+| Q8 | Bricks, Oxygen 6, Breakdance: site-wide settings | Site-wide abilities refused (`Core/BuilderAbilities`) | Run them behind D45 confirmation tokens with a settings snapshot where possible; PHP and code-execution abilities stay refused |
+| Q9 | Spectra Legacy: its other settings screens | Block switches only (C2) | Its admin helper, as in C2 |
+| Q10 | Catalogue notes in `Core/IntegrationCatalog` | Outdated | Live checks now cover Bricks 2.4.5, Oxygen 6, Breakdance, WPBakery 9.1 and Elementor Pro 4.0.4 popups ("tested against a stand-in" to go), Elementor Pro "Not yet: popups" is outdated, Divi 5.19 checked live — confirm each against `TESTING.md` and `COMPATIBILITY.md` before changing a note |
+
+Documented limits (not built): Brizy layout editing (Brizy compiles pages in its own editor); Weglot translations (kept in Weglot's cloud); paid products without a copy (Voxel, MyListing, Mosaic and phase L); Oxygen 4 classic (optional, low value).
