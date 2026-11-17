@@ -207,6 +207,9 @@ final class PostWriter {
 		if ( array_key_exists( 'content', $input ) && true === Beaver::available() && get_post_meta( $post->ID, '_fl_builder_enabled', true ) ) {
 			throw new ToolError( 'This post is built with Beaver Builder; its layout is not stored in the content field. Change other fields here, and the layout with kuduy-beaver-edit.' );
 		}
+		if ( array_key_exists( 'content', $input ) && str_contains( $post->post_content, '[et_pb_section' ) ) {
+			throw new ToolError( 'This post is built with Divi 4; its content is a layout of Divi shortcodes. Change other fields here, and the layout in Divi (Divi 5 pages, saved as blocks, can be changed with kuduy-block-edit).' );
+		}
 		if ( array_key_exists( 'content', $input ) && true === WpBakery::available() && 'wpbakery' === WpBakery::builder( $post ) ) {
 			throw new ToolError( 'This post is built with WPBakery Page Builder; its content is a layout of shortcodes. Change other fields here, and the layout with the kuduy-wpbakery-* tools (kuduy-wpbakery-replace swaps the whole layout and checks it first).' );
 		}

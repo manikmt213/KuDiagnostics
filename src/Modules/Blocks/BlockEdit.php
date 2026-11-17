@@ -46,7 +46,7 @@ final class BlockEdit implements Tool, Snapshottable {
 	 * {@inheritDoc}
 	 */
 	public function description(): string {
-		return 'Changes individual blocks of a post or page (block editor content) without rewriting the rest: 1–50 operations applied in order and saved once. Paths come from kuduy-post-blocks ("0", "2.1" = second inner block of the third block) and refer to the tree as it is when that operation runs. op insert: markup (block markup) or pattern (a registered pattern name from kuduy-patterns) under parent ("" = top level) at index (default: end). op replace: path + markup (exactly one block). op update: path + set (attributes to set) and/or unset (names to remove); only attributes the block type registers (see kuduy-block-schema); attributes stored in the block\'s HTML (with a "source") cannot be set this way — replace the block instead. op move: path to to_parent + to_index (counted after the block was taken out). op duplicate: path (copy placed right after). op remove: path. expect (block name) on any operation refuses it when the block at path is a different one. Every new or changed block is checked against its registered type (known block, attribute types, where it may be placed); if anything fails nothing is saved. Static blocks: KuDiagnostics cannot regenerate a block\'s HTML, so send complete markup when the look changes. Refuses pages built with Elementor, Avada, Beaver Builder or WPBakery. Snapshot first; undo with kuduy-snapshot-restore.';
+		return 'Changes individual blocks of a post or page (block editor content) without rewriting the rest: 1–50 operations applied in order and saved once. Paths come from kuduy-post-blocks ("0", "2.1" = second inner block of the third block) and refer to the tree as it is when that operation runs. op insert: markup (block markup) or pattern (a registered pattern name from kuduy-patterns) under parent ("" = top level) at index (default: end). op replace: path + markup (exactly one block). op update: path + set (attributes to set) and/or unset (names to remove), merge: true to merge object values into the stored ones; only attributes the block type registers (see kuduy-block-schema); attributes stored in the block\'s HTML (with a "source") cannot be set this way — replace the block instead. op move: path to to_parent + to_index (counted after the block was taken out). op duplicate: path (copy placed right after). op remove: path. expect (block name) on any operation refuses it when the block at path is a different one. Every new or changed block is checked against its registered type (known block, attribute types, where it may be placed); if anything fails nothing is saved. Static blocks: KuDiagnostics cannot regenerate a block\'s HTML, so send complete markup when the look changes. Works on pages built with Divi 5 (divi/... blocks with nested settings: use merge) and other block-based builders; Divi clears its CSS cache on save. Refuses pages built with Elementor, Avada, Beaver Builder, WPBakery or Divi 4. Snapshot first; undo with kuduy-snapshot-restore.';
 	}
 
 	/**
@@ -91,6 +91,10 @@ final class BlockEdit implements Tool, Snapshottable {
 								'maxLength' => 200,
 							),
 							'set'       => array( 'type' => 'object' ),
+							'merge'     => array(
+								'type'        => 'boolean',
+								'description' => 'update only: merge object values of set into the stored ones instead of replacing them (for nested settings such as Divi 5 {"content":{"innerContent":{"desktop":{"value":"..."}}}}).',
+							),
 							'unset'     => array(
 								'type'  => 'array',
 								'items' => array(
@@ -429,6 +433,11 @@ final class BlockEdit implements Tool, Snapshottable {
 		$attrs = (array) ( $block['attrs'] ?? array() );
 		foreach ( $unset as $key ) {
 			unset( $attrs[ $key ] );
+		}
+		if ( ! empty( $op['merge'] ) ) {
+			foreach ( $set as $key => $value ) {
+				$set[ $key ] = is_array( $value ) && is_array( $attrs[ $key ] ?? null ) ? array_replace_recursive( $attrs[ $key ], $value ) : $value;
+			}
 		}
 		$block['attrs'] = array_merge( $attrs, $set );
 		if ( '' !== trim( (string) ( $block['innerHTML'] ?? '' ) ) ) {

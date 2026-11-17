@@ -15,7 +15,17 @@ add_action(
 	static function () {
 		foreach ( array( 'divi/placeholder', 'divi/section', 'divi/row', 'divi/column', 'divi/text', 'etch/element', 'etch/text' ) as $name ) {
 			if ( ! WP_Block_Type_Registry::get_instance()->is_registered( $name ) ) {
-				register_block_type( $name, array( 'render_callback' => static fn( $attrs, $content ) => $content ) );
+				// Divi 5 modules declare their settings as nested objects in module.json (e.g. content.innerContent).
+				register_block_type(
+					$name,
+					array(
+						'render_callback' => static fn( $attrs, $content ) => $content,
+						'attributes'      => str_starts_with( $name, 'divi/' ) ? array(
+							'module'  => array( 'type' => 'object' ),
+							'content' => array( 'type' => 'object' ),
+						) : array(),
+					)
+				);
 			}
 		}
 	}

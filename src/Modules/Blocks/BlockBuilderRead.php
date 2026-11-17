@@ -14,7 +14,9 @@ use Kuduy\Mcp\Modules\Core\Content;
 /**
  * Builders that save pages as WordPress blocks in post_content (D41), read with WordPress' own parse_blocks(): Divi 5
  * (blocks named "divi/…"; Divi 4 pages are et_pb_* shortcodes and are reported as such) and Etch (Etch docs, "Block
- * authoring": everything built is saved as custom Gutenberg blocks in WordPress). Read only: neither builder documents
+ * authoring": everything built is saved as custom Gutenberg blocks in WordPress). Reading here; editing goes through
+ * kuduy-block-edit (phase Q1/Q3: Divi 5.19 registers its modules as block types, ModuleRegistration::register_module(),
+ * and clears its static CSS on save_post, ET_Core_PageResource::save_post_cb()). Neither builder documents
  * how its block attributes may be changed outside its editor. The block name prefixes come from third-party
  * references and are UNVERIFIED until checked on a site with the builder.
  */
@@ -83,7 +85,7 @@ final class BlockBuilderRead implements Tool {
 		$extra = 'divi' === $this->builder ? ' Divi 4 pages (shortcodes) are listed with format "divi4" and are not read as a tree.' : '';
 		return 'pages' === $this->mode
 			? 'Lists pages, posts and templates built with ' . $label . ' (saved as WordPress blocks): id, title, post type, status, link.' . $extra
-			: 'Returns the structure of a page built with ' . $label . ': its blocks as a tree with name, text and, on request (include_attributes), every stored attribute. Read only: edit the page in ' . $label . '.' . $extra;
+			: 'Returns the structure of a page built with ' . $label . ': its blocks as a tree with name, text and, on request (include_attributes), every stored attribute. Change its blocks with kuduy-block-edit (paths from kuduy-post-blocks; nested settings with merge); layout design is best done in ' . $label . '.' . $extra;
 	}
 
 	/**
@@ -275,7 +277,7 @@ final class BlockBuilderRead implements Tool {
 			'status'    => $post->post_status,
 			'format'    => $format,
 			'link'      => (string) get_permalink( $post ),
-			'read_only' => true,
+			'read_only' => 'divi4' === $format,
 		);
 		if ( 'divi4' === $format ) {
 			$out['note'] = 'This page is saved in the Divi 4 shortcode format; it is not read as a block tree. Divi 5 converts it when the page is opened and saved in Divi 5.';

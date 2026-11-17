@@ -90,7 +90,7 @@ final class BlockBuildersTest extends TestCase {
 		$this->assertArrayNotHasKey( self::$internal, $pages, 'Post types without an admin screen are the builder\'s own, not pages.' );
 
 		$page = $this->ok( 'kuduy-divi-get', array( 'id' => self::$divi ) );
-		$this->assertTrue( $page['read_only'] );
+		$this->assertFalse( $page['read_only'], 'Divi 5 pages are changed with kuduy-block-edit.' );
 		$this->assertSame( 7, $page['count'] );
 		$this->assertSame( 'divi/placeholder', $page['blocks'][0]['name'] );
 		$modules = $page['blocks'][0]['children'][0]['children'][0]['children'][0]['children'];
@@ -122,6 +122,56 @@ final class BlockBuildersTest extends TestCase {
 		$this->assertSame( 2, $page['count'] );
 		$this->assertSame( 'etch/element', $page['blocks'][0]['name'] );
 		$this->assertSame( 'Etch text', $page['blocks'][0]['children'][0]['text'] );
+	}
+
+	public function test_bk4_divi5_block_edit_with_merge_and_divi4_refused(): void {
+		$text = '0.0.0.0.0';
+		$this->assertSame( 'divi/text', array_column( $this->ok( 'kuduy-post-blocks', array( 'id' => self::$divi ) )['blocks'], 'name', 'path' )[ $text ] );
+		$edit  = $this->ok(
+			'kuduy-block-edit',
+			array(
+				'id'         => self::$divi,
+				'operations' => array(
+					array(
+						'op'     => 'update',
+						'path'   => $text,
+						'expect' => 'divi/text',
+						'merge'  => true,
+						'set'    => array( 'content' => array( 'innerContent' => array( 'tablet' => array( 'value' => 'Tablet text' ) ) ) ),
+					),
+				),
+			)
+		);
+		$attrs = parse_blocks( get_post_field( 'post_content', self::$divi ) )[0]['innerBlocks'][0]['innerBlocks'][0]['innerBlocks'][0]['innerBlocks'][0]['attrs'];
+		$this->assertSame( 'Divi text value', $attrs['content']['innerContent']['desktop']['value'], 'merge keeps the other breakpoints.' );
+		$this->assertSame( 'Tablet text', $attrs['content']['innerContent']['tablet']['value'] );
+		$this->assertStringContainsString( 'Divi live check heading', get_post_field( 'post_content', self::$divi ), 'Blocks around it are untouched.' );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $edit['_snapshot_id'] ) );
+		$this->assertStringNotContainsString( 'Tablet text', get_post_field( 'post_content', self::$divi ) );
+
+		$before = get_post_field( 'post_content', self::$divi4 );
+		$this->fails(
+			'kuduy-block-edit',
+			array(
+				'id'         => self::$divi4,
+				'operations' => array(
+					array(
+						'op'     => 'insert',
+						'markup' => '<!-- wp:paragraph --><p>x</p><!-- /wp:paragraph -->',
+					),
+				),
+			),
+			'a Divi 4 page is shortcodes, not blocks'
+		);
+		$this->fails(
+			'kuduy-post-update',
+			array(
+				'id'      => self::$divi4,
+				'content' => 'x',
+			),
+			'nor is its content replaced'
+		);
+		$this->assertSame( $before, get_post_field( 'post_content', self::$divi4 ) );
 	}
 
 	public function test_bk3_refusals_and_nothing_changes(): void {
