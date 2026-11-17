@@ -10,11 +10,14 @@ namespace Kuduy\Mcp\Mcp;
 use Kuduy\Mcp\Audit\AuditLog;
 use Kuduy\Mcp\Audit\MasksAuditArgs;
 use Kuduy\Mcp\Audit\Redactor;
+use Kuduy\Mcp\Execution\Confirmable;
+use Kuduy\Mcp\Execution\Confirmation;
 use Kuduy\Mcp\Execution\Snapshots;
 use Kuduy\Mcp\Execution\Snapshottable;
 
 /**
- * Availability → validation → capability → snapshot (destructive tools) → execute → redact → audit.
+ * Availability → validation → capability → confirmation (high-risk tools, D45) → snapshot (destructive tools) →
+ * execute → redact → audit.
  */
 final class Executor {
 
@@ -29,6 +32,12 @@ final class Executor {
 		$start                      = hrtime( true );
 		$snapshot                   = null;
 		[ $result, $status, $code ] = self::run( $tool, $args, $snapshot );
+		if ( is_array( $args ) && array_key_exists( Confirmation::ARG, $args ) ) {
+			// The token itself is never stored; a reference that cannot be used as a token is.
+			$token = $args[ Confirmation::ARG ];
+			unset( $args[ Confirmation::ARG ] );
+			$args['_confirmation'] = is_string( $token ) ? Confirmation::reference( $token ) : '';
+		}
 		AuditLog::record( $tool->name(), self::audit_args( $tool, $args ), $status, $code, (int) ( ( hrtime( true ) - $start ) / 1000000 ), $snapshot );
 		return $result;
 	}
@@ -45,22 +54,49 @@ final class Executor {
 		$available = $tool->is_available();
 		if ( true !== $available ) {
 			/* translators: %s: why the tool cannot run, e.g. "Elementor is not active". */
-			return self::error( sprintf( __( 'This tool is not available: %s', 'kuduy-mcp' ), (string) $available ), 'error', 'unavailable' );
+			$category = false !== stripos( (string) $available, 'not active' ) ? ToolError::PLUGIN_NOT_ACTIVE : ToolError::FEATURE_NOT_SUPPORTED;
+			return self::error( sprintf( __( 'This tool is not available: %s', 'kuduy-mcp' ), (string) $available ), 'error', 'unavailable', $category );
 		}
 
 		$args   = null === $args ? array() : $args;
 		$schema = $tool->input_schema();
 		$valid  = rest_validate_value_from_schema( $args, $schema, 'arguments' );
 		if ( is_wp_error( $valid ) ) {
-			return self::error( $valid->get_error_message(), 'error', 'invalid_arguments' );
+			return self::error( $valid->get_error_message(), 'error', 'invalid_arguments', ToolError::INVALID_ARGUMENT );
 		}
 		$input = (array) rest_sanitize_value_from_schema( $args, $schema, 'arguments' );
 
 		if ( ! self::allowed( $tool, $input ) ) {
-			return self::error( __( 'Your WordPress account is not allowed to use this tool.', 'kuduy-mcp' ), 'denied', 'forbidden' );
+			return self::error( __( 'Your WordPress account is not allowed to use this tool.', 'kuduy-mcp' ), 'denied', 'forbidden', ToolError::PERMISSION_DENIED );
 		}
 
 		try {
+			if ( $tool instanceof Confirmable ) {
+				$token = (string) ( $input[ Confirmation::ARG ] ?? '' );
+				unset( $input[ Confirmation::ARG ] );
+				$preview = Redactor::redact_array( $tool->preview( $input ) );
+				$version = (string) ( $preview['version'] ?? '' );
+				unset( $preview['version'] );
+				if ( '' === $token ) {
+					return array(
+						self::success(
+							array(
+								'confirmation_required' => true,
+								'preview'               => $preview ? $preview : new \stdClass(),
+								'confirm_token'         => Confirmation::issue( $tool->name(), $input, $version ),
+								'expires_in'            => Confirmation::TTL,
+								'next'                  => 'Nothing was changed. Show the preview to the user and ask. If they agree, call this tool again with the same arguments and this confirm_token.',
+							),
+							array()
+						),
+						'ok',
+						'confirmation_required',
+					);
+				}
+				if ( ! Confirmation::consume( $token, $tool->name(), $input, $version ) ) {
+					return self::error( __( 'This confirmation is not valid: it expired, was already used, was made for other arguments or another account, or the item changed since the preview. Nothing was changed. Call again without confirm_token for a new preview.', 'kuduy-mcp' ), 'error', 'confirmation_invalid', ToolError::CONFLICT );
+				}
+			}
 			if ( $tool instanceof Snapshottable && ( $tool->annotations()['destructiveHint'] ?? false ) ) {
 				$snap = $tool->snapshot( $input );
 				if ( null !== $snap ) {
@@ -70,11 +106,11 @@ final class Executor {
 			}
 			$result = Redactor::redact_array( $tool->execute( $input ) );
 		} catch ( ToolError $e ) {
-			return self::error( $e->getMessage(), 'error', 'tool_error' );
+			return self::error( $e->getMessage(), 'error', 'tool_error', $e->category() );
 		} catch ( \Throwable $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- operator diagnostics; arguments are never logged.
 			error_log( sprintf( 'KuDiagnostics: tool %s failed with %s in %s:%d', $tool->name(), get_class( $e ), $e->getFile(), $e->getLine() ) );
-			return self::error( __( 'The tool failed unexpectedly. Details are in the site error log.', 'kuduy-mcp' ), 'error', 'exception' );
+			return self::error( __( 'The tool failed unexpectedly. Details are in the site error log.', 'kuduy-mcp' ), 'error', 'exception', ToolError::INTERNAL_ERROR );
 		}
 
 		$extra = self::extra_content( $result['_content'] ?? array() );
@@ -82,22 +118,29 @@ final class Executor {
 		if ( null !== $snapshot ) {
 			$result['_snapshot_id'] = $snapshot;
 		}
+		return array( self::success( $result, $extra ), 'ok', null );
+	}
+
+	/**
+	 * Successful CallToolResult.
+	 *
+	 * @param array<string, mixed>                                   $result Structured result.
+	 * @param list<array{type:string, data:string, mimeType:string}> $extra  Extra content blocks.
+	 * @return array<string, mixed>
+	 */
+	private static function success( array $result, array $extra ): array {
 		return array(
-			array(
-				'content'           => array_merge(
+			'content'           => array_merge(
+				array(
 					array(
-						array(
-							'type' => 'text',
-							'text' => (string) wp_json_encode( $result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ),
-						),
+						'type' => 'text',
+						'text' => (string) wp_json_encode( $result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ),
 					),
-					$extra
 				),
-				'structuredContent' => $result ? $result : new \stdClass(),
-				'isError'           => false,
+				$extra
 			),
-			'ok',
-			null,
+			'structuredContent' => $result ? $result : new \stdClass(),
+			'isError'           => false,
 		);
 	}
 
@@ -147,14 +190,20 @@ final class Executor {
 	}
 
 	/**
-	 * Tool error result (the model sees it; not a protocol error).
+	 * Tool error result (the model sees it; not a protocol error). The first text block is the message; the second
+	 * names the failure category (decision D52). No structuredContent: it would not fit the tool's output schema.
 	 *
-	 * @param string $message Message.
-	 * @param string $status  Audit status.
-	 * @param string $code    Audit error code.
+	 * @param string $message  Message.
+	 * @param string $status   Audit status.
+	 * @param string $code     Audit error code.
+	 * @param string $category ToolError category.
 	 * @return array{0:array<string, mixed>, 1:string, 2:string}
 	 */
-	private static function error( string $message, string $status, string $code ): array {
+	private static function error( string $message, string $status, string $code, string $category ): array {
+		$error = array(
+			'code'      => $category,
+			'retryable' => ToolError::retryable( $category ),
+		);
 		return array(
 			array(
 				'content' => array(
@@ -162,8 +211,13 @@ final class Executor {
 						'type' => 'text',
 						'text' => $message,
 					),
+					array(
+						'type' => 'text',
+						'text' => (string) wp_json_encode( array( 'error' => $error ) ),
+					),
 				),
 				'isError' => true,
+				'_meta'   => array( 'kuduy/error' => $error ),
 			),
 			$status,
 			$code,

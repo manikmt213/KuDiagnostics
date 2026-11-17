@@ -296,7 +296,7 @@ final class Server {
 			$result['ttlMs']      = 0;
 			$result['cacheScope'] = 'private';
 		}
-		$result['_meta'] = array( 'io.modelcontextprotocol/serverInfo' => self::server_info() );
+		$result['_meta'] = array_merge( (array) ( $result['_meta'] ?? array() ), array( 'io.modelcontextprotocol/serverInfo' => self::server_info() ) );
 		return $result;
 	}
 
