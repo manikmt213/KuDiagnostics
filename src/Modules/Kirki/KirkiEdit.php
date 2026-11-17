@@ -262,7 +262,7 @@ final class KirkiEdit implements Tool, Snapshottable {
 	 * @param array<string, mixed> $input Arguments.
 	 * @throws ToolError When the page is not a Kirki page.
 	 */
-	public function snapshot( array $input ): ?array {
+	public function snapshot( array $input ): array {
 		$id = (int) $input['id'];
 		self::post( $id );
 		[ $published, $draft ] = self::state( $id );

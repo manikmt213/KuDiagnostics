@@ -243,7 +243,7 @@ final class BuilderSiteAbilities implements Tool, Snapshottable, Confirmable {
 	 *
 	 * @param array<string, mixed> $input Arguments.
 	 */
-	public function snapshot( array $input ): ?array {
+	public function snapshot( array $input ): array {
 		return array(
 			'object_type' => 'option',
 			'object_id'   => $this->builder,

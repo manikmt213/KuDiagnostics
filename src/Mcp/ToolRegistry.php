@@ -79,6 +79,7 @@ use Kuduy\Mcp\Modules\Media\MediaFiles;
 use Kuduy\Mcp\Modules\Avada\AvadaRead;
 use Kuduy\Mcp\Modules\Avada\AvadaWrite;
 use Kuduy\Mcp\Modules\WpBakery\WpBakeryRead;
+use Kuduy\Mcp\Modules\WpBakery\WpBakeryTemplates;
 use Kuduy\Mcp\Modules\WpBakery\WpBakeryWrite;
 use Kuduy\Mcp\Modules\Media\MediaLibrary;
 use Kuduy\Mcp\Modules\Media\MediaTools;
@@ -354,6 +355,9 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'create', 'add-row', 'add-column', 'add-element', 'update-element', 'update-row', 'update-column', 'move-element', 'duplicate-element', 'delete-element', 'replace' ) as $mode ) {
 			$registry->register( new WpBakeryWrite( $mode ) );
+		}
+		foreach ( array( 'templates', 'template-get', 'template-save', 'template-delete' ) as $mode ) {
+			$registry->register( new WpBakeryTemplates( $mode ) );
 		}
 		foreach ( array( 'status', 'purge' ) as $mode ) {
 			$registry->register( new CacheTools( $mode ) );

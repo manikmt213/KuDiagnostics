@@ -737,6 +737,71 @@ final class WpBakeryTest extends TestCase {
 		$this->assertStringNotContainsString( '<script>', self::content( $own ), 'WordPress filters the content of accounts without unfiltered_html.' );
 	}
 
+	public function test_templates_save_read_delete_with_undo(): void {
+		delete_option( 'wpb_js_templates' );
+		$made = $this->ok(
+			'kuduy-wpbakery-template-save',
+			array(
+				'name'    => 'Kuduy hero',
+				'content' => '[vc_row][vc_column][vc_custom_heading text="Template heading"][/vc_column][/vc_row]',
+			)
+		);
+		$this->assertMatchesRegularExpression( '/^kuduy-hero_\d+$/', $made['id'], 'Ids are made as WPBakery makes them.' );
+		$this->assertSame( 3, $made['elements'] );
+		$stored = get_option( 'wpb_js_templates' );
+		$this->assertSame( 'Kuduy hero', $stored[ $made['id'] ]['name'] );
+
+		$from = $this->ok(
+			'kuduy-wpbakery-template-save',
+			array(
+				'name'      => 'From a page',
+				'from_post' => self::page(),
+			)
+		);
+		$this->assertStringContainsString( 'Old hero heading', $from['content'] );
+		$list = array_column( $this->ok( 'kuduy-wpbakery-templates' )['templates'], 'name', 'id' );
+		$this->assertSame( 'Kuduy hero', $list[ $made['id'] ] );
+		$this->assertCount( 1, $this->ok( 'kuduy-wpbakery-templates', array( 'search' => 'page' ) )['templates'] );
+
+		$changed = $this->ok(
+			'kuduy-wpbakery-template-save',
+			array(
+				'id'   => $made['id'],
+				'name' => 'Kuduy hero v2',
+			)
+		);
+		$this->assertSame( 'Kuduy hero v2', $changed['name'] );
+		$this->assertStringContainsString( 'Template heading', $changed['content'], 'Content not given stays.' );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $changed['_snapshot_id'] ) );
+		$this->assertSame( 'Kuduy hero', $this->ok( 'kuduy-wpbakery-template-get', array( 'id' => $made['id'] ) )['name'] );
+
+		$gone = $this->ok( 'kuduy-wpbakery-template-delete', array( 'id' => $made['id'] ) );
+		$this->assertTrue( $gone['deleted'] );
+		$this->fails( 'kuduy-wpbakery-template-get', array( 'id' => $made['id'] ), 'deleted' );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $gone['_snapshot_id'] ) );
+		$this->assertSame( 'Kuduy hero', $this->ok( 'kuduy-wpbakery-template-get', array( 'id' => $made['id'] ) )['name'] );
+
+		$this->fails(
+			'kuduy-wpbakery-template-save',
+			array(
+				'name'    => 'Broken',
+				'content' => '[vc_column][vc_row][/vc_row][/vc_column]',
+			),
+			'a broken layout is refused'
+		);
+		$this->fails(
+			'kuduy-wpbakery-template-save',
+			array(
+				'name'    => 'Empty',
+				'content' => 'just text',
+			),
+			'no elements'
+		);
+		$this->fails( 'kuduy-wpbakery-template-save', array( 'name' => 'No layout' ), 'a new template needs content' );
+		wp_set_current_user( self::$subscriber );
+		$this->fails( 'kuduy-wpbakery-templates', array(), 'subscribers have no access' );
+	}
+
 	public function test_permissions_and_invalid_ids(): void {
 		$id = self::page();
 		$this->fails( 'kuduy-wpbakery-tree', array( 'post_id' => 99999999 ), 'invalid page id' );

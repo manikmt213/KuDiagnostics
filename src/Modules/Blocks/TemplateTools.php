@@ -326,7 +326,7 @@ final class TemplateTools implements Tool, Snapshottable {
 			$body['description'] = (string) $input['description'];
 		}
 		if ( 'wp_template_part' === $type ) {
-			$area  = (string) ( $input['area'] ?? WP_TEMPLATE_PART_AREA_UNCATEGORIZED );
+			$area  = (string) ( $input['area'] ?? 'uncategorized' );
 			$areas = array_column( get_allowed_block_template_part_areas(), 'area' );
 			if ( ! in_array( $area, $areas, true ) ) {
 				throw ToolError::of( ToolError::VALIDATION_FAILED, 'Unknown template part area "' . $area . '". This theme has: ' . implode( ', ', $areas ) . '. Nothing was created.' );

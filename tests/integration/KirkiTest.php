@@ -250,7 +250,7 @@ final class KirkiTest extends TestCase {
 				),
 			)
 		);
-		\Kirki\App\Supports\Facades\Page::publish_stage_version( $id );
+		call_user_func( array( '\Kirki\App\Supports\Facades\Page', 'publish_stage_version' ), $id );
 		return $id;
 	}
 
