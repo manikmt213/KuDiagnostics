@@ -224,6 +224,10 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Failure categories on tool errors (`PLUGIN_NOT_ACTIVE`, `PERMISSION_DENIED`, `RESOURCE_NOT_FOUND`, `CONFLICT`, …; D52). Existing tools report the general `OPERATION_FAILED` until they name a category | Tested 2026-11-17 (CT1, CT2) |
 | Two-step confirmation tokens for high-risk tools: single use, 10 minutes, bound to user, client, tool, arguments and the state of the target (D45) | Tested 2026-11-17 (CT3, CT4) |
 | Permanent delete of a media item with a usage preview (`kuduy-media-delete`, D46; first tool on confirmation tokens) | Tested 2026-11-17 (CT3–CT5) |
+| Block-level editing: insert (markup or pattern), replace, update attributes, move, duplicate, remove, 1–50 operations saved once, every new or changed block checked against its registered type, undo (`kuduy-block-edit`) | Tested 2026-11-17 (BK-E1–BK-E6) |
+| Exact block type schemas, validation of posts or markup, patterns, block usage search (`kuduy-block-schema`, `kuduy-block-validate`, `kuduy-patterns`, `kuduy-block-usage`) | Tested 2026-11-17 (BK-E7–BK-E9) |
+| Duplicate a post or page as a draft (`kuduy-post-duplicate`) | Tested 2026-11-17 (BK-E10) |
+| GenerateBlocks, Kadence Blocks, Spectra Legacy blocks through the core block tools | Tested 2026-11-17 (BK-E11) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |

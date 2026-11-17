@@ -7,6 +7,8 @@
 
 namespace Kuduy\Mcp\Modules\Media;
 
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- tool errors are returned to the MCP client as JSON text, never printed as HTML.
+
 use Kuduy\Mcp\Audit\AuditLog;
 use Kuduy\Mcp\Execution\Confirmable;
 use Kuduy\Mcp\Execution\Confirmation;
@@ -120,7 +122,6 @@ final class MediaDelete implements Tool, Confirmable {
 	private static function item( array $input ): \WP_Post {
 		$post = get_post( (int) $input['id'] );
 		if ( ! $post instanceof \WP_Post || 'attachment' !== $post->post_type ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- returned as JSON text, never HTML.
 			throw ToolError::of( ToolError::RESOURCE_NOT_FOUND, 'No media item with this id.' );
 		}
 		return $post;

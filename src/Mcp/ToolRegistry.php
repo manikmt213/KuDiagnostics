@@ -21,6 +21,7 @@ use Kuduy\Mcp\Modules\Core\PostCreate;
 use Kuduy\Mcp\Modules\Core\PostGet;
 use Kuduy\Mcp\Modules\Core\PostList;
 use Kuduy\Mcp\Modules\Core\PostMeta;
+use Kuduy\Mcp\Modules\Core\PostDuplicate;
 use Kuduy\Mcp\Modules\Core\PostTrash;
 use Kuduy\Mcp\Modules\Core\PostTypes;
 use Kuduy\Mcp\Modules\Core\PostUpdate;
@@ -47,6 +48,8 @@ use Kuduy\Mcp\Modules\Elementor\ElementorWrite;
 use Kuduy\Mcp\Modules\Elementor\ThemeBuilder;
 use Kuduy\Mcp\Jobs\JobTools;
 use Kuduy\Mcp\Modules\Acf\AcfTools;
+use Kuduy\Mcp\Modules\Blocks\BlockEdit;
+use Kuduy\Mcp\Modules\Blocks\BlockInfo;
 use Kuduy\Mcp\Modules\Blocks\BlockTools;
 use Kuduy\Mcp\Modules\Blocks\GlobalStyles;
 use Kuduy\Mcp\Modules\Blocks\NavigationTools;
@@ -118,6 +121,7 @@ final class ToolRegistry {
 		$registry->register( new PostCreate() );
 		$registry->register( new PostUpdate() );
 		$registry->register( new PostTrash() );
+		$registry->register( new PostDuplicate() );
 		foreach ( array( 'create', 'update', 'delete' ) as $mode ) {
 			$registry->register( new TermWrite( $mode ) );
 		}
@@ -262,6 +266,10 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'types', 'post' ) as $mode ) {
 			$registry->register( new BlockTools( $mode ) );
+		}
+		$registry->register( new BlockEdit() );
+		foreach ( array( 'schema', 'validate', 'patterns', 'usage' ) as $mode ) {
+			$registry->register( new BlockInfo( $mode ) );
 		}
 		foreach ( array( 'list', 'get', 'update', 'revert' ) as $mode ) {
 			$registry->register( new TemplateTools( $mode ) );

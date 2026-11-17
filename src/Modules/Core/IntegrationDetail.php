@@ -7,6 +7,8 @@
 
 namespace Kuduy\Mcp\Modules\Core;
 
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- tool errors are returned to the MCP client as JSON text, never printed as HTML.
+
 use Kuduy\Mcp\Mcp\Tool;
 use Kuduy\Mcp\Mcp\ToolError;
 use Kuduy\Mcp\Mcp\ToolRegistry;
@@ -219,7 +221,6 @@ final class IntegrationDetail implements Tool {
 		$plugins = Integrations::plugin_folders();
 		$only    = (string) ( $input['integration'] ?? '' );
 		if ( '' !== $only && null === IntegrationCatalog::find( $only ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- returned as JSON text, never HTML.
 			throw ToolError::of( ToolError::RESOURCE_NOT_FOUND, 'No integration with this id. See kuduy-integrations with all: true for the ids.' );
 		}
 		return 'get' === $this->mode ? self::get( $only, $plugins, ! empty( $input['include_schemas'] ) ) : self::diagnose( $only, $plugins );

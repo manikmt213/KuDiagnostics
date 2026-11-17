@@ -451,6 +451,24 @@ Run 2026-11-17 on both pairs (WordPress 6.9.11 / PHP 8.1.34 and 7.1.4 / PHP 8.3.
 | CT7 | `kuduy-integration-diagnose`: one integration or all installed; findings with levels; refused without `activate_plugins` | I — `test_integration_diagnose` |
 | CT8 | Every required integration exists in the catalogue; Spectra Blocks and Spectra Legacy are separate rows | I — `test_catalogue_dependencies_exist` |
 
+## Blocks (phase C1)
+
+Run 2026-11-17: full suite 247 tests, 0 failures on WordPress 6.9.11 / PHP 8.1.34 and 7.1.4 / PHP 8.3.36; with GenerateBlocks 2.5.1, Kadence Blocks 3.9.1 and Spectra Legacy 2.20.6 active on both pairs, 0 failures and `test_block_plugins_when_active` ran (38 assertions on 6.9).
+
+| # | Feature | Type |
+|---|---|---|
+| BK-E1 | Editor-made markup round-trips through WordPress' serializer; `kuduy-block-validate` reports it valid | I — `BlockEditTest::test_unchanged_content_round_trips` |
+| BK-E2 | Insert at the top level, inside a group and at the end; separators and the group's own HTML kept | I — `test_insert_at_top_and_inside_a_group` |
+| BK-E3 | Insert into an empty group (before its closing tag) | I — `test_insert_into_an_empty_group` |
+| BK-E4 | replace, update (attribute validated), move out of a group, duplicate, remove in one call; note for blocks with saved HTML; undo restores the content byte for byte | I — `test_replace_update_move_duplicate_remove` |
+| BK-E5 | Refused, nothing saved (not even earlier operations): unknown block, invalid attribute value, unknown attribute, attribute kept in HTML, nesting rule, stale path (expect), missing path, HTML outside blocks, move into itself | I — `test_refusals_save_nothing` |
+| BK-E6 | Someone else's page refused for an author; Elementor pages refused | I — `test_permissions_and_builder_pages` |
+| BK-E7 | `kuduy-block-schema`: attributes with type and source, dynamic flag, parent rule; unknown type refused. `kuduy-block-validate` finds wrong attribute type, HTML outside blocks, unknown block | I — `test_schema_and_validate` |
+| BK-E8 | `kuduy-patterns` lists and returns a registered pattern; `kuduy-block-edit` inserts it | I — `test_patterns_and_insert_a_pattern` |
+| BK-E9 | `kuduy-block-usage` counts a block per post, core names without `core/`, no prefix matches | I — `test_usage` |
+| BK-E10 | `kuduy-post-duplicate`: draft copy with content, structured custom fields, current author; no edit lock; Elementor pages refused | I — `test_duplicate_a_post` |
+| BK-E11 | GenerateBlocks, Kadence Blocks and Spectra Legacy: schema, insert, validate and usage of one of their blocks | I — `test_block_plugins_when_active` (job "+ block plugins") |
+
 ## SEO + Image SEO
 
 | # | Feature | Type |

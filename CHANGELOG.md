@@ -11,6 +11,15 @@ Phase M of the ecosystem plan (`docs/plans/phase-m-contract.md`).
 - Added: tool errors now name a failure category (`PERMISSION_DENIED`, `RESOURCE_NOT_FOUND`, `INVALID_ARGUMENT`, `PLUGIN_NOT_ACTIVE`, `CONFLICT`, …) next to the message. Messages and successful results are unchanged.
 - Changed: Spectra Blocks and Spectra Legacy are listed as two separate plugins.
 
+Phase K (`scripts/measure-tools.mjs`): the size of the tool list is measured per kind of site (`TESTING.md` §3d); nothing trimmed yet (D56).
+
+Phase C1 (`docs/plans/phase-c-blocks.md`):
+
+- Added: `kuduy-block-edit` — change single blocks of a post without rewriting the rest: insert (block markup or a pattern), replace, update attributes, move, duplicate, remove; up to 50 operations saved at once; every new or changed block is checked against its registered block type, and if one fails nothing is saved. Undo with `kuduy-snapshot-restore`.
+- Added: `kuduy-block-schema` (a block type exactly as registered, including which attributes live in its HTML), `kuduy-block-validate` (check a post or markup), `kuduy-patterns` (list and read patterns), `kuduy-block-usage` (which posts use a block).
+- Added: `kuduy-post-duplicate` — copy a post or page into a new draft.
+- Changed: GenerateBlocks, Kadence Blocks and Spectra Legacy are now partly supported (their blocks work through the block tools; their own settings come later).
+
 ## 1.3.8 — 2026-11-17
 
 The plugin moved to a new GitHub repository. No feature changes.

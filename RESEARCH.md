@@ -435,3 +435,13 @@ KUDUY MCP is GPL-2.0-or-later, written from public specifications and documented
 | Multilingual, Site Editor APIs | 7 (later in the phase) |
 | WP-CLI command registration for hidden-mode recovery | 8 |
 | MCP Tasks extension for background jobs | later |
+
+## Blocks: serializer, attributes, patterns (WordPress 6.9 source, read 2026-11-17)
+
+- `serialize_block()` builds a block from `innerContent`; each `null` stands for the next inner block, strings are the block's own HTML. Inner blocks can only be added or removed together with their `null` markers.
+- `get_comment_delimited_block_content()` writes `<!-- wp:name {attrs} -->…<!-- /wp:name -->` (self-closing when empty) and strips the `core/` namespace; there is always a space after the name.
+- `serialize_block_attributes()` writes `--`, `<`, `>`, `&`, `\"` and `\\` as unicode escapes, so attribute JSON written by hand can change form when saved.
+- `WP_Block_Type::prepare_attributes_for_render()` checks each attribute with `rest_validate_value_from_schema( $value, $definition )`; attributes with a `source` are read from the HTML.
+- `WP_Block_Type` exposes `parent`, `ancestor`, `allowed_blocks`, `supports`, `styles`, `example`, `get_variations()`. `is_dynamic()` only means a render callback exists: in WordPress 7.1 `core/heading` is dynamic and still has saved HTML (found by test BK-E7).
+- `core/heading` `level` is type `number` in WordPress 7.1 (test BK-E7).
+- `WP_Block_Patterns_Registry::get_registered()` / `get_all_registered()` return `content`, loading it from `filePath` when needed; synced patterns are `wp_block` posts referenced by `<!-- wp:block {"ref":ID} /-->`.
