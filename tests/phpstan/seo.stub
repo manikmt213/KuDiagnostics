@@ -37,6 +37,17 @@ namespace {
 		 * @return mixed
 		 */
 		public static function get( string $key, $default_value = null, array $option_groups = array() ) {}
+		/** @return array<string, mixed> */
+		public static function get_all( array $specific_options = array() ): array {}
+	}
+	class WPSEO_Taxonomy_Meta {
+		/**
+		 * @param int|object|string $term
+		 * @return array<string, mixed>|false
+		 */
+		public static function get_term_meta( $term, string $taxonomy, ?string $meta = null ) {}
+		/** @param array<string, mixed> $meta_values */
+		public static function set_values( int $term_id, string $taxonomy, array $meta_values ): void {}
 	}
 	class WPSEO_Capability_Utils {
 		public static function current_user_can( string $capability ): bool {}
@@ -121,6 +132,9 @@ namespace Yoast\WP\SEO\Memoizers {
 }
 
 namespace Yoast\WP\SEO\Integrations\Watchers {
+	class Indexable_Term_Watcher {
+		public function build_indexable( int $term_id ): void {}
+	}
 	class Indexable_Post_Watcher {
 		public function build_indexable( int $post_id ): void {}
 	}

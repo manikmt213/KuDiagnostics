@@ -497,6 +497,17 @@ Run 2026-11-17, full suite: 312 tests, 0 failures with WooCommerce 11.0.1 on Wor
 | WG6 | Order addresses and customer note changed, result masked, not in the audit log, undo | I — `test_order_address_update` |
 | WG7 | Store settings read with options; a shop manager changes the number of decimals; settings outside the group refused; undo; editor refused | I — `test_store_settings` |
 
+## SEO terms, settings, audits (phase G2)
+
+Run 2026-11-17: `SeoTermsTest` in each SEO plugin's job — Rank Math 1.0.281, Yoast 28.7 (WP 6.9) / 28.8 (WP 7.1), All in One SEO 5.0.5, SEOPress 10.4 — on WordPress 6.9.11 / PHP 8.1.34 and 7.1.4 / PHP 8.3.36: 0 failures; Rank Math full suite on 7.1: 262 tests, 0 failures.
+
+| # | Feature | Type |
+|---|---|---|
+| SG1 | Term SEO read, written through the plugin (title, description, noindex, Open Graph title), read back, one field cleared while the others stay, both changes undone; unknown term and unknown field refused; author refused (Yoast, Rank Math, SEOPress) | I — `SeoTermsTest::test_term_seo_round_trip` |
+| SG2 | All in One SEO free: no term tools offered | I — same test, AIOSEO job |
+| SG3 | Settings (title templates) read for Yoast, Rank Math, SEOPress | I — `test_settings` |
+| SG4 | Audit: two posts with the same SEO title reported as duplicates; a noindexed post found by the noindex check, the other not | I — `test_audit_noindex_and_duplicates` (all four plugins) |
+
 ## SEO + Image SEO
 
 | # | Feature | Type |

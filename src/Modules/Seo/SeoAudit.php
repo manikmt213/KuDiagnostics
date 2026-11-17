@@ -37,7 +37,7 @@ final class SeoAudit implements Tool {
 	 * {@inheritDoc}
 	 */
 	public function description(): string {
-		return 'Lists published posts of one type that have no SEO title, description or focus keyword of their own in the active SEO plugin (the plugin\'s template then applies). Only posts with something missing are listed; total counts all published posts of the type, for paging. Paged; fix them with kuduy-seo-update, or many at once with kuduy-job-start.';
+		return 'Audits published posts of one type in the active SEO plugin. check "missing" (default): posts with no SEO title, description or focus keyword of their own (the plugin\'s template then applies); only posts with something missing are listed, total counts all published posts of the type, for paging. check "noindex": posts on this page hidden from search engines by their own setting. check "duplicates": SEO titles and descriptions that several posts share (looks at up to 500 newest posts; not paged). Fix them with kuduy-seo-update, or many at once with kuduy-job-start. Read only.';
 	}
 
 	/**
@@ -51,6 +51,11 @@ final class SeoAudit implements Tool {
 					'type'      => 'string',
 					'default'   => 'post',
 					'maxLength' => 20,
+				),
+				'check'     => array(
+					'type'    => 'string',
+					'enum'    => array( 'missing', 'noindex', 'duplicates' ),
+					'default' => 'missing',
 				),
 				'missing'   => array(
 					'type'     => 'array',
@@ -110,6 +115,20 @@ final class SeoAudit implements Tool {
 				),
 				'total_pages' => array( 'type' => 'integer' ),
 				'page'        => array( 'type' => 'integer' ),
+				'duplicates'  => array(
+					'type'  => 'array',
+					'items' => array(
+						'type'       => 'object',
+						'properties' => array(
+							'field' => array( 'type' => 'string' ),
+							'value' => array( 'type' => 'string' ),
+							'ids'   => array(
+								'type'  => 'array',
+								'items' => array( 'type' => 'integer' ),
+							),
+						),
+					),
+				),
 			),
 			'required'   => array( 'plugin', 'checked', 'posts', 'total', 'total_pages', 'page' ),
 		);
@@ -154,6 +173,10 @@ final class SeoAudit implements Tool {
 	public function execute( array $input ): array {
 		$type    = Content::post_type( (string) ( $input['post_type'] ?? 'post' ) );
 		$adapter = Seo::adapter();
+		$check   = (string) ( $input['check'] ?? 'missing' );
+		if ( 'duplicates' === $check ) {
+			return self::duplicates( $adapter, $type->name );
+		}
 		$checks  = array_values( array_intersect( self::CHECKS, (array) ( $input['missing'] ?? self::CHECKS ), $adapter->fields() ) );
 		$page    = (int) ( $input['page'] ?? 1 );
 		$query   = new \WP_Query(
@@ -174,7 +197,9 @@ final class SeoAudit implements Tool {
 			}
 			++$checked;
 			$stored  = $adapter->stored( $post->ID );
-			$missing = array_values( array_filter( $checks, static fn( string $field ): bool => null === ( $stored[ $field ] ?? null ) ) );
+			$missing = 'noindex' === $check
+				? ( true === ( $stored['robots.noindex'] ?? null ) ? array( 'robots.noindex' ) : array() )
+				: array_values( array_filter( $checks, static fn( string $field ): bool => null === ( $stored[ $field ] ?? null ) ) );
 			if ( $missing ) {
 				$posts[] = array(
 					'id'      => $post->ID,
@@ -191,6 +216,63 @@ final class SeoAudit implements Tool {
 			'total'       => (int) $query->found_posts,
 			'total_pages' => (int) $query->max_num_pages,
 			'page'        => $page,
+		);
+	}
+
+	/**
+	 * SEO titles and descriptions shared by several of the newest published posts of a type.
+	 *
+	 * @param SeoAdapter $adapter Active SEO plugin.
+	 * @param string     $type    Post type.
+	 * @return array<string, mixed>
+	 */
+	private static function duplicates( SeoAdapter $adapter, string $type ): array {
+		$ids     = get_posts(
+			array(
+				'post_type'      => $type,
+				'post_status'    => 'publish',
+				'posts_per_page' => 500,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'fields'         => 'ids',
+			)
+		);
+		$seen    = array();
+		$checked = 0;
+		foreach ( $ids as $id ) {
+			if ( ! current_user_can( 'edit_post', (int) $id ) ) {
+				continue;
+			}
+			++$checked;
+			$stored = $adapter->stored( (int) $id );
+			foreach ( array( 'title', 'description' ) as $field ) {
+				$value = $stored[ $field ] ?? null;
+				if ( is_string( $value ) && '' !== $value ) {
+					$seen[ $field ][ mb_strtolower( $value ) ]['value'] = $value;
+					$seen[ $field ][ mb_strtolower( $value ) ]['ids'][] = (int) $id;
+				}
+			}
+		}
+		$out = array();
+		foreach ( $seen as $field => $values ) {
+			foreach ( $values as $entry ) {
+				if ( count( $entry['ids'] ) > 1 ) {
+					$out[] = array(
+						'field' => $field,
+						'value' => $entry['value'],
+						'ids'   => $entry['ids'],
+					);
+				}
+			}
+		}
+		return array(
+			'plugin'      => $adapter->slug(),
+			'checked'     => $checked,
+			'posts'       => array(),
+			'total'       => count( $ids ),
+			'total_pages' => 1,
+			'page'        => 1,
+			'duplicates'  => $out,
 		);
 	}
 }

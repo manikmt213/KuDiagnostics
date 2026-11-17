@@ -76,6 +76,7 @@ use Kuduy\Mcp\Modules\WpBakery\WpBakeryWrite;
 use Kuduy\Mcp\Modules\Media\MediaLibrary;
 use Kuduy\Mcp\Modules\Media\MediaTools;
 use Kuduy\Mcp\Modules\Seo\SeoAudit;
+use Kuduy\Mcp\Modules\Seo\SeoTerms;
 use Kuduy\Mcp\Modules\Seo\SeoTools;
 use Kuduy\Mcp\Modules\Seo\RankMathExtras;
 use Kuduy\Mcp\Modules\Seo\SeoVerify;
@@ -210,6 +211,11 @@ final class ToolRegistry {
 		}
 		$registry->register( new SeoVerify() );
 		$registry->register( new SeoAudit() );
+		foreach ( array_keys( SeoTerms::PLUGINS ) as $plugin ) {
+			foreach ( array( 'term-seo', 'term-seo-update', 'settings' ) as $mode ) {
+				$registry->register( new SeoTerms( $plugin, $mode ) );
+			}
+		}
 		foreach ( array( 'redirects', 'redirect-save', 'redirect-trash', 'schema-get', 'schema-save', 'schema-delete', 'sitemap' ) as $mode ) {
 			$registry->register( new RankMathExtras( $mode ) );
 		}

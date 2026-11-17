@@ -107,10 +107,10 @@ Elementor add-on widgets need no per-add-on code: the generic Elementor tools di
 |---|---|---|---|---|
 | Dynamic Shortcodes | paid | None | — | L |
 | Code Snippets | free 4.1.0 | None | — | G |
-| Rank Math | free 1.0.281 | **Full** | Meta, redirects, schema, sitemap status | G (audits) |
-| Yoast SEO | free 28.8 | **Full** (meta) | Missing: schema type, sitemap settings | G |
-| All in One SEO | free 5.0.5 | **Full** (meta) | — | G (audits) |
-| SEOPress | free 10.4 | **Full** (meta) | — | G (audits) |
+| Rank Math | free 1.0.281 | **Full** | Post and term meta, redirects, schema, sitemap status, title templates (read), audits incl. noindex and duplicates. Missing: settings changes, heading/link audits | G |
+| Yoast SEO | free 28.8 | **Full** (meta) | Post and term meta, sitemap status, title templates and archive settings (read), audits. Missing: schema type, settings changes, redirects (Premium) | G, L |
+| All in One SEO | free 5.0.5 | **Full** (meta) | Post meta, audits. Term SEO is Pro only | L (Pro) |
+| SEOPress | free 10.4 | **Full** (meta) | Post and term meta through its abilities, title templates (read), audits. Missing: settings changes, redirects (Pro) | G, L |
 | WPML | paid | None | — | L |
 | Weglot | free 6.4.3, but translations live in Weglot's cloud and need an account | None | — | K (detection and languages only) |
 

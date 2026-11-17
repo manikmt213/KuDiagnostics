@@ -36,6 +36,12 @@ Phase G1 — WooCommerce (`docs/plans/phase-g1-woocommerce.md`):
 - Added: refunds (`kuduy-woo-refund-create`), in two steps with a confirmation token. The preview says whether the payment gateway will send the money back or the refund is only recorded.
 - Added: change an order's addresses and customer note (`kuduy-woo-order-update`), and read and change store settings (`kuduy-woo-settings`, `-settings-update`: general, products, accounts, emails, visibility).
 
+Phase G2 — SEO (`docs/plans/phase-g2-seo.md`):
+
+- Added: SEO of categories, tags and other taxonomy terms for Yoast SEO, Rank Math and SEOPress (`kuduy-yoast-term-seo` / `-term-seo-update`, and the same for `rank-math` and `seopress`), each saved through the plugin's own API, with undo. All in One SEO keeps term SEO in its Pro edition, so it has no term tools.
+- Added: each plugin's title templates and archive settings, read only (`kuduy-yoast-settings`, `kuduy-rank-math-settings`, `kuduy-seopress-settings`).
+- Added: `kuduy-seo-audit` can now find noindexed posts (`check: "noindex"`) and duplicate SEO titles or descriptions (`check: "duplicates"`).
+
 ## 1.3.8 — 2026-11-17
 
 The plugin moved to a new GitHub repository. No feature changes.

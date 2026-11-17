@@ -461,3 +461,10 @@ KUDUY MCP is GPL-2.0-or-later, written from public specifications and documented
 - `wc_create_attribute()` / `wc_update_attribute()` find duplicate slugs through `taxonomy_exists( 'pa_…' )`; the taxonomy is registered only from the next request after creation, so a duplicate created in the same request is not caught (found by test WG3; KuDiagnostics also compares with `wc_get_attribute_taxonomies()`). `wc_delete_attribute()` deletes the terms too.
 - `product_shipping_class` is registered with `show_ui` false.
 - Settings REST: `wc/v3/settings/{group}` and `…/{group}/batch` (WC_REST_Setting_Options_Controller); groups include general, products, account, email, site-visibility, advanced, integration, tax, shipping, point-of-sale.
+
+## SEO terms and settings (plugin source, read 2026-11-17)
+
+- **Yoast SEO 28.8:** term SEO lives in the option `wpseo_taxonomy_meta`, read with `WPSEO_Taxonomy_Meta::get_term_meta( $term_id, $taxonomy )` and saved with `set_values()` (validated by `validate_term_meta_data()`); keys `wpseo_title`, `wpseo_desc`, `wpseo_focuskw`, `wpseo_canonical`, `wpseo_noindex` ("default" / "index" / "noindex"), `wpseo_opengraph-*`, `wpseo_twitter-*`. Its term indexable is rebuilt by `Indexable_Term_Watcher::build_indexable()` on `edited_term`. Settings via `WPSEO_Options::get_all()`.
+- **Rank Math 1.0.281:** term meta uses the same `rank_math_*` keys as posts; its editor saves them through REST `POST rankmath/v1/updateMeta` with `objectType`, `objectID`, `meta` (its `Sanitize` class; empty values delete). Title templates in the option `rank-math-options-titles`.
+- **All in One SEO 5.0.5 (free):** no Term model in `app/Common/Models`; term SEO is a Pro feature.
+- **SEOPress 10.4:** abilities `seopress/get-term-title-description`, `-robots-settings`, `-social-settings` and their `update-` counterparts; the read abilities return `{ settings: [ { key, value, can_modify, … } ], term_id, … }` (found by test SG1). `_seopress_robots_index` "yes" means hidden from search engines; there is no per-term "force index". Title templates in `seopress_titles_option_name`.

@@ -237,6 +237,9 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | WooCommerce: refunds with confirmation and a clear statement whether money is sent (`kuduy-woo-refund-create`) | Tested 2026-11-17 (WG5) |
 | WooCommerce: order addresses and customer note (`kuduy-woo-order-update`) | Tested 2026-11-17 (WG6) |
 | WooCommerce: store settings read and changed through WooCommerce's settings API (`kuduy-woo-settings`, `-settings-update`) | Tested 2026-11-17 (WG7) |
+| SEO of categories, tags and other terms for Yoast, Rank Math, SEOPress, through each plugin's own API (`kuduy-yoast-term-seo`, `kuduy-rank-math-term-seo`, `kuduy-seopress-term-seo` and `-update`) | Tested 2026-11-17 (SG1, SG2) |
+| SEO title templates and archive settings, read (`kuduy-yoast-settings`, `kuduy-rank-math-settings`, `kuduy-seopress-settings`) | Tested 2026-11-17 (SG3) |
+| SEO audit for noindexed posts and duplicate titles/descriptions (`kuduy-seo-audit` check) | Tested 2026-11-17 (SG4) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |
