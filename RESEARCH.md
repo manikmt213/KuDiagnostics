@@ -468,3 +468,11 @@ KUDUY MCP is GPL-2.0-or-later, written from public specifications and documented
 - **Rank Math 1.0.281:** term meta uses the same `rank_math_*` keys as posts; its editor saves them through REST `POST rankmath/v1/updateMeta` with `objectType`, `objectID`, `meta` (its `Sanitize` class; empty values delete). Title templates in the option `rank-math-options-titles`.
 - **All in One SEO 5.0.5 (free):** no Term model in `app/Common/Models`; term SEO is a Pro feature.
 - **SEOPress 10.4:** abilities `seopress/get-term-title-description`, `-robots-settings`, `-social-settings` and their `update-` counterparts; the read abilities return `{ settings: [ { key, value, can_modify, … } ], term_id, … }` (found by test SG1). `_seopress_robots_index` "yes" means hidden from search engines; there is no per-term "force index". Title templates in `seopress_titles_option_name`.
+
+## Code Snippets (4.1.0 source, read 2026-11-17)
+
+- Functions in namespace `Code_Snippets` (php/snippet-ops.php): `get_snippets()`, `get_snippet()`, `save_snippet()`, `activate_snippet()` (runs its `Validator` on PHP first), `deactivate_snippet()`, `trash_snippet()`, `restore_snippet()`, `delete_snippet()`.
+- `save_snippet()` runs `test_snippet_code()` for an active PHP snippet that is not single-use: `execute_snippet( $code, $id, true )`, then saves it inactive if it threw. Saving an active PHP snippet therefore executes it.
+- `Utils\Validator::validate()` only reports duplicate function/class/constant names, not general syntax errors.
+- Type follows scope (`Model\Snippet::get_type_from_scope()`): `-css` → css, `-js` → js, `content` suffix → html, else php. Scopes: global, admin, front-end, single-use, content, head-content, body-content, footer-content, admin-css, site-css, site-head-js, site-footer-js, condition.
+- Capability: `code_snippets()->get_cap()`, filter `code_snippets_cap`, default manage_options.

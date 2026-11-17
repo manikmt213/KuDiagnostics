@@ -98,7 +98,7 @@ final class IntegrationCatalog {
 		array( 'bricksforge', 'Bricksforge', 'addon', 'plugin', array( 'bricksforge' ), 'none', array(), 'paid', 'L', 'Needs Bricks.' ),
 
 		array( 'dynamic-shortcodes', 'Dynamic Shortcodes', 'dynamic', 'plugin', array( 'dynamic-shortcodes' ), 'none', array(), 'paid', 'L', '' ),
-		array( 'code-snippets', 'Code Snippets', 'code', 'plugin', array( 'code-snippets', 'code-snippets-pro' ), 'none', array(), 'free', 'G', '' ),
+		array( 'code-snippets', 'Code Snippets', 'code', 'plugin', array( 'code-snippets', 'code-snippets-pro' ), 'full', array( 'kuduy-code-snippets-' ), 'free', 'G', 'Snippets listed, read with a syntax check and risky-call report, HTML/CSS/JS snippets saved with a confirmation step, PHP snippets only where the site allows code execution (kuduy:code), switched off and trashed with undo (tested with 4.1.0). Not yet: import/export, Pro conditions and cloud.' ),
 
 		array( 'rank-math', 'Rank Math SEO', 'seo', 'plugin', array( 'seo-by-rank-math' ), 'full', array( 'kuduy-seo-', 'kuduy-rank-math-' ), 'free', 'G', 'Post and term meta, redirects, schema, sitemap status, title templates (read). Audits for missing data, noindex and duplicate titles/descriptions. Not yet: heading and link audits, settings changes.' ),
 		array( 'yoast', 'Yoast SEO', 'seo', 'plugin', array( 'wordpress-seo' ), 'full', array( 'kuduy-seo-status', 'kuduy-seo-get', 'kuduy-seo-update', 'kuduy-seo-verify', 'kuduy-seo-audit', 'kuduy-seo-sitemap', 'kuduy-yoast-' ), 'free', 'G', 'Post and term meta, sitemap status, title templates and archive settings (read). Audits for missing data, noindex and duplicates. Not yet: schema type, settings changes, redirects (Premium).' ),

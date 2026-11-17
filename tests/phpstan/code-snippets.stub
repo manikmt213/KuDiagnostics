@@ -1,0 +1,48 @@
+<?php
+/**
+ * Code Snippets is not a dependency; this declares only what KUDUY and its tests call (Code Snippets 4.1.0
+ * php/snippet-ops.php, php/Model/Snippet.php, php/Plugin.php).
+ */
+
+namespace Code_Snippets\Model {
+	/**
+	 * @property int                $id
+	 * @property string             $name
+	 * @property string             $desc
+	 * @property string             $code
+	 * @property array<int, string> $tags
+	 * @property string             $scope
+	 * @property string             $type
+	 * @property bool               $active
+	 * @property bool               $trashed
+	 * @property int                $priority
+	 * @property string             $modified
+	 * @property mixed              $code_error
+	 */
+	class Snippet {
+		/** @param array<string, mixed>|object|null $initial_data */
+		public function __construct( $initial_data = null ) {}
+	}
+}
+
+namespace Code_Snippets {
+	/**
+	 * @param array<int> $ids
+	 * @return array<Model\Snippet>
+	 */
+	function get_snippets( array $ids = array(), ?bool $network = null ): array {}
+	function get_snippet( int $id = 0, ?bool $network = null ): ?Model\Snippet {}
+	/** @param Model\Snippet|array<string, mixed> $snippet */
+	function save_snippet( $snippet ): ?Model\Snippet {}
+	function deactivate_snippet( int $id, ?bool $network = null ): ?Model\Snippet {}
+	function trash_snippet( int $id, ?bool $network = null ): bool {}
+	function restore_snippet( int $id, ?bool $network = null ): bool {}
+}
+
+namespace {
+	define( 'CODE_SNIPPETS_VERSION', '4.1.0' );
+	class Code_Snippets_Plugin_Stub {
+		public function get_cap(): string {}
+	}
+	function code_snippets(): Code_Snippets_Plugin_Stub {}
+}

@@ -23,7 +23,7 @@ final class JobTools implements Tool {
 	/**
 	 * Mode.
 	 *
-	 * @param string $mode start | status | cancel.
+	 * @param string $mode start | status | cancel | retry.
 	 */
 	public function __construct( private string $mode ) {}
 
@@ -40,6 +40,7 @@ final class JobTools implements Tool {
 	public function title(): string {
 		return match ( $this->mode ) {
 			'start'  => __( 'Start a background job', 'kuduy-mcp' ),
+			'retry'  => __( 'Retry the failed items of a job', 'kuduy-mcp' ),
 			'status' => __( 'Background job status', 'kuduy-mcp' ),
 			default  => __( 'Cancel a background job', 'kuduy-mcp' ),
 		};
@@ -52,6 +53,7 @@ final class JobTools implements Tool {
 		return match ( $this->mode ) {
 			'start'  => 'Runs one tool over many items in the background (up to 500): ' . implode( ', ', Jobs::TOOLS ) . '. Each item is the normal input of that tool (e.g. {"post_id": 12, "description": "…"}) and is checked like a single call, with its own undo snapshot. Returns a job id; follow it with kuduy-job-status. Use for more than a few items.',
 			'status' => 'Progress of a background job: status (queued, running, done, cancelled, stopped, failed), counts, and per-item results with errors and undo snapshot ids.',
+			'retry'  => 'Starts a new background job with the items of a finished job that failed, plus those it never reached when it was cancelled or stopped, using the same tool. The finished job is not changed. Each item is checked again like a single call. Returns the new job (follow it with kuduy-job-status) and retried_from.',
 			default  => 'Stops a background job after the item it is working on; finished items stay changed (undo them with their snapshot ids).',
 		};
 	}
@@ -99,14 +101,15 @@ final class JobTools implements Tool {
 		return array(
 			'type'       => 'object',
 			'properties' => array(
-				'id'      => array( 'type' => 'integer' ),
-				'tool'    => array( 'type' => 'string' ),
-				'status'  => array( 'type' => 'string' ),
-				'total'   => array( 'type' => 'integer' ),
-				'done'    => array( 'type' => 'integer' ),
-				'failed'  => array( 'type' => 'integer' ),
-				'error'   => array( 'type' => 'string' ),
-				'results' => array(
+				'id'           => array( 'type' => 'integer' ),
+				'tool'         => array( 'type' => 'string' ),
+				'status'       => array( 'type' => 'string' ),
+				'total'        => array( 'type' => 'integer' ),
+				'done'         => array( 'type' => 'integer' ),
+				'failed'       => array( 'type' => 'integer' ),
+				'error'        => array( 'type' => 'string' ),
+				'retried_from' => array( 'type' => 'integer' ),
+				'results'      => array(
 					'type'  => 'array',
 					'items' => array(
 						'type'       => 'object',
@@ -137,7 +140,7 @@ final class JobTools implements Tool {
 		return array(
 			'readOnlyHint'    => 'status' === $this->mode,
 			'destructiveHint' => false,
-			'idempotentHint'  => 'start' !== $this->mode,
+			'idempotentHint'  => ! in_array( $this->mode, array( 'start', 'retry' ), true ),
 			'openWorldHint'   => false,
 		);
 	}
@@ -184,6 +187,9 @@ final class JobTools implements Tool {
 			Jobs::finish( (int) $job['id'], 'cancelled', 'Cancelled.' );
 			$job = (array) Jobs::get( (int) $job['id'] );
 		}
+		if ( 'retry' === $this->mode ) {
+			return $this->retry( $job );
+		}
 		return self::describe( $job );
 	}
 
@@ -216,6 +222,38 @@ final class JobTools implements Tool {
 		$id = Jobs::create( $tool->name(), $items, get_current_user_id(), TokenAuth::client_id(), $scopes );
 		AuditLog::target( 'job', (string) $id );
 		return self::describe( (array) Jobs::get( $id ) );
+	}
+
+	/**
+	 * Start a new job with a finished job's failed and unreached items.
+	 *
+	 * @param array<string, mixed> $job Finished job.
+	 * @return array<string, mixed>
+	 * @throws ToolError When the job still runs or has nothing to retry.
+	 */
+	private function retry( array $job ): array {
+		if ( in_array( (string) $job['status'], array( 'queued', 'running' ), true ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- returned as JSON text, never HTML.
+			throw ToolError::of( ToolError::CONFLICT, 'Job ' . (int) $job['id'] . ' is still ' . esc_html( (string) $job['status'] ) . '; retry it when it has finished (or cancel it first).' );
+		}
+		$items   = array_values( (array) $job['items'] );
+		$results = array_values( (array) $job['results'] );
+		$again   = array();
+		foreach ( $items as $index => $item ) {
+			if ( ! isset( $results[ $index ] ) || empty( ( (array) $results[ $index ] )['ok'] ) ) {
+				$again[] = (array) $item;
+			}
+		}
+		if ( ! $again ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- returned as JSON text, never HTML.
+			throw ToolError::of( ToolError::VALIDATION_FAILED, 'Every item of job ' . (int) $job['id'] . ' succeeded; there is nothing to retry.' );
+		}
+		return $this->start(
+			array(
+				'tool'  => (string) $job['tool'],
+				'items' => $again,
+			)
+		) + array( 'retried_from' => (int) $job['id'] );
 	}
 
 	/**

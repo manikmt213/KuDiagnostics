@@ -106,7 +106,7 @@ Elementor add-on widgets need no per-add-on code: the generic Elementor tools di
 | Integration | Copy | Support today | What exists | Phase |
 |---|---|---|---|---|
 | Dynamic Shortcodes | paid | None | — | L |
-| Code Snippets | free 4.1.0 | None | — | G |
+| Code Snippets | free 4.1.0 | **Full** (CS1–CS3, 2026-11-17) | List, read with checks, HTML/CSS/JS saves with confirmation, PHP saves only with code execution allowed, switch off, trash. Missing: import/export, Pro conditions | — |
 | Rank Math | free 1.0.281 | **Full** | Post and term meta, redirects, schema, sitemap status, title templates (read), audits incl. noindex and duplicates. Missing: settings changes, heading/link audits | G |
 | Yoast SEO | free 28.8 | **Full** (meta) | Post and term meta, sitemap status, title templates and archive settings (read), audits. Missing: schema type, settings changes, redirects (Premium) | G, L |
 | All in One SEO | free 5.0.5 | **Full** (meta) | Post meta, audits. Term SEO is Pro only | L (Pro) |

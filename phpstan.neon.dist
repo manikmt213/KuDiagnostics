@@ -16,6 +16,7 @@ parameters:
     - tests/phpstan/themes.stub
     - tests/phpstan/brizy.stub
     - tests/phpstan/blocks.stub
+    - tests/phpstan/code-snippets.stub
     # Stand-ins for paid plugins (WPBakery): their names, not ours, so they are scanned but not analysed.
     - tests/integration/fakes/wpbakery.php
   paths:

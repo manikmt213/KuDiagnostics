@@ -240,6 +240,9 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | SEO of categories, tags and other terms for Yoast, Rank Math, SEOPress, through each plugin's own API (`kuduy-yoast-term-seo`, `kuduy-rank-math-term-seo`, `kuduy-seopress-term-seo` and `-update`) | Tested 2026-11-17 (SG1, SG2) |
 | SEO title templates and archive settings, read (`kuduy-yoast-settings`, `kuduy-rank-math-settings`, `kuduy-seopress-settings`) | Tested 2026-11-17 (SG3) |
 | SEO audit for noindexed posts and duplicate titles/descriptions (`kuduy-seo-audit` check) | Tested 2026-11-17 (SG4) |
+| Code Snippets: list, read with syntax check and risky-call report, save HTML/CSS/JS snippets with confirmation, save PHP snippets only with code execution allowed (`kuduy:code`) and confirmation, switch off and trash with undo (`kuduy-code-snippets-*`) | Tested 2026-11-17 (CS1–CS3) |
+| Registered shortcodes with what provides each (`kuduy-shortcodes`) | Tested 2026-11-17 (SC1) |
+| Retry the failed items of a background job (`kuduy-job-retry`) | Tested 2026-11-17 (JR1) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |

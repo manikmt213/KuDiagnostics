@@ -508,6 +508,18 @@ Run 2026-11-17: `SeoTermsTest` in each SEO plugin's job — Rank Math 1.0.281, Y
 | SG3 | Settings (title templates) read for Yoast, Rank Math, SEOPress | I — `test_settings` |
 | SG4 | Audit: two posts with the same SEO title reported as duplicates; a noindexed post found by the noindex check, the other not | I — `test_audit_noindex_and_duplicates` (all four plugins) |
 
+## Code Snippets, shortcodes, job retry (phase G3)
+
+Run 2026-11-17: `CodeAndJobsTest` with Code Snippets 4.1.0 on WordPress 6.9.11 / PHP 8.1.34 and 7.1.4 / PHP 8.3.36, 0 failures; with code execution allowed (7.1) the PHP snippet test ran (12 assertions); bare full suites 259 tests, 0 failures on both pairs.
+
+| # | Feature | Type |
+|---|---|---|
+| CS1 | CSS snippet created after the confirmation step (preview: create, css, "does not make code safe"), listed, read with its code, changed and undone, switched off and undone, trashed and undone | I — `CodeAndJobsTest::test_css_snippet_lifecycle` |
+| CS2 | HTML/CSS/JS tool refuses PHP scopes and refuses switching on an existing PHP snippet; PHP snippet read with syntax "ok"; PHP tool needs `kuduy:code` and exists only with code execution allowed | I — `test_php_is_guarded` |
+| CS3 | With code execution: broken PHP refused when saved active; PHP snippet saved inactive after confirmation, preview lists base64_decode as risky | I — `test_php_snippet_with_code_execution` (job "+ code tools (D4) + Code Snippets") |
+| SC1 | Shortcodes listed with source: gallery from core, a test shortcode from the kuduy-mcp plugin folder; search | I — `test_shortcodes` |
+| JR1 | Retry refused while queued; after a run with one failed item, retry starts a job with only that item; run by a site manager it succeeds; nothing left to retry afterwards | I — `test_job_retry` |
+
 ## SEO + Image SEO
 
 | # | Feature | Type |

@@ -42,6 +42,12 @@ Phase G2 — SEO (`docs/plans/phase-g2-seo.md`):
 - Added: each plugin's title templates and archive settings, read only (`kuduy-yoast-settings`, `kuduy-rank-math-settings`, `kuduy-seopress-settings`).
 - Added: `kuduy-seo-audit` can now find noindexed posts (`check: "noindex"`) and duplicate SEO titles or descriptions (`check: "duplicates"`).
 
+Phase G3 (`docs/plans/phase-g3-code.md`):
+
+- Added: Code Snippets tools — list snippets, read one with a syntax check and a list of risky calls, save HTML/CSS/JavaScript snippets (two steps with a confirmation token, admin access level), switch a snippet off or trash it (with undo). PHP snippets have their own tool that exists only when the site allows code execution and needs the code access level, also in two steps. A clean check does not make code safe, and every preview says so.
+- Added: `kuduy-shortcodes` — the shortcodes registered on the site and what provides each.
+- Added: `kuduy-job-retry` — start a new background job with the failed items of a finished one.
+
 ## 1.3.8 — 2026-11-17
 
 The plugin moved to a new GitHub repository. No feature changes.

@@ -22,11 +22,14 @@ use Kuduy\Mcp\Modules\Core\PostGet;
 use Kuduy\Mcp\Modules\Core\PostList;
 use Kuduy\Mcp\Modules\Core\PostMeta;
 use Kuduy\Mcp\Modules\Core\PostDuplicate;
+use Kuduy\Mcp\Modules\Core\Shortcodes;
 use Kuduy\Mcp\Modules\Core\PostTrash;
 use Kuduy\Mcp\Modules\Core\PostTypes;
 use Kuduy\Mcp\Modules\Core\PostUpdate;
 use Kuduy\Mcp\Modules\Core\Revisions;
 use Kuduy\Mcp\Modules\Core\Settings;
+use Kuduy\Mcp\Modules\Code\CodeSnippetSave;
+use Kuduy\Mcp\Modules\Code\CodeSnippets;
 use Kuduy\Mcp\Modules\Core\IntegrationDetail;
 use Kuduy\Mcp\Modules\Core\Integrations;
 use Kuduy\Mcp\Modules\Core\SiteInfo;
@@ -118,6 +121,12 @@ final class ToolRegistry {
 		$registry->register( new Integrations() );
 		$registry->register( new IntegrationDetail( 'get' ) );
 		$registry->register( new IntegrationDetail( 'diagnose' ) );
+		foreach ( array( 'list', 'get', 'deactivate', 'trash' ) as $mode ) {
+			$registry->register( new CodeSnippets( $mode ) );
+		}
+		foreach ( array( 'save', 'php-save' ) as $mode ) {
+			$registry->register( new CodeSnippetSave( $mode ) );
+		}
 		$registry->register( new SnapshotList() );
 		$registry->register( new SnapshotRestore() );
 		$registry->register( new CheckUpdate() );
@@ -129,6 +138,7 @@ final class ToolRegistry {
 		$registry->register( new PostUpdate() );
 		$registry->register( new PostTrash() );
 		$registry->register( new PostDuplicate() );
+		$registry->register( new Shortcodes() );
 		foreach ( array( 'create', 'update', 'delete' ) as $mode ) {
 			$registry->register( new TermWrite( $mode ) );
 		}
@@ -229,7 +239,7 @@ final class ToolRegistry {
 			$registry->register( new MediaFiles( $mode ) );
 		}
 		$registry->register( new MediaDelete() );
-		foreach ( array( 'start', 'status', 'cancel' ) as $mode ) {
+		foreach ( array( 'start', 'status', 'cancel', 'retry' ) as $mode ) {
 			$registry->register( new JobTools( $mode ) );
 		}
 		$registry->register( new WooStatus() );
