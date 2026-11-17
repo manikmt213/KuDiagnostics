@@ -28,6 +28,14 @@ Phase C2 (`docs/plans/phase-c2-block-plugins.md`):
 - Added: Spectra Blocks' own abilities through `kuduy-spectra-blocks-abilities`, `-ability-get`, `-ability-run` (when the site owner has switched them on in Spectra Blocks).
 - Changed: builder abilities that delete something for good are no longer run through the abilities tools (Breakdance, Oxygen, Bricks, Spectra Blocks): a snapshot cannot bring it back.
 
+Phase G1 — WooCommerce (`docs/plans/phase-g1-woocommerce.md`):
+
+- Added: duplicate a product, restore one from the trash, delete one permanently (two steps with a confirmation token), and set its default variation (`default_attributes`).
+- Added: generate all missing variations at once, delete a variation (undo recreates it).
+- Added: global product attributes (list, create, change, delete with confirmation) and shipping classes (list, create, change, delete).
+- Added: refunds (`kuduy-woo-refund-create`), in two steps with a confirmation token. The preview says whether the payment gateway will send the money back or the refund is only recorded.
+- Added: change an order's addresses and customer note (`kuduy-woo-order-update`), and read and change store settings (`kuduy-woo-settings`, `-settings-update`: general, products, accounts, emails, visibility).
+
 ## 1.3.8 — 2026-11-17
 
 The plugin moved to a new GitHub repository. No feature changes.

@@ -79,17 +79,21 @@ use Kuduy\Mcp\Modules\Seo\SeoAudit;
 use Kuduy\Mcp\Modules\Seo\SeoTools;
 use Kuduy\Mcp\Modules\Seo\RankMathExtras;
 use Kuduy\Mcp\Modules\Seo\SeoVerify;
+use Kuduy\Mcp\Modules\Woo\CatalogTools;
 use Kuduy\Mcp\Modules\Woo\CouponTools;
 use Kuduy\Mcp\Modules\Woo\CustomerTools;
 use Kuduy\Mcp\Modules\Woo\OrderRead;
+use Kuduy\Mcp\Modules\Woo\OrderUpdate;
 use Kuduy\Mcp\Modules\Woo\OrderWrite;
 use Kuduy\Mcp\Modules\Woo\ProductRead;
 use Kuduy\Mcp\Modules\Woo\ProductWrite;
 use Kuduy\Mcp\Modules\Woo\Report;
 use Kuduy\Mcp\Modules\Woo\ReviewTools;
 use Kuduy\Mcp\Modules\Woo\StoreSettings;
+use Kuduy\Mcp\Modules\Woo\StoreConfirmed;
 use Kuduy\Mcp\Modules\Woo\StoreSettingsWrite;
 use Kuduy\Mcp\Modules\Woo\VariationWrite;
+use Kuduy\Mcp\Modules\Woo\WooSettings;
 use Kuduy\Mcp\Modules\Woo\WooStatus;
 
 /**
@@ -223,6 +227,16 @@ final class ToolRegistry {
 			$registry->register( new JobTools( $mode ) );
 		}
 		$registry->register( new WooStatus() );
+		foreach ( CatalogTools::MODES as $mode ) {
+			$registry->register( new CatalogTools( $mode ) );
+		}
+		foreach ( array( 'product-delete', 'attribute-delete', 'refund-create' ) as $mode ) {
+			$registry->register( new StoreConfirmed( $mode ) );
+		}
+		$registry->register( new OrderUpdate() );
+		foreach ( array( 'get', 'update' ) as $mode ) {
+			$registry->register( new WooSettings( $mode ) );
+		}
 		foreach ( array( 'list', 'get', 'variations' ) as $mode ) {
 			$registry->register( new ProductRead( $mode ) );
 		}

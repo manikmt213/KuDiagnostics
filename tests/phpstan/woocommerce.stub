@@ -63,6 +63,10 @@ namespace {
 		public function is_taxonomy(): bool {}
 	}
 	class WC_Product extends WC_Data {
+		public function set_sku( string $sku ): void {}
+		/** @return array<string, string> */
+		public function get_default_attributes( string $context = 'view' ): array {}
+		public function get_shipping_class_id( string $context = 'view' ): int {}
 		public function get_type(): string {}
 		public function get_name( string $context = 'view' ): string {}
 		public function get_status( string $context = 'view' ): string {}
@@ -145,7 +149,8 @@ namespace {
 		public function get_total_tax( string $context = 'view' ): string {}
 		public function get_prices_include_tax( string $context = 'view' ): bool {}
 		/** @return array<int, WC_Order_Item> */
-		public function get_items( string $types = 'line_item' ): array {}
+		/** @param string|array<int, string> $types */
+		public function get_items( $types = 'line_item' ): array {}
 		/** @return array<int, WC_Order_Item_Shipping> */
 		public function get_shipping_methods(): array {}
 		/** @return array<int, WC_Order_Item_Fee> */
@@ -175,6 +180,11 @@ namespace {
 		public function get_date_completed( string $context = 'view' ): ?WC_DateTime {}
 		public function get_created_via( string $context = 'view' ): string {}
 		public function get_customer_note( string $context = 'view' ): string {}
+		public function set_customer_note( string $value ): void {}
+		public function set_payment_method( string $value ): void {}
+		public function set_payment_method_title( string $value ): void {}
+		public function get_billing_city( string $context = 'view' ): string {}
+		public function get_remaining_refund_amount(): string {}
 		public function get_customer_ip_address( string $context = 'view' ): string {}
 		public function get_customer_user_agent( string $context = 'view' ): string {}
 		public function get_transaction_id( string $context = 'view' ): string {}
@@ -264,6 +274,7 @@ namespace {
 		public $supports = array();
 		public function get_title(): string {}
 		public function get_method_title(): string {}
+		public function supports( string $feature ): bool {}
 	}
 	class WC_Payment_Gateways {
 		/** @return array<string, mixed> */
@@ -390,4 +401,37 @@ namespace {
 	function wc_tax_enabled(): bool {}
 	function wc_shipping_enabled(): bool {}
 	function wc_coupons_enabled(): bool {}
+
+	define( 'WC_ABSPATH', '/wordpress/wp-content/plugins/woocommerce/' );
+	class WC_Admin_Duplicate_Product {
+		public function product_duplicate( WC_Product $product ): WC_Product {}
+	}
+	class WC_Data_Store {
+		public static function load( string $object_type ): WC_Data_Store {}
+		public function create_all_product_variations( WC_Product $product, int $limit = -1 ): int {}
+	}
+	/** @param mixed $attribute */
+	function wc_attributes_array_filter_variation( $attribute ): bool {}
+	/** @return object|null */
+	function wc_get_attribute( int $id ) {}
+	/** @return list<object> */
+	function wc_get_attribute_taxonomies(): array {}
+	function wc_attribute_taxonomy_name( string $attribute_name ): string {}
+	function wc_sanitize_taxonomy_name( string $taxonomy ): string {}
+	/**
+	 * @param array<string, mixed> $args
+	 * @return int|WP_Error
+	 */
+	function wc_create_attribute( array $args ) {}
+	/**
+	 * @param array<string, mixed> $args
+	 * @return int|WP_Error
+	 */
+	function wc_update_attribute( int $id, array $args ) {}
+	function wc_delete_attribute( int $id ): bool {}
+	/**
+	 * @param array<string, mixed> $args
+	 * @return WC_Order_Refund|WP_Error
+	 */
+	function wc_create_refund( array $args = array() ) {}
 }

@@ -231,6 +231,12 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Block plugins' own settings: GenerateBlocks and Kadence Blocks settings read and changed through their own save paths, secrets never shown (`kuduy-generateblocks-*`, `kuduy-kadence-blocks-*`) | Tested 2026-11-17 (BP1, BP2) |
 | Spectra Legacy blocks switched on or off; Spectra Legacy and Spectra Blocks popups listed, read, created, changed, trashed (`kuduy-spectra-*`, `kuduy-spectra-blocks-popup*`) | Tested 2026-11-17 (BP3–BP5) |
 | Spectra Blocks' own abilities run page by page with undo (`kuduy-spectra-blocks-abilities`, `-ability-get`, `-ability-run`) | Tested 2026-11-17 (BP6) |
+| WooCommerce: product duplicate, restore from trash, permanent delete with confirmation; default attributes (`kuduy-woo-product-duplicate`, `-product-restore`, `-product-delete`) | Tested 2026-11-17 (WG1, WG2) |
+| WooCommerce: generate variations, delete a variation (`kuduy-woo-variations-generate`, `-variation-delete`) | Tested 2026-11-17 (WG2) |
+| WooCommerce: global attributes and shipping classes (`kuduy-woo-attributes`, `-attribute-save`, `-attribute-delete`, `-shipping-classes`, `-shipping-class-save`, `-shipping-class-delete`) | Tested 2026-11-17 (WG3, WG4) |
+| WooCommerce: refunds with confirmation and a clear statement whether money is sent (`kuduy-woo-refund-create`) | Tested 2026-11-17 (WG5) |
+| WooCommerce: order addresses and customer note (`kuduy-woo-order-update`) | Tested 2026-11-17 (WG6) |
+| WooCommerce: store settings read and changed through WooCommerce's settings API (`kuduy-woo-settings`, `-settings-update`) | Tested 2026-11-17 (WG7) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |

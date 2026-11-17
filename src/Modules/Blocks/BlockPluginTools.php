@@ -112,7 +112,7 @@ final class BlockPluginTools implements Tool, Snapshottable {
 		if ( 'status' === $this->mode ) {
 			return array(
 				'type'                 => 'object',
-				'properties'           => (object) array(),
+				'properties'           => array(),
 				'additionalProperties' => false,
 			);
 		}

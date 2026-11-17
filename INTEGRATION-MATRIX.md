@@ -58,7 +58,7 @@ One row per integration in the upgrade brief (58), plus what KuDiagnostics suppo
 
 | Integration | Copy | Support today | What exists | Phase |
 |---|---|---|---|---|
-| WooCommerce | free 11.2.2 | **Full** | 33 tools, HPOS on/off. Not offered by decision: permanent delete, refunds. Missing: general store settings writes, attribute taxonomy management | G |
+| WooCommerce | free 11.2.2 (11.0.1 on WordPress 6.9) | **Full** | 48 tools, HPOS on/off: products incl. duplicate, restore, permanent delete (confirmation), variations incl. generate and delete, global attributes, shipping classes, orders incl. addresses and refunds (confirmation), coupons, customers, reviews, shipping, tax, store settings. Missing: customer create/delete, payment gateway settings changes | — |
 
 ## E. Forms
 

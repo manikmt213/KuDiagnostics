@@ -483,6 +483,20 @@ Run 2026-11-17 with GenerateBlocks 2.5.1, Kadence Blocks 3.9.1, Spectra Legacy 2
 | BP6 | Spectra Blocks abilities listed and read; delete-popup and update-plugin-setting are not run | I — `test_spectra_blocks_abilities` |
 | BP7 | Each plugin's tools are offered only while it is active | I — `test_tools_hidden_without_their_plugin` |
 
+## WooCommerce gaps (phase G1)
+
+Run 2026-11-17, full suite: 312 tests, 0 failures with WooCommerce 11.0.1 on WordPress 6.9.11 / PHP 8.1.34 and 11.2.2 on 7.1.4 / PHP 8.3.36, each with HPOS on and off; bare 7.1 suite 254 tests, 0 failures. Two runs started at the same moment share `build/it` and break each other's report — run them one after another.
+
+| # | Feature | Type |
+|---|---|---|
+| WG1 | Duplicate (draft, "(Copy)", new SKU); restore from trash and undo; refused when not in the trash; permanent delete only after the confirmation step; editor refused | I — `WooCatalogTest::test_duplicate_restore_and_delete` |
+| WG2 | Generate all size variations, no duplicates on a second run, undo deletes them; variation delete and undo recreates it; default attributes set and read back; simple product refused | I — `test_variations_generate_delete_and_defaults` |
+| WG3 | Global attribute created, duplicate slug refused, renamed and undone, deleted with confirmation; editor refused | I — `test_global_attributes` |
+| WG4 | Shipping class created and used, listed with product count, deleted (product loses it), undo recreates and re-assigns; duplicate name refused | I — `test_shipping_classes` |
+| WG5 | Refund: over the remaining amount refused; automatic refund refused for cash on delivery; preview says no money is sent; refund recorded after confirmation; a token from before another refund is refused (CONFLICT) and refunds nothing; editor refused | I — `test_refund_with_confirmation` |
+| WG6 | Order addresses and customer note changed, result masked, not in the audit log, undo | I — `test_order_address_update` |
+| WG7 | Store settings read with options; a shop manager changes the number of decimals; settings outside the group refused; undo; editor refused | I — `test_store_settings` |
+
 ## SEO + Image SEO
 
 | # | Feature | Type |

@@ -106,6 +106,14 @@ final class Woo {
 			'product_url'        => $text + array( 'format' => 'uri' ),
 			'button_text'        => $text,
 			'children'           => $ids,
+			'default_attributes' => array(
+				'type'                 => 'object',
+				'description'          => 'Variable products: the variation selected when the product page opens, as attribute name => option slug, e.g. {"pa_size": "m", "pa_color": "red"}; {} for none.',
+				'additionalProperties' => array(
+					'type'      => 'string',
+					'maxLength' => 200,
+				),
+			),
 		);
 	}
 
@@ -266,6 +274,8 @@ final class Woo {
 				$value = (int) $value;
 			} elseif ( 'low_stock_amount' === $key ) {
 				$value = '' === $value || null === $value ? null : (int) $value;
+			} elseif ( 'default_attributes' === $key ) {
+				$value = (object) array_map( 'strval', (array) $value );
 			} elseif ( is_array( $value ) ) {
 				$value = array_values( array_map( 'intval', $value ) );
 			}
