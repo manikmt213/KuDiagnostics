@@ -4,7 +4,11 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
-- Repository moved to `github.com/manikmt213/KuDiagnostics` (2026-11-17). The updater (`GitHubUpdater::REPO`), the `Update URI` header, install links and the update check script now point there. Sites on 1.3.7 or older still poll `kuduyDigital/KuDiagnostics` until they install a release that contains this change.
+## 1.3.8 — 2026-11-17
+
+The plugin moved to a new GitHub repository. No feature changes.
+
+- Changed: updates now come from `github.com/manikmt213/KuDiagnostics` (updater, `Update URI` header, install links). The old repository (`kuduyDigital/KuDiagnostics`) is not reachable (account suspended), so sites on 1.3.7 or older move over by uploading this release's ZIP once; later releases then arrive through the built-in updater.
 
 ## 1.3.7 — 2026-11-16
 
