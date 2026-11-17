@@ -62,7 +62,7 @@ final class AvadaRead implements Tool {
 			'structure'      => 'Returns an Avada page in full: every container, row, column and element with id, parent id, tag, name, settings (attrs), responsive values (medium, small), content, column width, global element id, and settings that are not registered for the element. element_id returns one part.',
 			'content'        => 'Returns the raw Avada shortcodes of a page exactly as stored, its builder (avada, elementor, wpbakery, none), whether Avada Builder is switched on for it, and its custom CSS.',
 			'library'        => 'Lists the Avada Library (global elements, columns and containers saved for reuse, and templates) and Avada Layouts with their sections (header, footer, content, page title bar): id, title, status, category. Read one with kuduy-avada-tree.',
-			'global-options' => 'Reads Avada Global Options that shape the design: colours, typography, breakpoints, grid and layout widths (secret settings such as API keys are never returned). Read only: Global Options apply to the whole site and are changed in Avada > Options.',
+			'global-options' => 'Reads Avada Global Options that shape the design: colours, typography, breakpoints, grid and layout widths (secret settings such as API keys are never returned). Change them with kuduy-avada-global-options-update (site-wide, with undo).',
 			default          => 'Checks an Avada layout without saving: shortcode syntax, closing tags, containers/rows/columns in the right places, nested columns, unknown elements, missing global elements, option values that are not among an element\'s options. Give post_id or content.',
 		};
 	}

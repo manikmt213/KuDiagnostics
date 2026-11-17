@@ -15,6 +15,40 @@ define( 'FUSION_BUILDER_VERSION', '3.16.4-fake' );
 
 $GLOBALS['all_fusion_builder_elements'] = array();
 
+/**
+ * Avada's settings class (Avada 7.16 includes/lib/inc/class-fusion-settings.php): Global Options in the option named by
+ * get_option_name(), set() saving one setting from the values loaded at start.
+ */
+class Fusion_Settings {
+	public static $instance;
+	public static $saved_options = array();
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+			self::$saved_options = get_option( self::get_option_name(), array() );
+		}
+		return self::$instance;
+	}
+	public static function get_option_name() {
+		return 'fusion_options';
+	}
+	public function get_all() {
+		return get_option( self::get_option_name(), array() );
+	}
+	public function get_available_options() {
+		self::$saved_options = get_option( self::get_option_name(), array() );
+	}
+	public function set( $setting, $value ) {
+		$settings             = self::$saved_options;
+		$settings[ $setting ] = $value;
+		update_option( self::get_option_name(), $settings );
+	}
+}
+
+function fusion_reset_all_caches( $delete_cache = array() ) {
+	update_option( 'kuduy_fake_avada_caches_reset', (int) get_option( 'kuduy_fake_avada_caches_reset', 0 ) + 1 );
+}
+
 function fusion_builder_map( $module ) {
 	$GLOBALS['all_fusion_builder_elements'][ $module['shortcode'] ] = $module;
 }

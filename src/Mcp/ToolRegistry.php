@@ -76,6 +76,7 @@ use Kuduy\Mcp\Modules\Kirki\KirkiEdit;
 use Kuduy\Mcp\Modules\Kirki\KirkiRead;
 use Kuduy\Mcp\Modules\Media\MediaDelete;
 use Kuduy\Mcp\Modules\Media\MediaFiles;
+use Kuduy\Mcp\Modules\Avada\AvadaOptions;
 use Kuduy\Mcp\Modules\Avada\AvadaRead;
 use Kuduy\Mcp\Modules\Avada\AvadaWrite;
 use Kuduy\Mcp\Modules\WpBakery\WpBakeryRead;
@@ -347,6 +348,7 @@ final class ToolRegistry {
 		foreach ( array( 'status', 'elements', 'tree', 'structure', 'content', 'library', 'global-options', 'validate' ) as $mode ) {
 			$registry->register( new AvadaRead( $mode ) );
 		}
+		$registry->register( new AvadaOptions() );
 		foreach ( array( 'create', 'add-container', 'add-column', 'add-element', 'update-element', 'update-container', 'update-column', 'move-element', 'duplicate-element', 'delete-element', 'replace', 'page-css' ) as $mode ) {
 			$registry->register( new AvadaWrite( $mode ) );
 		}

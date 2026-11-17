@@ -598,4 +598,60 @@ final class AvadaTest extends TestCase {
 		$this->assertStringContainsString( 'kuduy-avada', $message );
 		$this->assertSame( self::fixture(), self::content( $id ) );
 	}
+
+	public function test_global_options_update_with_undo(): void {
+		wp_set_current_user( self::$admin );
+		update_option(
+			'fusion_options',
+			array(
+				'primary_color'       => '#65bc7b',
+				'body_typography'     => array(
+					'font-family' => 'Inter',
+					'font-size'   => '16px',
+				),
+				'site_width'          => '1200px',
+				'google_maps_api_key' => 'AIza-secret-key',
+			)
+		);
+		\Fusion_Settings::get_instance()->get_available_options();
+		$resets  = (int) get_option( 'kuduy_fake_avada_caches_reset', 0 );
+		$changed = $this->ok(
+			'kuduy-avada-global-options-update',
+			array(
+				'settings' => array(
+					'primary_color'   => '#1e73be',
+					'body_typography' => array( 'font-size' => '17px' ),
+				),
+			)
+		);
+		$this->assertSame( array( 'primary_color', 'body_typography' ), $changed['changed'] );
+		$saved = get_option( 'fusion_options' );
+		$this->assertSame( '#1e73be', $saved['primary_color'] );
+		$this->assertSame(
+			array(
+				'font-family' => 'Inter',
+				'font-size'   => '17px',
+			),
+			$saved['body_typography'],
+			'Sub-values not given stay.'
+		);
+		$this->assertSame( '1200px', $saved['site_width'], 'Other settings stay.' );
+		$this->assertSame( 'AIza-secret-key', $saved['google_maps_api_key'] );
+		$this->assertGreaterThan( $resets, (int) get_option( 'kuduy_fake_avada_caches_reset', 0 ), 'The Avada caches are reset.' );
+
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $changed['_snapshot_id'] ) );
+		$back = get_option( 'fusion_options' );
+		$this->assertSame( '#65bc7b', $back['primary_color'] );
+		$this->assertSame( '16px', $back['body_typography']['font-size'] );
+
+		$this->fails( 'kuduy-avada-global-options-update', array( 'settings' => array( 'google_maps_api_key' => 'x' ) ), 'secrets are not changed' );
+		$this->fails( 'kuduy-avada-global-options-update', array( 'settings' => array( 'no_such_option' => 'x' ) ), 'unknown option' );
+		$this->fails( 'kuduy-avada-global-options-update', array( 'settings' => array( 'body_typography' => '17px' ) ), 'sub-values need an object' );
+		$this->fails( 'kuduy-avada-global-options-update', array( 'settings' => array( 'body_typography' => array( 'colour' => 'red' ) ) ), 'unknown sub-value' );
+		$this->fails( 'kuduy-avada-global-options-update', array( 'settings' => array( 'site_width' => array( 'a' ) ) ), 'single value' );
+		wp_set_current_user( self::$author );
+		$this->fails( 'kuduy-avada-global-options-update', array( 'settings' => array( 'site_width' => '1000px' ) ), 'site managers only' );
+		$this->assertSame( '1200px', get_option( 'fusion_options' )['site_width'] );
+		delete_option( 'fusion_options' );
+	}
 }
