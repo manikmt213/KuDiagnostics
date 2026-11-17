@@ -325,8 +325,8 @@ final class ThemeSettings implements Tool, Snapshottable {
 	 */
 	private static function saved( \WP_Customize_Manager $manager ): void {
 		if ( function_exists( 'blocksy_manager' ) ) {
-			$blocksy = call_user_func( 'blocksy_manager' );
-			if ( is_object( $blocksy ) && isset( $blocksy->db ) && is_object( $blocksy->db ) && method_exists( $blocksy->db, 'wipe_cache' ) ) {
+			$blocksy = blocksy_manager();
+			if ( isset( $blocksy->db ) && is_object( $blocksy->db ) && method_exists( $blocksy->db, 'wipe_cache' ) ) {
 				$blocksy->db->wipe_cache();
 			}
 		}

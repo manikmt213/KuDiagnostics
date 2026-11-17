@@ -1,6 +1,7 @@
 <?php
 /**
- * Themes are not dependencies; this declares only the Astra function the tests call (Astra 4.14.2).
+ * Themes are not dependencies; this declares only the theme functions KUDUY and its tests call (Astra 4.14.2,
+ * Blocksy 2.1.62 inc/manager.php).
  */
 
 namespace {
@@ -10,4 +11,11 @@ namespace {
 	 * @return mixed
 	 */
 	function astra_get_option( $option, $default_value = '', $deprecated = '' ) {}
+
+	/**
+	 * Blocksy's manager singleton (its db property holds the theme-mod cache).
+	 *
+	 * @return object
+	 */
+	function blocksy_manager() {}
 }

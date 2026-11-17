@@ -1,0 +1,22 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "playground",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "playground"
+      ],
+      "port": 9400
+    },
+    {
+      "name": "zip-server",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "build/serve-zip.mjs"
+      ],
+      "port": 9455
+    }
+  ]
+}
