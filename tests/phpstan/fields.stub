@@ -1,0 +1,31 @@
+<?php
+/**
+ * Field plugins are not dependencies; this declares only the Meta Box, Pods and ACPT API KuDiagnostics and its tests
+ * call (phase E, read on Meta Box 5.15.5, Pods 3.3.9.2, ACPT Lite 2.1.3).
+ *
+ * @package Kuduy\Mcp
+ */
+
+// Meta Box.
+/** Registry of meta boxes; make() and all() are the calls used. */
+class RWMB_Registry_Stub {
+	/**
+	 * @param array<string, mixed> $settings
+	 * @return object
+	 */
+	public function make( array $settings ) {}
+	/** @return array<string, object> */
+	public function all() {}
+}
+function rwmb_get_registry( string $type ): RWMB_Registry_Stub {}
+/**
+ * @param int|string $type_or_id
+ * @return array<string, array<string, mixed>>
+ */
+function rwmb_get_object_fields( $type_or_id, string $object_type = 'post' ): array {}
+/**
+ * @param array<string, mixed> $args
+ * @param int|string|null      $object_id
+ * @return mixed
+ */
+function rwmb_get_value( string $field_id, array $args = array(), $object_id = null ) {}

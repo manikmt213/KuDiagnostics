@@ -53,6 +53,7 @@ use Kuduy\Mcp\Modules\Elementor\ElementorWrite;
 use Kuduy\Mcp\Modules\Elementor\ThemeBuilder;
 use Kuduy\Mcp\Jobs\JobTools;
 use Kuduy\Mcp\Modules\Acf\AcfDefinitions;
+use Kuduy\Mcp\Modules\Fields\MetaBoxTools;
 use Kuduy\Mcp\Modules\Acf\AcfTools;
 use Kuduy\Mcp\Modules\Blocks\BlockEdit;
 use Kuduy\Mcp\Modules\Blocks\BlockInfo;
@@ -310,6 +311,10 @@ final class ToolRegistry {
 		// Phase E1 (D58): ACF definitions through ACF's own import path.
 		foreach ( array( 'field-group-save', 'field-group-trash', 'post-type-save', 'taxonomy-save' ) as $mode ) {
 			$registry->register( new AcfDefinitions( $mode ) );
+		}
+		// Phase E2: Meta Box definitions (read) and values through its own abilities.
+		foreach ( array( 'boxes', 'get', 'update' ) as $mode ) {
+			$registry->register( new MetaBoxTools( $mode ) );
 		}
 		foreach ( array( 'status', 'list', 'get' ) as $mode ) {
 			$registry->register( new FormsTools( $mode ) );
