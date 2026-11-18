@@ -55,6 +55,7 @@ use Kuduy\Mcp\Jobs\JobTools;
 use Kuduy\Mcp\Modules\Acf\AcfDefinitions;
 use Kuduy\Mcp\Modules\Fields\AcptTools;
 use Kuduy\Mcp\Modules\Fields\AseTools;
+use Kuduy\Mcp\Modules\Fields\ContentModel;
 use Kuduy\Mcp\Modules\Fields\MetaBoxTools;
 use Kuduy\Mcp\Modules\Fields\PodsTools;
 use Kuduy\Mcp\Modules\Acf\AcfTools;
@@ -331,6 +332,8 @@ final class ToolRegistry {
 		foreach ( array( 'settings', 'settings-update' ) as $mode ) {
 			$registry->register( new AseTools( $mode ) );
 		}
+		// Phase E6: the content model across field plugins.
+		$registry->register( new ContentModel() );
 		foreach ( array( 'status', 'list', 'get' ) as $mode ) {
 			$registry->register( new FormsTools( $mode ) );
 		}
