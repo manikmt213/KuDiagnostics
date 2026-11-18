@@ -42,6 +42,8 @@ Phase G2 — SEO (`docs/plans/phase-g2-seo.md`):
 - Added: each plugin's title templates and archive settings, read only (`kuduy-yoast-settings`, `kuduy-rank-math-settings`, `kuduy-seopress-settings`).
 - Added: `kuduy-seo-audit` can now find noindexed posts (`check: "noindex"`) and duplicate SEO titles or descriptions (`check: "duplicates"`).
 
+- Fixed: Mosaic installed as `builder-mosaic/init.php` (the folder its own ZIP uses, seen on the owner's site 2026-11-18) is now detected.
+
 Phase B2 — form editing (`docs/plans/phase-b2-forms.md`, D57):
 
 - Added: `kuduy-wpforms-*`, `kuduy-fluent-forms-*`, `kuduy-ninja-forms-*`, `kuduy-formidable-*` — field types, form create, form edit (add, change, move and remove fields; title, submit button, confirmation message; up to 30 operations checked before anything is saved) and email notifications, each through the plugin's own save path, with undo.
