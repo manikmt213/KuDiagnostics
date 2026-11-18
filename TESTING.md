@@ -565,6 +565,21 @@ Also seen: a browser request that sends both the WordPress login cookie and a Be
 
 Run after the fixes (2026-11-18): full suites 263 tests, 0 failures on WordPress 7.1.4 / PHP 8.3.36 and 6.9.11 / PHP 8.1.34; with all builder stand-ins active (Bricks, Divi/Etch, Breakdance, Oxygen, Avada, WPBakery, Elementor Pro forms) 298 tests, 0 failures (TL1 covers every listed builder tool); Kirki 6.4.2 suite with TL1 on 6.9 / 8.1 and 7.1 / 8.3: 0 failures; real-HTTP smoke 26/26; PHPCS and PHPStan clean.
 
+## Phase L — paid products (stand-ins built from source read on the owner's site)
+
+Runs 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36. Each stand-in in `tests/integration/fakes/` reproduces only the calls KuDiagnostics makes, with the names, inputs and results read in the product's source on the test site; these tests prove KuDiagnostics' side, not the products themselves (live checks pending).
+
+| # | Feature | Type |
+|---|---|---|
+| FB6 | Gravity Forms form editing: field types, create, add/update/move/remove, settings, undo, removal refused while an entry holds a value, notification with confirm-first routing (stand-in for 3.2.2) | I — `FormEditGravityTest` |
+| SR1–SR3 | Yoast Premium, SEOPress PRO, AIOSEO Pro redirects: create, search, change and undo, 410 without target, switch off (Yoast refuses), delete and undo, refusals (duplicate, missing target, loop, bad regex, editor), Yoast warnings | I — `SeoRedirectsProTest` |
+| DS1 | Dynamic Shortcodes: types with privileged ones, strict check (valid, unclosed, missing colon, unknown, privileged), Power Shortcodes masked, editor limits | I — `DynamicShortcodesTest` |
+| CS2 | Code Snippets: hard-coded credential masked in a snippet read; saving masked code refused (real Code Snippets 4.1.0) | I — `CodeAndJobsTest` |
+| L5 | WPML: status, set language with undo from none, link with undo, translation draft, terms by term_taxonomy_id, missing report | I — `MultilingualWpmlTest` |
+| L6 | Polylang: string translations listed, saved and undone, unknown string refused, editor refused, missing report (real Polylang 3.9.2) | I — `MultilingualTest` |
+| WR1 | WP Rocket: settings (allowlist only), switch and list changed with undo, refused option, cache health and page state, purge of a post and the site | I — `WpRocketTest` |
+| JE1 | JetEngine: features listed, configuration parts, add-cpt run, JetEngine's refusal passed on, unknown feature, editor refused | I — `JetEngineTest` |
+
 ## Phase E — fields
 
 Runs 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36 with the real plugins (wordpress.org ZIPs through `KUDUY_LOCAL_PLUGINS`): ACF 6.8.11 (FE1 + the existing ACF tests: 11, 0 failures), Meta Box 5.15.5 (FE2), Pods 3.3.9.2 (FE3), ACPT Lite 2.1.3 (FE4), ASE 9.3.3 (FE5), ACF + Meta Box (FE6): 0 failures. Found while building: ACF's export drops the post id, so imports without it made a second group with the same key; ACF's getters skip trashed groups; ACF and Pods keep request caches that hide fresh changes; `pods_error()` exits (or sends its own JSON during REST calls) unless its error mode is exception; a partial `save_pod()` crashed PHP; Meta Box values named like secrets are already masked by the global redactor.

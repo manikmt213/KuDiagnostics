@@ -45,6 +45,16 @@ Phase G2 — SEO (`docs/plans/phase-g2-seo.md`):
 - Fixed (CI, red since phase C1): with two SEO plugins active, `kuduy-yoast-term-seo` and the other term SEO tools threw while the tool list was built, so `tools/list` failed on such sites; they now report themselves unavailable. PHPCS warnings cleared (CI fails on warnings). Tests that assumed one SEO plugin or a single gallery shortcode were corrected. The test runner now gives local ZIPs the same setup as downloaded plugins (Rank Math's skipped wizard, Polylang's languages, WooCommerce's order storage).
 - Fixed: Mosaic installed as `builder-mosaic/init.php` (the folder its own ZIP uses, seen on the owner's site 2026-11-18) is now detected.
 
+Phase L — paid products (`docs/plans/phase-l.md`, D59–D61; built from source read on the owner's test site, tested against stand-ins):
+
+- Added: `kuduy-gravity-forms-field-types`, `-form-create`, `-form-edit`, `-notification-save` — Gravity Forms form editing.
+- Added: `kuduy-yoast-redirects`, `kuduy-seopress-redirects`, `kuduy-aioseo-redirects` with `-redirect-save` and `-redirect-delete` — Pro SEO redirects.
+- Added: `kuduy-dynamic-shortcodes-types`, `-lint`, `-power` — Dynamic Shortcodes, never evaluated.
+- Added: WPML support in `kuduy-lang-*`; `kuduy-lang-missing`; `kuduy-lang-strings`, `kuduy-lang-string-save` (Polylang).
+- Added: `kuduy-wp-rocket-settings`, `-setting-update`, `-cache-status`.
+- Added: `kuduy-jetengine-features`, `-config`, `-run`.
+- Fixed (security): `kuduy-code-snippets-get` now masks hard-coded credentials in snippet code as its description said, and saving code that contains the mask is refused.
+
 Phase E — fields (`docs/plans/phase-e-fields.md`, D58):
 
 - Added: `kuduy-acf-field-group-save`, `-field-group-trash`, `-post-type-save`, `-taxonomy-save` — ACF definitions through ACF's own import, with undo.

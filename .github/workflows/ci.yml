@@ -92,6 +92,10 @@ jobs:
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'ninja-forms@3.16.1,formidable@7.0', label: '+ Ninja Forms + Formidable' }
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: '', fakes: 'gravity', label: '+ Gravity Forms (stand-in)' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'gravity', label: '+ Gravity Forms (stand-in)' }
+          - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: '', fakes: 'yoast-premium,seopress-pro,aioseo-pro,dynamic-shortcodes,wp-rocket,jet-engine', label: '+ Pro SEO, Dynamic Shortcodes, WP Rocket, JetEngine (stand-ins)' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'yoast-premium,seopress-pro,aioseo-pro,dynamic-shortcodes,wp-rocket,jet-engine', label: '+ Pro SEO, Dynamic Shortcodes, WP Rocket, JetEngine (stand-ins)' }
+          - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: '', fakes: 'wpml', label: '+ WPML (stand-in)' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'wpml', label: '+ WPML (stand-in)' }
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'wpforms-lite@2.0.4', fakes: 'wpforms-pro', label: '+ WPForms Pro entries (stand-in)' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'wpforms-lite@2.0.4', fakes: 'wpforms-pro', label: '+ WPForms Pro entries (stand-in)' }
           # Cache plugins (Phase 7, D19): LiteSpeed Cache purges through its own actions.
