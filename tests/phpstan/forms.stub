@@ -460,6 +460,20 @@ namespace {
 		public $post;
 		/** @var PLL_Translated_Object_Model */
 		public $term;
+		/** @return PLL_Language|false */
+		public function get_language( string $value ) {}
+	}
+	class PLL_MO {
+		public function import_from_db( PLL_Language $lang ): void {}
+		public function export_to_db( PLL_Language $lang ): void {}
+		public function delete_entry( string $string ): void {}
+		public function translate_if_any( string $source ): string {}
+		public function make_entry( string $original, string $translation ): object {}
+		public function add_entry( object $entry ): bool {}
+	}
+	class PLL_Admin_Strings {
+		/** @return array<string, array<string, mixed>> */
+		public static function &get_strings() {}
 	}
 	class PLL_Base {
 		/** @var PLL_Model */

@@ -423,7 +423,7 @@ final class ToolRegistry {
 		foreach ( array( 'status', 'purge' ) as $mode ) {
 			$registry->register( new CacheTools( $mode ) );
 		}
-		foreach ( array( 'status', 'get', 'set', 'link', 'translate' ) as $mode ) {
+		foreach ( array( 'status', 'get', 'set', 'link', 'translate', 'missing', 'strings', 'string-save' ) as $mode ) {
 			$registry->register( new LanguageTools( $mode ) );
 		}
 		foreach ( array( 'list', 'read', 'search', 'log' ) as $mode ) {

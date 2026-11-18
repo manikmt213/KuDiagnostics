@@ -162,4 +162,39 @@ final class MultilingualTest extends TestCase {
 			'a German translation already exists'
 		);
 	}
+
+	public function test_strings_and_missing(): void {
+		\PLL_Admin_Strings::register_string( 'kuduy_greeting', 'Hello from Kuduy', 'Kuduy' );
+		$this->fails( 'kuduy-lang-strings', array(), 'string translations need a site manager' );
+		wp_set_current_user( self::make_user( 'administrator' ) );
+		$list = $this->ok( 'kuduy-lang-strings', array( 'group' => 'Kuduy' ) );
+		$this->assertSame( 'Hello from Kuduy', $list['strings'][0]['string'] );
+		$this->assertSame( array(), $list['strings'][0]['translations'] );
+
+		$saved = $this->ok(
+			'kuduy-lang-string-save',
+			array(
+				'string'      => 'Hello from Kuduy',
+				'language'    => 'de',
+				'translation' => 'Hallo von Kuduy',
+			)
+		);
+		$this->assertSame( 'Hallo von Kuduy', $saved['string']['translations']['de'] );
+		$this->assertSame( 'Hallo von Kuduy', $this->ok( 'kuduy-lang-strings', array( 'search' => 'kuduy_greeting' ) )['strings'][0]['translations']['de'] );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $saved['_snapshot_id'] ) );
+		$this->assertArrayNotHasKey( 'de', $this->ok( 'kuduy-lang-strings', array( 'group' => 'Kuduy' ) )['strings'][0]['translations'], 'Undo removes the translation.' );
+		$this->fails(
+			'kuduy-lang-string-save',
+			array(
+				'string'      => 'Not registered anywhere',
+				'language'    => 'de',
+				'translation' => 'x',
+			),
+			'no such string'
+		);
+
+		$alone   = self::post( 'en' );
+		$missing = array_column( $this->ok( 'kuduy-lang-missing', array( 'language' => 'de' ) )['items'], 'missing', 'id' );
+		$this->assertSame( array( 'de' ), $missing[ $alone ] ?? null, 'An English post without a German translation is listed.' );
+	}
 }
