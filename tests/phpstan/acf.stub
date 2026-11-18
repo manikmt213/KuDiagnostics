@@ -59,3 +59,54 @@ function update_field( string $selector, $value, $post_id = false ): bool {}
  * @param int|string|false $post_id
  */
 function delete_field( string $selector, $post_id = false ): bool {}
+// ACF 6.8.11 definitions API (phase E1): only what KuDiagnostics and its tests call.
+/**
+ * @param int|string $id
+ * @return array<string, mixed>|false
+ */
+function acf_get_field_group( $id = 0 ) {}
+/**
+ * @param string $selector
+ * @return array<string, mixed>|false
+ */
+function acf_get_field( $selector = '' ) {}
+/**
+ * @param array<string, mixed> $field_group
+ * @return array<string, mixed>
+ */
+function acf_prepare_field_group_for_export( $field_group = array() ) {}
+/**
+ * @param array<string, mixed> $field_group
+ * @return array<string, mixed>|false
+ */
+function acf_import_field_group( $field_group ) {}
+/** @param int $id */
+function acf_trash_field_group( $id = 0 ): bool {}
+/** @param int $id */
+function acf_untrash_field_group( $id = 0 ): bool {}
+/** @param int|string $id */
+function acf_delete_field_group( $id = 0 ): bool {}
+/** @return object|false */
+function acf_get_field_type( string $name ) {}
+/** @return array<string, array<string, string>> */
+function acf_get_location_rule_types(): array {}
+function acf_slugify( string $str = '', string $glue = '-' ): string {}
+/** @return object|false */
+function acf_get_store( string $name = '' ) {}
+/**
+ * @param array<string, mixed> $filter
+ * @return list<array<string, mixed>>
+ */
+function acf_get_internal_post_type_posts( string $post_type = 'acf-field-group', array $filter = array() ): array {}
+/** @return object */
+function acf_get_internal_post_type_instance( string $post_type = 'acf-field-group' ) {}
+/**
+ * @param array<string, mixed> $post_type
+ * @return array<string, mixed>|false
+ */
+function acf_import_post_type( array $post_type ) {}
+/**
+ * @param array<string, mixed> $taxonomy
+ * @return array<string, mixed>|false
+ */
+function acf_import_taxonomy( array $taxonomy ) {}

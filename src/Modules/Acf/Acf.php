@@ -315,4 +315,27 @@ final class Acf {
 		}
 		return $out;
 	}
+
+	/**
+	 * A stored field group as the definition tools return it.
+	 *
+	 * @param string $key Group key.
+	 * @return array<string, mixed>
+	 */
+	public static function definition_group( string $key ): array {
+		$group = acf_get_field_group( $key );
+		if ( ! is_array( $group ) ) {
+			return array( 'key' => $key );
+		}
+		return array(
+			'key'         => (string) $group['key'],
+			'id'          => (int) ( $group['ID'] ?? 0 ),
+			'title'       => (string) ( $group['title'] ?? '' ),
+			'description' => (string) ( $group['description'] ?? '' ),
+			'active'      => ! empty( $group['active'] ),
+			'position'    => (string) ( $group['position'] ?? 'normal' ),
+			'location'    => (array) ( $group['location'] ?? array() ),
+			'fields'      => array_map( array( self::class, 'definition' ), array_values( (array) acf_get_fields( $group ) ) ),
+		);
+	}
 }

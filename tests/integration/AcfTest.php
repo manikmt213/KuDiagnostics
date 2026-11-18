@@ -178,7 +178,7 @@ final class AcfTest extends TestCase {
 				'id'     => $id,
 			)
 		)['groups'];
-		$fields = array_column( $groups[0]['fields'], 'type', 'name' );
+		$fields = array_column( array_column( $groups, null, 'key' )['group_kuduy_post']['fields'], 'type', 'name' );
 		$this->assertSame( 'select', $fields['kacf_color'] );
 	}
 
