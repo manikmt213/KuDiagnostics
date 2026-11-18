@@ -90,14 +90,14 @@ final class FormidableEditor implements FormEditor {
 	/**
 	 * Run one of Formidable's ability controller methods.
 	 *
-	 * @param string               $class  Controller.
-	 * @param string               $method Method.
-	 * @param array<string, mixed> $input  Input.
+	 * @param string               $controller Controller.
+	 * @param string               $method     Method.
+	 * @param array<string, mixed> $input      Input.
 	 * @return array<string, mixed>
 	 * @throws ToolError When Formidable refuses.
 	 */
-	private static function run( string $class, string $method, array $input ): array {
-		$result = call_user_func( array( $class, $method ), $input );
+	private static function run( string $controller, string $method, array $input ): array {
+		$result = call_user_func( array( $controller, $method ), $input );
 		if ( is_wp_error( $result ) ) {
 			throw ToolError::of( ToolError::VALIDATION_FAILED, 'Formidable refused: ' . $result->get_error_message() );
 		}

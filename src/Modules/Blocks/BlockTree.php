@@ -260,13 +260,13 @@ final class BlockTree {
 	 * @param array<int, array<string, mixed>> $blocks Top-level blocks.
 	 * @param list<int>                        $steps  Parent steps.
 	 * @param string                           $path   Path for messages.
-	 * @param callable                         $fn     Receives (&list, &parent-or-null).
+	 * @param callable                         $callback     Receives (&list, &parent-or-null).
 	 * @throws ToolError When the parent does not exist.
 	 */
-	private static function at_parent( array &$blocks, array $steps, string $path, callable $fn ): void {
+	private static function at_parent( array &$blocks, array $steps, string $path, callable $callback ): void {
 		if ( ! $steps ) {
 			$none = null;
-			$fn( $blocks, $none );
+			$callback( $blocks, $none );
 			return;
 		}
 		$n = array_shift( $steps );
@@ -274,7 +274,7 @@ final class BlockTree {
 		if ( null === $i || null === ( $blocks[ $i ]['blockName'] ?? null ) ) {
 			throw ToolError::of( ToolError::RESOURCE_NOT_FOUND, 'There is no block at path ' . $path . '. Read the current paths with kuduy-post-blocks.' );
 		}
-		self::descend( $blocks[ $i ], $steps, $path, $fn );
+		self::descend( $blocks[ $i ], $steps, $path, $callback );
 	}
 
 	/**
@@ -283,20 +283,20 @@ final class BlockTree {
 	 * @param array<string, mixed> $node  Current block (by reference).
 	 * @param list<int>            $steps Remaining steps.
 	 * @param string               $path  Path for messages.
-	 * @param callable             $fn    Callback.
+	 * @param callable             $callback    Callback.
 	 * @throws ToolError When the parent does not exist.
 	 */
-	private static function descend( array &$node, array $steps, string $path, callable $fn ): void {
+	private static function descend( array &$node, array $steps, string $path, callable $callback ): void {
 		if ( ! $steps ) {
 			$items = (array) ( $node['innerBlocks'] ?? array() );
-			$fn( $items, $node );
+			$callback( $items, $node );
 			return;
 		}
 		$n = array_shift( $steps );
 		if ( ! isset( $node['innerBlocks'][ $n ] ) ) {
 			throw ToolError::of( ToolError::RESOURCE_NOT_FOUND, 'There is no block at path ' . $path . '. Read the current paths with kuduy-post-blocks.' );
 		}
-		self::descend( $node['innerBlocks'][ $n ], $steps, $path, $fn );
+		self::descend( $node['innerBlocks'][ $n ], $steps, $path, $callback );
 	}
 
 	/**

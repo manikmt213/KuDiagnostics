@@ -76,14 +76,8 @@ if (theme) {
     steps.push({ step: 'setSiteOptions', options: { astra_admin_settings: { enable_abilities: true, enable_edit_abilities: true } } });
   }
 }
-// KUDUY_PLUGINS=slug@version,… installs more wordpress.org plugins after Elementor (e.g. Elementor add-ons).
-for (const entry of (process.env.KUDUY_PLUGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean)) {
-  const [slug, version] = entry.split('@');
-  if (!/^[a-z0-9-]+$/.test(slug) || !/^([0-9][0-9.]*|latest)$/.test(version ?? '')) {
-    console.error(`KUDUY_PLUGINS entry "${entry}" must be slug@version (or slug@latest).`);
-    process.exit(1);
-  }
-  steps.push(install(slug, version));
+// Setup a plugin needs after install, for KUDUY_PLUGINS and KUDUY_LOCAL_PLUGINS alike.
+function setup(slug) {
   if (slug === 'seo-by-rank-math') {
     // Rank Math stays inert until its account is connected or its setup wizard is skipped; do what "Skip" does.
     steps.push({ step: 'setSiteOptions', options: { rank_math_registration_skip: '1' } });
@@ -112,6 +106,16 @@ for (const entry of (process.env.KUDUY_PLUGINS ?? '').split(',').map((s) => s.tr
     } });
   }
 }
+// KUDUY_PLUGINS=slug@version,… installs more wordpress.org plugins after Elementor (e.g. Elementor add-ons).
+for (const entry of (process.env.KUDUY_PLUGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean)) {
+  const [slug, version] = entry.split('@');
+  if (!/^[a-z0-9-]+$/.test(slug) || !/^([0-9][0-9.]*|latest)$/.test(version ?? '')) {
+    console.error(`KUDUY_PLUGINS entry "${entry}" must be slug@version (or slug@latest).`);
+    process.exit(1);
+  }
+  steps.push(install(slug, version));
+  setup(slug);
+}
 // KUDUY_LOCAL_PLUGINS=file.zip,… installs licensed ZIPs kept in the repo folder but git-ignored (e.g. Elementor Pro).
 // Local runs only: CI has no such files. The repo is mounted into the site, so the ZIP is read from there.
 for (const file of (process.env.KUDUY_LOCAL_PLUGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean)) {
@@ -124,6 +128,8 @@ for (const file of (process.env.KUDUY_LOCAL_PLUGINS ?? '').split(',').map((s) =>
     pluginData: { resource: 'vfs', path: `/wordpress/wp-content/plugins/kuduy-mcp/${file}` },
     options: { activate: true },
   });
+  // The plugin slug is the file name before its version (seo-by-rank-math.1.0.281.zip → seo-by-rank-math).
+  setup(file.replace(/\.zip$/, '').replace(/\.[0-9][0-9.]*$/, ''));
 }
 // KUDUY_FILTER=<PHPUnit filter> runs only matching tests (local debugging; CI always runs everything).
 const filter = process.env.KUDUY_FILTER ?? '';

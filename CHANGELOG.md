@@ -42,6 +42,7 @@ Phase G2 — SEO (`docs/plans/phase-g2-seo.md`):
 - Added: each plugin's title templates and archive settings, read only (`kuduy-yoast-settings`, `kuduy-rank-math-settings`, `kuduy-seopress-settings`).
 - Added: `kuduy-seo-audit` can now find noindexed posts (`check: "noindex"`) and duplicate SEO titles or descriptions (`check: "duplicates"`).
 
+- Fixed (CI, red since phase C1): with two SEO plugins active, `kuduy-yoast-term-seo` and the other term SEO tools threw while the tool list was built, so `tools/list` failed on such sites; they now report themselves unavailable. PHPCS warnings cleared (CI fails on warnings). Tests that assumed one SEO plugin or a single gallery shortcode were corrected. The test runner now gives local ZIPs the same setup as downloaded plugins (Rank Math's skipped wizard, Polylang's languages, WooCommerce's order storage).
 - Fixed: Mosaic installed as `builder-mosaic/init.php` (the folder its own ZIP uses, seen on the owner's site 2026-11-18) is now detected.
 
 Phase B2 — form editing (`docs/plans/phase-b2-forms.md`, D57):

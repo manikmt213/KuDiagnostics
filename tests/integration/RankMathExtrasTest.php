@@ -48,9 +48,20 @@ final class RankMathExtrasTest extends TestCase {
 		if ( ! defined( 'RANK_MATH_VERSION' ) ) {
 			$this->markTestSkipped( 'Rank Math is not active in this run.' );
 		}
+		$this->needs_one_seo_plugin();
+	}
+
+	/**
+	 * Skip when several SEO plugins are active: the Rank Math tools are then unavailable by design (SeoConflictTest).
+	 */
+	private function needs_one_seo_plugin(): void {
+		if ( count( \Kuduy\Mcp\Modules\Seo\Seo::detected() ) > 1 ) {
+			$this->markTestSkipped( 'Several SEO plugins are active in this run (covered by SeoConflictTest).' );
+		}
 	}
 
 	public function test_sitemap_status(): void {
+		$this->needs_one_seo_plugin();
 		$status = $this->ok( 'kuduy-seo-sitemap' );
 		$this->assertSame( defined( 'RANK_MATH_VERSION' ) ? 'rank-math' : ( defined( 'WPSEO_VERSION' ) ? 'yoast' : ( defined( 'AIOSEO_VERSION' ) ? 'aioseo' : ( defined( 'SEOPRESS_VERSION' ) ? 'seopress' : 'core' ) ) ), $status['plugin'] );
 	}

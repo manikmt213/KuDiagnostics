@@ -380,12 +380,12 @@ final class KirkiEdit implements Tool, Snapshottable {
 	 * @param array<string, mixed> $blocks Blocks by id.
 	 * @param array<string, mixed> $op     Operation.
 	 * @param int                  $n      Operation number.
-	 * @param list<string>         $new    Ids of duplicated blocks.
+	 * @param list<string>         $added  Ids of duplicated blocks.
 	 * @param list<string>         $notes  Notes.
 	 * @return array<string, mixed>
 	 * @throws ToolError When the operation is refused.
 	 */
-	private static function apply( array $blocks, array $op, int $n, array &$new, array &$notes ): array {
+	private static function apply( array $blocks, array $op, int $n, array &$added, array &$notes ): array {
 		$key = (string) $op['block'];
 		if ( ! isset( $blocks[ $key ] ) || ! is_array( $blocks[ $key ] ) ) {
 			throw ToolError::of( ToolError::RESOURCE_NOT_FOUND, 'Operation ' . $n . ': no block "' . $key . '" on this page (see kuduy-kirki-get with version "latest"). Nothing was saved.' );
@@ -476,8 +476,8 @@ final class KirkiEdit implements Tool, Snapshottable {
 				if ( '' === $parent || false === $at ) {
 					throw ToolError::of( ToolError::FEATURE_NOT_SUPPORTED, 'Operation ' . $n . ': block "' . $key . '" is an inline element of its parent\'s text; it cannot be duplicated here. Nothing was saved.' );
 				}
-				$blocks = self::attach( $blocks, $map[ $key ], $parent, (int) $at + 1 );
-				$new[]  = $map[ $key ];
+				$blocks  = self::attach( $blocks, $map[ $key ], $parent, (int) $at + 1 );
+				$added[] = $map[ $key ];
 				return $blocks;
 		}//end switch
 	}
@@ -571,16 +571,16 @@ final class KirkiEdit implements Tool, Snapshottable {
 	 *
 	 * @param array<string, mixed> $blocks Blocks.
 	 * @param string               $key    Block id.
-	 * @param string               $parent Parent id.
+	 * @param string               $parent_id Parent id.
 	 * @param int|null             $index  Position (null = end).
 	 * @return array<string, mixed>
 	 */
-	private static function attach( array $blocks, string $key, string $parent, ?int $index ): array {
-		$children = array_values( array_map( 'strval', (array) ( $blocks[ $parent ]['children'] ?? array() ) ) );
+	private static function attach( array $blocks, string $key, string $parent_id, ?int $index ): array {
+		$children = array_values( array_map( 'strval', (array) ( $blocks[ $parent_id ]['children'] ?? array() ) ) );
 		$index    = null === $index ? count( $children ) : min( $index, count( $children ) );
 		array_splice( $children, $index, 0, array( $key ) );
-		$blocks[ $parent ]['children'] = $children;
-		$blocks[ $key ]['parentId']    = $parent;
+		$blocks[ $parent_id ]['children'] = $children;
+		$blocks[ $key ]['parentId']       = $parent_id;
 		return $blocks;
 	}
 }

@@ -195,11 +195,11 @@ final class WpformsEditor implements FormEditor {
 	/**
 	 * First element of a keyed list.
 	 *
-	 * @param array<mixed> $list List.
+	 * @param array<mixed> $items List.
 	 * @return array<string, mixed>
 	 */
-	private static function first( array $list ): array {
-		$first = reset( $list );
+	private static function first( array $items ): array {
+		$first = reset( $items );
 		return is_array( $first ) ? $first : array();
 	}
 

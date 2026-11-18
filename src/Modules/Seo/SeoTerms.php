@@ -245,7 +245,13 @@ final class SeoTerms implements Tool, Snapshottable {
 		if ( true !== $available ) {
 			return $available;
 		}
-		return Seo::adapter()->slug() === $this->plugin ? true : $this->label() . ' is not the active SEO plugin on this site.';
+		try {
+			$active = Seo::adapter()->slug();
+		} catch ( ToolError $e ) {
+			// Several SEO plugins at once (or one not set up): tools/list asks every tool, so this never throws.
+			return $e->getMessage();
+		}
+		return $active === $this->plugin ? true : $this->label() . ' is not the active SEO plugin on this site.';
 	}
 
 	/**

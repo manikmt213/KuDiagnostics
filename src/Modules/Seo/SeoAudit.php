@@ -231,7 +231,7 @@ final class SeoAudit implements Tool {
 			array(
 				'post_type'      => $type,
 				'post_status'    => 'publish',
-				'posts_per_page' => 500,
+				'posts_per_page' => 500, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page -- the audit reads ids only, capped at 500 per run.
 				'orderby'        => 'date',
 				'order'          => 'DESC',
 				'fields'         => 'ids',

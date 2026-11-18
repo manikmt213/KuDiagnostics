@@ -57,7 +57,7 @@ final class FormEditFluentTest extends TestCase {
 	 */
 	private static function entry( int $form_id, string $name, string $value ): void {
 		global $wpdb;
-		$wpdb->insert(
+		$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- test data in Fluent's own tables, as a submission would leave it.
 			$wpdb->prefix . 'fluentform_submissions',
 			array(
 				'form_id'    => $form_id,
@@ -67,7 +67,7 @@ final class FormEditFluentTest extends TestCase {
 				'updated_at' => current_time( 'mysql' ),
 			)
 		);
-		$wpdb->insert(
+		$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- test data in Fluent's own tables, as a submission would leave it.
 			$wpdb->prefix . 'fluentform_entry_details',
 			array(
 				'form_id'       => $form_id,

@@ -118,9 +118,9 @@ final class FluentEditor implements FormEditor {
 			return $this->defaults;
 		}
 		$components = new Components( fluentformLoadFile( 'Services/FormBuilder/DefaultElements.php' ) );
-		do_action( 'fluentform/editor_init', $components ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Fluent Forms' own hook, as its form creator runs it.
+		do_action( 'fluentform/editor_init', $components ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound, WordPress.NamingConventions.ValidHookName.UseUnderscores -- Fluent Forms' own hook, as its form creator runs it.
 		$all   = (array) $components->toArray();
-		$extra = (array) apply_filters( 'fluentform/editor_components', array(), true ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Fluent Forms' own filter, as its form creator applies it.
+		$extra = (array) apply_filters( 'fluentform/editor_components', array(), true ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound, WordPress.NamingConventions.ValidHookName.UseUnderscores -- Fluent Forms' own filter, as its form creator applies it.
 		$out   = array();
 		foreach ( array( 'general', 'advanced' ) as $group ) {
 			$out = array_merge( $out, (array) ( $all[ $group ] ?? array() ), array_column( (array) ( $extra[ $group ] ?? array() ), null, 'element' ) );
@@ -152,15 +152,15 @@ final class FluentEditor implements FormEditor {
 	/**
 	 * Whether a dotted path exists.
 	 *
-	 * @param array<string, mixed> $array Array.
-	 * @param string               $path  Path.
+	 * @param array<string, mixed> $data Array.
+	 * @param string               $path Path.
 	 */
-	private static function has( array $array, string $path ): bool {
+	private static function has( array $data, string $path ): bool {
 		foreach ( explode( '.', $path ) as $key ) {
-			if ( ! is_array( $array ) || ! array_key_exists( $key, $array ) ) {
+			if ( ! is_array( $data ) || ! array_key_exists( $key, $data ) ) {
 				return false;
 			}
-			$array = $array[ $key ];
+			$data = $data[ $key ];
 		}
 		return true;
 	}
@@ -505,8 +505,10 @@ final class FluentEditor implements FormEditor {
 				$base = '' !== $base ? substr( $base, 0, 40 ) : $default;
 			}
 			$name = $base;
-			for ( $n = 1; in_array( $name, $used, true ); $n++ ) {
+			$n    = 1;
+			while ( in_array( $name, $used, true ) ) {
 				$name = $base . '_' . $n;
+				++$n;
 			}
 			$spec['attributes'] = array( 'name' => $name );
 			unset( $properties['name'] );

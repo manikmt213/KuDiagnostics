@@ -338,7 +338,7 @@ final class SpectraPopups implements Tool, Snapshottable {
 			array(
 				'post_type'      => $this->config()['type'],
 				'post_status'    => 'any' === $status ? array( 'publish', 'draft', 'pending', 'private', 'future' ) : $status,
-				'posts_per_page' => 200,
+				'posts_per_page' => 200, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page -- the list tool has no paging; 200 popups is far above a real site.
 				'orderby'        => 'ID',
 				'order'          => 'DESC',
 			)
@@ -383,7 +383,7 @@ final class SpectraPopups implements Tool, Snapshottable {
 	 * @throws ToolError When it is not valid popup content.
 	 */
 	private function check_content( string $content ): void {
-		$blocks = BlockTree::parse_markup( $content );
+		$blocks  = BlockTree::parse_markup( $content );
 		$wrapper = $this->config()['block'];
 		if ( 1 !== count( $blocks ) || ( $blocks[0]['blockName'] ?? '' ) !== $wrapper ) {
 			throw ToolError::of( ToolError::VALIDATION_FAILED, 'Popup content must be exactly one ' . $this->config()['block'] . ' block with the popup\'s blocks inside it. Nothing was saved.' );

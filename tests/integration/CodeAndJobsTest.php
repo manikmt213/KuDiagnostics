@@ -178,7 +178,13 @@ final class CodeAndJobsTest extends TestCase {
 		$this->assertSame( 'core', $all['gallery']['source'] );
 		$this->assertSame( 'plugin', $all['kuduy_test_sc']['source'] );
 		$this->assertSame( 'kuduy-mcp', $all['kuduy_test_sc']['provider'] );
-		$this->assertSame( array( 'gallery' ), array_column( $this->ok( 'kuduy-shortcodes', array( 'search' => 'gallery' ) )['shortcodes'], 'tag' ) );
+		// Other active plugins may have gallery shortcodes too (Qi Addons: qi_addons_for_elementor_cards_gallery).
+		$found = array_column( $this->ok( 'kuduy-shortcodes', array( 'search' => 'gallery' ) )['shortcodes'], 'tag' );
+		$this->assertContains( 'gallery', $found );
+		$this->assertNotContains( 'kuduy_test_sc', $found, 'The search filters.' );
+		foreach ( $found as $tag ) {
+			$this->assertStringContainsString( 'gallery', $tag );
+		}
 		remove_shortcode( 'kuduy_test_sc' );
 	}
 

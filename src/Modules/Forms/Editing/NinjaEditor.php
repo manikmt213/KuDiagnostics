@@ -347,17 +347,17 @@ final class NinjaEditor implements FormEditor {
 	/**
 	 * Run one of Ninja's ability functions.
 	 *
-	 * @param string               $function Function name.
-	 * @param array<string, mixed> $input    Input.
+	 * @param string               $name  Function name.
+	 * @param array<string, mixed> $input Input.
 	 * @return array<string, mixed>
 	 * @throws ToolError When Ninja refuses.
 	 */
-	private static function run( string $function, array $input ): array {
+	private static function run( string $name, array $input ): array {
 		if ( isset( $input['form_id'] ) ) {
 			// Ninja's insert check compares its cached field list with the database: start from the database.
 			self::refresh( (int) $input['form_id'] );
 		}
-		$result = call_user_func( $function, $input );
+		$result = call_user_func( $name, $input );
 		if ( is_wp_error( $result ) ) {
 			throw ToolError::of( ToolError::VALIDATION_FAILED, 'Ninja Forms refused: ' . $result->get_error_message() );
 		}

@@ -63,6 +63,14 @@ final class SeoConflictTest extends TestCase {
 		}
 		$this->assertStringContainsString( 'Nothing was changed', $message );
 		$this->assertSame( $before, get_post_meta( $id ) );
+
+		// tools/list asks every tool whether it is available; with two SEO plugins none may throw (found in CI:
+		// the term SEO tools did, which broke the whole tool list).
+		foreach ( ToolRegistry::create()->all() as $tool ) {
+			$available = $tool->is_available();
+			$this->assertTrue( true === $available || is_string( $available ), $tool->name() );
+		}
+		$this->assertNotContains( 'kuduy-yoast-term-seo', array_map( static fn( $t ) => $t->name(), array_filter( ToolRegistry::create()->all(), static fn( $t ) => true === $t->is_available() ) ) );
 	}
 
 	public function test_without_seo_plugin_only_status_is_listed(): void {

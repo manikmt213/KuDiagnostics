@@ -580,6 +580,14 @@ Run 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36 with the real plugins (wordpress.
 
 Full round after B2 (2026-11-18): bare suites 263 tests, 0 failures on WordPress 7.1.4 / PHP 8.3.36 and 6.9.11 / PHP 8.1.34; with CF7 (6.2.4.1 on 7.1, 6.1.7 on 6.9), Flamingo 2.6.4, Fluent 6.2.17 and WPForms Lite 2.0.4: 286 tests, 0 failures on both pairs; with Ninja 3.16.1 and Formidable 7.0: 273 tests, 0 failures on both pairs; all builder stand-ins: 298 tests, 0 failures; real-HTTP smoke 26/26; PHPCS and PHPStan clean.
 
+## CI repair (2026-11-18)
+
+GitHub CI had been red since phase C1 (265933f) in three jobs; found from the job names (logs need a login) and reproduced locally:
+
+- **PHPCS + PHPStan:** 17 PHPCS warnings (CI fails on warnings; local checks had used `-n`). All fixed; `phpcs -q` now reports nothing.
+- **WP 7.1 + Rank Math + Yoast (conflict):** `SeoTerms::is_available()` threw when two SEO plugins were active, so `tools/list` failed (10 errors, 4 failures). Fixed; `SeoConflictTest` now checks that no tool's availability check throws. `RankMathExtrasTest` skips when several SEO plugins are active. Run: 263 tests, 0 failures (Rank Math 1.0.281 + Yoast 28.8, WP 7.1.4 / PHP 8.3.36); Rank Math alone: 7 of 7 pass.
+- **WP 7.1 + add-ons B:** `CodeAndJobsTest::test_shortcodes` expected only core's `[gallery]` for the search "gallery"; Qi Addons registers its own. Test corrected. Run: 263 tests, 0 failures (Happy 3.51.3, HT Mega 3.2.8, PowerPack Lite 3.1.4, Qi 1.11.2).
+
 ## SEO + Image SEO
 
 | # | Feature | Type |

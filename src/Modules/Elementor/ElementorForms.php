@@ -232,7 +232,7 @@ final class ElementorForms implements Tool, Snapshottable {
 			$sql   .= ' AND p.ID = %d';
 			$args[] = (int) $input['post_id'];
 		}
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- read-only and prepared; no API finds widgets across documents.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- read-only and prepared (the placeholders are in $sql); no API finds widgets across documents.
 		$ids    = array_map( 'intval', (array) $wpdb->get_col( $wpdb->prepare( $sql . ' ORDER BY p.ID DESC LIMIT 200', $args ) ) );
 		$search = strtolower( (string) ( $input['search'] ?? '' ) );
 		$out    = array();
