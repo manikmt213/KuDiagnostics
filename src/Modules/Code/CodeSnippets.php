@@ -10,11 +10,13 @@ namespace Kuduy\Mcp\Modules\Code;
 // phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- tool errors are returned to the MCP client as JSON text, never printed as HTML.
 
 use Kuduy\Mcp\Audit\AuditLog;
+use Kuduy\Mcp\Audit\Redactor;
 use Kuduy\Mcp\Execution\Confirmation;
 use Kuduy\Mcp\Execution\Snapshottable;
 use Kuduy\Mcp\Mcp\Tool;
 use Kuduy\Mcp\Mcp\ToolError;
 use Kuduy\Mcp\Modules\Core\Content;
+use Kuduy\Mcp\Modules\Dev\DevText;
 
 /**
  * Code Snippets (phase G3) through the plugin's own functions (Code Snippets 4.1.0, namespace Code_Snippets):
@@ -39,6 +41,8 @@ class CodeSnippets implements Tool, Snapshottable {
 		'html' => array( 'content', 'head-content', 'body-content', 'footer-content' ),
 		'css'  => array( 'admin-css', 'site-css' ),
 		'js'   => array( 'site-head-js', 'site-footer-js' ),
+		// Code Snippets Pro (3.10.2) condition snippets: rule sets other snippets use; listed and read, not saved here.
+		'cond' => array( 'condition' ),
 	);
 
 	/**
@@ -108,7 +112,7 @@ class CodeSnippets implements Tool, Snapshottable {
 		$two = ' Two steps: the first call changes nothing and returns a preview (what changes, a syntax check, risky calls found) with a confirm_token; show it to the user and only if they agree call again with the same arguments and the token. A clean preview does not make code safe.';
 		return match ( $this->mode ) {
 			'list'       => 'Lists the snippets of the Code Snippets plugin: id, name, type (php, html, css, js), scope (where it runs: global, admin, front-end, single-use, content, head-content, body-content, footer-content, site-css, admin-css, site-head-js, site-footer-js), active, priority, tags, description, last change. Filter by type, active or search. Code is not included (kuduy-code-snippets-get).',
-			'get'        => 'Returns one Code Snippets snippet with its code, scope, type, active state, priority, tags and description, plus a syntax check (PHP: PHP\'s own parser, the code is not run) and the risky calls it contains. Values that look like credentials are masked.',
+			'get'        => 'Returns one Code Snippets snippet with its code, scope, type, active state, priority, tags and description, plus a syntax check (PHP: PHP\'s own parser, the code is not run) and the risky calls it contains. Values that look like credentials (api_key = "…", define( "…_SECRET", … ), bearer tokens) are shown as [redacted]: when changing such a snippet, keep the real value out of the new code or ask the user to re-enter it in the plugin.',
 			'save'       => 'Creates (no id) or changes (id) an HTML, CSS or JavaScript snippet of Code Snippets: name, code, scope (content, head-content, body-content, footer-content, site-css, admin-css, site-head-js, site-footer-js), active, priority, description, tags. Fields not given stay. These run in visitors\' browsers. PHP snippets are refused here (kuduy-code-snippets-php-save). Needs the admin access level.' . $two,
 			'php-save'   => 'Creates (no id), changes or activates/deactivates (id) a PHP snippet of Code Snippets: name, code (without the opening <?php), scope (global, admin, front-end, single-use), active, priority, description, tags. PHP runs on the server with full access: Code Snippets runs an active snippet once when it is saved, to test it, and switches it off if it fails. Code with a syntax error is not saved active. Only exists when the site allows code execution (KUDUY_MCP_ALLOW_CODE_EXEC) and needs the code access level; use on development or staging sites.' . $two,
 			'deactivate' => 'Switches a Code Snippets snippet off (any type) through the plugin; its code stays. Undo with kuduy-snapshot-restore switches it on again.',
@@ -289,7 +293,8 @@ class CodeSnippets implements Tool, Snapshottable {
 			'modified'    => (string) $snippet->modified,
 		);
 		if ( $code ) {
-			$out['code']  = (string) $snippet->code;
+			// Hard-coded credentials in the code are masked (rule 3); the check still reads the stored code.
+			$out['code']  = DevText::mask( (string) $snippet->code );
 			$out['check'] = self::check( (string) $snippet->code, (string) $snippet->type );
 		}
 		return $out;
@@ -379,7 +384,10 @@ class CodeSnippets implements Tool, Snapshottable {
 		}
 		$code   = (string) ( $input['code'] ?? ( null === $old ? '' : $old->code ) );
 		$active = (bool) ( $input['active'] ?? ( null === $old ? false : $old->active ) );
-		$check  = self::check( $code, $type );
+		if ( isset( $input['code'] ) && str_contains( $code, Redactor::MASK ) ) {
+			throw ToolError::of( ToolError::VALIDATION_FAILED, 'The code contains ' . Redactor::MASK . ', the placeholder for a masked credential: saving it would replace the real value. Leave that line as it is in the plugin, or ask the user to enter the value there. Nothing was changed.' );
+		}
+		$check = self::check( $code, $type );
 		if ( 'php' === $type && $active && 'ok' !== $check['syntax'] ) {
 			throw ToolError::of( ToolError::VALIDATION_FAILED, 'The PHP code does not parse (' . $check['syntax'] . '). It is not saved active; fix it first. Nothing was changed.' );
 		}

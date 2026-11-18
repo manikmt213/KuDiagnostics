@@ -31,6 +31,7 @@ use Kuduy\Mcp\Modules\Core\Revisions;
 use Kuduy\Mcp\Modules\Core\Settings;
 use Kuduy\Mcp\Modules\Code\CodeSnippetSave;
 use Kuduy\Mcp\Modules\Code\CodeSnippets;
+use Kuduy\Mcp\Modules\Code\DynamicShortcodes;
 use Kuduy\Mcp\Modules\Core\IntegrationDetail;
 use Kuduy\Mcp\Modules\Core\Integrations;
 use Kuduy\Mcp\Modules\Core\SiteInfo;
@@ -149,6 +150,10 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'save', 'php-save' ) as $mode ) {
 			$registry->register( new CodeSnippetSave( $mode ) );
+		}
+		// Phase L3: Dynamic Shortcodes, read and checked through its own manager (never evaluated).
+		foreach ( array( 'types', 'lint', 'power' ) as $mode ) {
+			$registry->register( new DynamicShortcodes( $mode ) );
 		}
 		$registry->register( new SnapshotList() );
 		$registry->register( new SnapshotRestore() );

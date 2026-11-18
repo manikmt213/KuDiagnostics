@@ -91,6 +91,26 @@ final class CodeAndJobsTest extends TestCase {
 		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $changed['_snapshot_id'] ) );
 		$this->assertSame( '.kuduy-test { color: red; }', $this->ok( 'kuduy-code-snippets-get', array( 'id' => $id ) )['code'], 'Undo puts the old code back.' );
 
+		[ , $keyed ] = $this->confirmed(
+			'kuduy-code-snippets-save',
+			array(
+				'name'  => 'Kuduy keyed script',
+				'code'  => "var api_key = 'kuduy-live-0123456789abcdef';",
+				'scope' => 'site-footer-js',
+			)
+		);
+		$shown       = $this->ok( 'kuduy-code-snippets-get', array( 'id' => $keyed['id'] ) )['code'];
+		$this->assertStringNotContainsString( 'kuduy-live-0123456789abcdef', $shown, 'A hard-coded credential is masked.' );
+		$this->assertStringContainsString( '[redacted]', $shown );
+		$this->fails(
+			'kuduy-code-snippets-save',
+			array(
+				'id'   => $keyed['id'],
+				'code' => $shown,
+			),
+			'saving masked code would replace the real value'
+		);
+
 		$off = $this->ok( 'kuduy-code-snippets-deactivate', array( 'id' => $id ) );
 		$this->assertFalse( $off['active'] );
 		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $off['_snapshot_id'] ) );
