@@ -29,3 +29,64 @@ function rwmb_get_object_fields( $type_or_id, string $object_type = 'post' ): ar
  * @return mixed
  */
 function rwmb_get_value( string $field_id, array $args = array(), $object_id = null ) {}
+
+// Pods.
+/** Pods' API object (PodsAPI): only the calls used. */
+class PodsAPI_Stub {
+	/**
+	 * @param array<string, mixed> $params
+	 * @return object|false
+	 */
+	public function load_pod( $params, $strict = false ) {}
+	/**
+	 * @param array<string, mixed> $params
+	 * @return array<int|string, object>
+	 */
+	public function load_pods( $params = array() ) {}
+	/**
+	 * @param array<string, mixed> $params
+	 * @return array<int|string, object>
+	 */
+	public function load_fields( $params = array() ) {}
+	/**
+	 * @param array<string, mixed> $params
+	 * @return mixed
+	 */
+	public function add_pod( $params ) {}
+	/**
+	 * @param array<string, mixed> $params
+	 * @return mixed
+	 */
+	public function save_pod( $params, $sanitized = false, $db = true ) {}
+	/**
+	 * @param array<string, mixed> $params
+	 * @return mixed
+	 */
+	public function save_field( $params, $table_operation = true, $sanitized = false, $db = true ) {}
+	/** @return void */
+	public function cache_flush_pods( $pod = null, $flush_rewrites = true, $flush_groups_and_fields = true ) {}
+}
+/** Pods' item object: only the calls used. */
+class Pods_Stub {
+	public function exists(): bool {}
+	/** @return mixed */
+	public function field( $name, $single = null, $raw = false ) {}
+	/**
+	 * @param array<string, mixed>|null $data
+	 * @return int|false
+	 */
+	public function save( $data = null, $value = null, $id = null, $params = null ) {}
+	/**
+	 * @param array<string, mixed>|null $data
+	 * @return int|false
+	 */
+	public function add( $data = null, $value = null ) {}
+}
+function pods_api( $pod = null, $format = null ): PodsAPI_Stub {}
+function pods( $type = null, $id = null, $strict = null ): Pods_Stub {}
+/** @param array<int, string>|string|null $capabilities */
+function pods_is_admin( $capabilities = null ): bool {}
+class PodsForm {
+	/** @return list<string> */
+	public static function field_types_list() {}
+}

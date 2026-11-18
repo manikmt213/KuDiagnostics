@@ -54,6 +54,7 @@ use Kuduy\Mcp\Modules\Elementor\ThemeBuilder;
 use Kuduy\Mcp\Jobs\JobTools;
 use Kuduy\Mcp\Modules\Acf\AcfDefinitions;
 use Kuduy\Mcp\Modules\Fields\MetaBoxTools;
+use Kuduy\Mcp\Modules\Fields\PodsTools;
 use Kuduy\Mcp\Modules\Acf\AcfTools;
 use Kuduy\Mcp\Modules\Blocks\BlockEdit;
 use Kuduy\Mcp\Modules\Blocks\BlockInfo;
@@ -315,6 +316,10 @@ final class ToolRegistry {
 		// Phase E2: Meta Box definitions (read) and values through its own abilities.
 		foreach ( array( 'boxes', 'get', 'update' ) as $mode ) {
 			$registry->register( new MetaBoxTools( $mode ) );
+		}
+		// Phase E3: Pods definitions and items through pods_api() and pods().
+		foreach ( array( 'list', 'get', 'save', 'field-save', 'item-get', 'item-save' ) as $mode ) {
+			$registry->register( new PodsTools( $mode ) );
 		}
 		foreach ( array( 'status', 'list', 'get' ) as $mode ) {
 			$registry->register( new FormsTools( $mode ) );
