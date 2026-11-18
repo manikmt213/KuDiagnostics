@@ -6,4 +6,4 @@ vendor-prefixed/
 .tunnel-admin.txt
 
 # Licensed third-party plugin ZIPs used only for local research/tests (never commit).
-/elementor-pro*.zip
+/*.zip
