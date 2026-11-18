@@ -368,6 +368,12 @@ final class BuilderAbilities implements Tool, Snapshottable {
 		if ( in_array( $short, $config['site'], true ) ) {
 			return '';
 		}
+		// Found live on Bricks 2.4.5 and Breakdance 3 (2026-11-18): site-level abilities that change roles and builder
+		// capabilities, menus, files, fonts, form submissions, WooCommerce options, index tables, remote imports or
+		// multi-step page changesets. Their effects lie outside the builder's options, so the snapshot cannot undo them.
+		if ( preg_match( '/role|capabilit|menu|agent-file|remote|reindex|changeset|foundation|import|workspace|site-edit|cleanup|woo|font|submission/', $short ) ) {
+			return 'This ability changes things outside ' . $this->label() . '\'s options (roles, menus, files, fonts, submissions, WooCommerce settings, indexes or pages), which a snapshot of those options cannot undo. Do it in ' . $this->label() . ' itself.';
+		}
 		if ( str_starts_with( $short, 'create-' ) || str_starts_with( $short, 'duplicate-' ) || ( null !== $config['allow'] && in_array( $short, $config['allow'], true ) ) ) {
 			return 'This ability works on one page or creates something new: use kuduy-' . $this->builder . '-ability-run.';
 		}

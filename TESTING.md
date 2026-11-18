@@ -522,7 +522,7 @@ Run 2026-11-17: `CodeAndJobsTest` with Code Snippets 4.1.0 on WordPress 6.9.11 /
 
 ## Phase Q — builders and themes completion
 
-Run 2026-11-18: full bare suites 262 tests, 0 failures on WordPress 6.9.11 / PHP 8.1.34 and 7.1.4 / PHP 8.3.36; Kirki 6.4.2 and Spectra Legacy 2.20.6 suites on both pairs; real-HTTP smoke 26/26; each suite below on WordPress 7.1.4 / PHP 8.3.36 — `SiteEditorTest` (bare), `BlockPluginsTest` with Spectra Legacy 2.20.6, `KirkiTest` with Kirki 6.4.2 (real plugin), `BuilderAbilitiesTest` / `BricksTest` with the Breakdance, Oxygen and Bricks stand-ins, `ElementorFormsTest` with the Elementor Pro forms stand-in, `WpBakeryTest` and `AvadaTest` with their stand-ins, `BlockBuildersTest` / `BlockEditTest` with the Divi/Etch stand-in: 0 failures. Not yet checked against the paid products on the owner's site.
+Run 2026-11-18: full bare suites 262 tests, 0 failures on WordPress 6.9.11 / PHP 8.1.34 and 7.1.4 / PHP 8.3.36; Kirki 6.4.2 and Spectra Legacy 2.20.6 suites on both pairs; real-HTTP smoke 26/26; each suite below on WordPress 7.1.4 / PHP 8.3.36 — `SiteEditorTest` (bare), `BlockPluginsTest` with Spectra Legacy 2.20.6, `KirkiTest` with Kirki 6.4.2 (real plugin), `BuilderAbilitiesTest` / `BricksTest` with the Breakdance, Oxygen and Bricks stand-ins, `ElementorFormsTest` with the Elementor Pro forms stand-in, `WpBakeryTest` and `AvadaTest` with their stand-ins, `BlockBuildersTest` / `BlockEditTest` with the Divi/Etch stand-in: 0 failures.
 
 | # | Feature | Type |
 |---|---|---|
@@ -539,6 +539,31 @@ Run 2026-11-18: full bare suites 262 tests, 0 failures on WordPress 6.9.11 / PHP
 | WB13 | WPBakery template saved from shortcodes and from a page, listed and searched, renamed and undone, deleted and undone; broken or empty layouts refused; subscriber refused | I — `WpBakeryTest::test_templates_save_read_delete_with_undo` (stand-in) |
 | AO1 | Avada Global Options changed (sub-values merged, other settings kept), caches reset, undo; secrets, unknown names, wrong kinds refused; author refused | I — `AvadaTest::test_global_options_update_with_undo` (stand-in) |
 | BK4 | Divi 5 text module updated with merge (other breakpoints kept), undo; Divi 4 page refused by kuduy-block-edit and kuduy-post-update | I — `BlockBuildersTest::test_bk4_divi5_block_edit_with_merge_and_divi4_refused` (stand-in) |
+
+Live check 2026-11-18 on the owner's test site (WordPress 7.x on Hostinger, current `main` uploaded as 1.3.8 over 1.3.7; temporary OAuth connection approved by the owner, both tokens revoked afterwards and checked refused; every test page, template, pattern and submission deleted; plugins and theme put back as found). Each product was switched on alone for its check:
+
+| # | Product (real) | Result |
+|---|---|---|
+| LQ1 | Elementor Pro 4.0.4 (Elementor 4.4.1) | **pass**: a form widget made with `kuduy-elementor-create`, one entry sent through Pro's own AJAX handler as a visitor; `kuduy-elementor-forms` lists it with fields, actions and count 1; the entry is read with name, email, IP and user agent masked; marked read, trashed and restored with undo; Pro's own `elementor/v1/form-submissions` shows the same entry |
+| LQ2 | WPBakery 9.1 | **pass**: template saved, read, renamed, broken layout refused, deleted and restored with undo; the template shows in WPBakery's My Templates panel in the editor; 75 shipped templates named |
+| LQ3 | Divi 5.19.0 | **pass**: a `divi/*` block page is listed by `kuduy-divi-pages`, rendered by Divi on the front end; `kuduy-block-edit` update with merge keeps the module's admin label, duplicate works, the front end shows both changed modules; undo restores. The Visual Builder did not start in the narrow browser pane (not checked there) |
+| LQ4 | Avada 7.16 / Fusion Builder 3.16.4 | **pass**: `site_width` and the h1 font size changed (other h1 sub-values kept); Avada's generated `fusion-styles` CSS carries `--site_width:1180px` and `--h1_typography-font-size:60px`; undo puts 1200px / 64px back in the options and the CSS; a key setting refused |
+| LQ5 | Kirki 6.4.2 | **pass** on a page built in Kirki's editor (a pre-built hero section): text, attribute and duplicate saved as an unpublished version and shown in Kirki's editor; publishing refused while Kirki's own unpublished changes exist; undo. **Found:** `kuduy-kirki-edit` was missing from `tools/list` (fixed, TL1) |
+| LQ6 | Breakdance 3.0.0-beta.4 | **pass**: `insert-css-variables` through `kuduy-breakdance-site-ability-run` (preview with 14 options saved, then the token; a reused token refused); Breakdance's `get-css-variables` shows the variable; undo removes it |
+| LQ7 | Oxygen 6.2.0 | **pass**: the same with `oxygen/insert-css-variables` (17 options saved) |
+| LQ8 | Bricks 2.4.5 | **pass**: `set-global-variables` with Bricks' ownership guards; listed by `list-global-variables`; undo removes the variable and puts Bricks' version counter back to 0. **Found:** the site tool offered abilities with effects outside Bricks' options (fixed, BR6) |
+| LQ9 | WordPress core, Ollie theme | **pass**: template part (area footer) and template created and listed, duplicate slug and unknown area refused; synced pattern created, used by a page, changed (front end shows it), undone, unsynced and synced again, trashed with `used_in`. **Found:** creating with `sync: "synced"` refused by core (fixed, SP2) |
+| — | Spectra Legacy | not installed on the site; covered by SL1 against the real plugin in Playground |
+
+Also seen: a browser request that sends both the WordPress login cookie and a Bearer token is answered "Authentication required" (core's REST cookie check without a nonce runs after the token); MCP clients send no cookies, so this only affects tests run from a logged-in page (`credentials: 'omit'` avoids it).
+
+| # | Feature | Type |
+|---|---|---|
+| TL1 | Every tool available on the site passes its own capability check without arguments for an administrator, so `tools/list` shows it | I — `ToolListingTest::test_f9_every_available_tool_is_listed_for_an_administrator` (failed for `kuduy-kirki-edit` with Kirki 6.4.2 before the fix) |
+| BR6 | Bricks site-level abilities that change roles, builder capabilities, menus, files or indexes are not run by the site tool and are listed as "not run here" | I — `BricksTest::test_br2_…`, `test_br5_…` (Bricks stand-in; names from Bricks 2.4.5) |
+| SP2 | Synced pattern created with `sync: "synced"`; synced again with nothing to remove | I — `SiteEditorTest::test_synced_patterns_create_change_trash_with_undo` |
+
+Run after the fixes (2026-11-18): full suites 263 tests, 0 failures on WordPress 7.1.4 / PHP 8.3.36 and 6.9.11 / PHP 8.1.34; with all builder stand-ins active (Bricks, Divi/Etch, Breakdance, Oxygen, Avada, WPBakery, Elementor Pro forms) 298 tests, 0 failures (TL1 covers every listed builder tool); Kirki 6.4.2 suite with TL1 on 6.9 / 8.1 and 7.1 / 8.3: 0 failures; real-HTTP smoke 26/26; PHPCS and PHPStan clean.
 
 ## SEO + Image SEO
 

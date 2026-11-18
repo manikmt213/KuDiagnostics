@@ -243,15 +243,15 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Code Snippets: list, read with syntax check and risky-call report, save HTML/CSS/JS snippets with confirmation, save PHP snippets only with code execution allowed (`kuduy:code`) and confirmation, switch off and trash with undo (`kuduy-code-snippets-*`) | Tested 2026-11-17 (CS1–CS3) |
 | Registered shortcodes with what provides each (`kuduy-shortcodes`) | Tested 2026-11-17 (SC1) |
 | Retry the failed items of a background job (`kuduy-job-retry`) | Tested 2026-11-17 (JR1) |
-| Create Site Editor templates and template parts (`kuduy-site-template-create`) | Tested 2026-11-18 (TP1) |
-| Synced patterns: read with where they are used, create, change, trash with undo (`kuduy-synced-pattern-*`) | Tested 2026-11-18 (SP1) |
+| Create Site Editor templates and template parts (`kuduy-site-template-create`) | Tested 2026-11-18 (TP1); live on WordPress core with Ollie (LQ9) |
+| Synced patterns: read with where they are used, create, change, trash with undo (`kuduy-synced-pattern-*`) | Tested 2026-11-18 (SP1, SP2); live (LQ9) |
 | Spectra Legacy settings (`kuduy-spectra-settings-update`) | Tested 2026-11-18 (SL1) |
-| Kirki page editing through Kirki's page manager (`kuduy-kirki-edit`) | Tested 2026-11-18 (KK5, KK6) |
-| Bricks, Breakdance, Oxygen site-wide abilities with confirmation and undo (`kuduy-*-site-ability-run`) | Tested 2026-11-18 against stand-ins (BA5, BR5) |
-| Elementor Pro forms and submissions (`kuduy-elementor-forms`, `-form-submission*`) | Tested 2026-11-18 against a stand-in (EF1–EF3) |
-| WPBakery templates (`kuduy-wpbakery-template*`) | Tested 2026-11-18 against a stand-in (WB13) |
-| Avada Global Options changes (`kuduy-avada-global-options-update`) | Tested 2026-11-18 against a stand-in (AO1) |
-| Divi 5 / Etch page editing with `kuduy-block-edit` (merge for nested settings) | Tested 2026-11-18 against a stand-in (BK4) |
+| Kirki page editing through Kirki's page manager (`kuduy-kirki-edit`) | Tested 2026-11-18 (KK5, KK6, TL1); live on Kirki 6.4.2 (LQ5) |
+| Bricks, Breakdance, Oxygen site-wide abilities with confirmation and undo (`kuduy-*-site-ability-run`) | Tested 2026-11-18 against stand-ins (BA5, BR5, BR6); live on Breakdance 3.0.0-beta.4, Oxygen 6.2.0, Bricks 2.4.5 (LQ6–LQ8) |
+| Elementor Pro forms and submissions (`kuduy-elementor-forms`, `-form-submission*`) | Tested 2026-11-18 against a stand-in (EF1–EF3); live on Elementor Pro 4.0.4 (LQ1) |
+| WPBakery templates (`kuduy-wpbakery-template*`) | Tested 2026-11-18 against a stand-in (WB13); live on WPBakery 9.1 (LQ2) |
+| Avada Global Options changes (`kuduy-avada-global-options-update`) | Tested 2026-11-18 against a stand-in (AO1); live on Avada 7.16 / Fusion Builder 3.16.4 (LQ4) |
+| Divi 5 / Etch page editing with `kuduy-block-edit` (merge for nested settings) | Tested 2026-11-18 against a stand-in (BK4); Divi 5 live on 5.19.0 (LQ3); Etch not checked |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |

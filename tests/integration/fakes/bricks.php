@@ -113,6 +113,22 @@ add_action(
 			// Bricks 2.4.5's description, with an unclosed tag in it.
 			'Rebuilds the per-post CSS files served when `cssLoading` is `file`. When `cssLoading` is `inline`, the regenerated files act only as a fallback; the live output is still inline `<style>` tags.'
 		);
+		// Site-level abilities of Bricks 2.4.5 whose effects lie outside Bricks' options (roles, menus, files).
+		foreach ( array( 'set-builder-role-access', 'save-nav-menu', 'commit-agent-file', 'reindex-filters' ) as $outside ) {
+			$reg(
+				$outside,
+				array(
+					'type'       => 'object',
+					'properties' => array( 'value' => array( 'type' => 'string' ) ),
+				),
+				static function () use ( $outside ) {
+					update_option( 'kuduy_fake_bricks_outside', $outside );
+					return array( 'done' => true );
+				},
+				false,
+				'manage_options'
+			);
+		}
 		// As in Bricks 2.4.5: names the popup template by templateId (or popupId, slug, title), not postId.
 		$reg(
 			'update-popup-settings',

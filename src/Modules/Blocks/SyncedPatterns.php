@@ -321,9 +321,12 @@ final class SyncedPatterns implements Tool, Snapshottable {
 			return $out;
 		}
 		$body = array_intersect_key( $input, array_flip( array( 'title', 'content' ) ) );
-		if ( isset( $input['sync'] ) ) {
-			// Core keeps "synced" as no meta at all; null deletes it through the controller.
-			$body['meta'] = array( 'wp_pattern_sync_status' => 'unsynced' === $input['sync'] ? 'unsynced' : null );
+		if ( 'unsynced' === ( $input['sync'] ?? '' ) ) {
+			$body['meta'] = array( 'wp_pattern_sync_status' => 'unsynced' );
+		} elseif ( isset( $input['sync'] ) && $id > 0 && 'unsynced' === self::sync( $id ) ) {
+			// Core keeps "synced" as no meta at all; null deletes it through the controller, but core refuses null
+			// when nothing valid is stored (found live, 2026-11-18), so it is sent only to remove "unsynced".
+			$body['meta'] = array( 'wp_pattern_sync_status' => null );
 		}
 		if ( $id <= 0 ) {
 			if ( ! isset( $input['title'], $input['content'] ) ) {
@@ -334,10 +337,12 @@ final class SyncedPatterns implements Tool, Snapshottable {
 			$id             = (int) ( $data['id'] ?? 0 );
 			AuditLog::target( 'wp_block', (string) $id );
 		} else {
-			if ( ! $body ) {
+			if ( ! $body && ! isset( $input['sync'] ) ) {
 				throw ToolError::of( ToolError::INVALID_ARGUMENT, 'Give title, content or sync. Nothing was changed.' );
 			}
-			CoreRest::call( 'POST', self::ROUTE . '/' . $id, $body );
+			if ( $body ) {
+				CoreRest::call( 'POST', self::ROUTE . '/' . $id, $body );
+			}
 		}
 		clean_post_cache( $id );
 		return self::shape( self::pattern( $id ) );

@@ -44,6 +44,8 @@ Phase G2 — SEO (`docs/plans/phase-g2-seo.md`):
 
 Phase Q (`docs/plans/phase-q.md`):
 
+- Fixed (found in the live check of 2026-11-18): `kuduy-kirki-edit` was missing from the tool list; creating a synced pattern with `sync: "synced"` was refused by WordPress; the Bricks, Breakdance and Oxygen site tool no longer runs abilities that change roles, builder capabilities, menus, files, fonts, form submissions, WooCommerce settings, indexes or pages, which the options snapshot cannot undo.
+
 - Added: `kuduy-site-template-create` (templates and template parts) and `kuduy-synced-pattern-get`, `-save`, `-trash` (patterns saved on the site, with where they are used).
 - Added: `kuduy-kirki-edit` — change text and attributes, remove, move and duplicate blocks of a Kirki page, saved as an unpublished version or published, with undo.
 - Added: `kuduy-bricks-site-ability-run`, `kuduy-breakdance-site-ability-run`, `kuduy-oxygen-site-ability-run` — the builders' site-wide abilities (global settings and similar) in two steps with a confirmation, with the builder's options saved for undo. Code, delete, import and upload abilities stay refused.

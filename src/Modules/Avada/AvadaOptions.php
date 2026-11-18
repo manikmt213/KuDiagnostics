@@ -120,7 +120,7 @@ final class AvadaOptions implements Tool, Snapshottable {
 	 * {@inheritDoc}
 	 */
 	public function is_available(): bool|string {
-		return class_exists( '\Fusion_Settings' ) && method_exists( '\Fusion_Settings', 'get_option_name' )
+		return class_exists( '\Fusion_Settings' )
 			? true
 			: 'The Avada theme (its Global Options) is not active on this site.';
 	}

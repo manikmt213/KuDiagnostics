@@ -208,9 +208,22 @@ final class SiteEditorTest extends TestCase {
 			array(
 				'title'   => 'Kuduy call to action',
 				'content' => '<!-- wp:paragraph --><p>Buy now</p><!-- /wp:paragraph -->',
+				// Found live (2026-11-18): core refuses null for a sync status that was never stored.
+				'sync'    => 'synced',
 			)
 		);
 		$this->assertSame( 'synced', $made['sync'] );
+		$this->assertSame(
+			'synced',
+			$this->ok(
+				'kuduy-synced-pattern-save',
+				array(
+					'id'   => $made['id'],
+					'sync' => 'synced',
+				)
+			)['sync'],
+			'Synced again: nothing to remove.'
+		);
 		$this->assertSame( 'publish', $made['status'] );
 		$id   = $made['id'];
 		$page = (int) wp_insert_post(

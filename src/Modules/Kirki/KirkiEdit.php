@@ -167,8 +167,8 @@ final class KirkiEdit implements Tool, Snapshottable {
 	 * @param array<string, mixed> $input Arguments.
 	 * @return array<int, mixed>
 	 */
-	public function capability( array $input ): array {
-		return array( 'edit_post', (int) ( $input['id'] ?? 0 ) );
+	public function capability( array $input ): string|array {
+		return isset( $input['id'] ) ? array( 'edit_post', (int) $input['id'] ) : 'edit_posts';
 	}
 
 	/**

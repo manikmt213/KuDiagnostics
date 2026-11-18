@@ -137,6 +137,9 @@ final class BricksTest extends TestCase {
 		$this->assertSame( 'not run here', $rows['bricks/delete-post']['run_with'], 'Takes a post, but deletes it: not on the page-level list.' );
 		$this->assertStringContainsString( 'runs code', $rows['bricks/execute-php']['why_not'] );
 		$this->assertSame( 'kuduy-bricks-site-ability-run', $rows['bricks/regenerate-css-files']['run_with'], 'Bricks declares no-input abilities with an object for properties.' );
+		foreach ( array( 'set-builder-role-access', 'save-nav-menu', 'commit-agent-file', 'reindex-filters' ) as $outside ) {
+			$this->assertSame( 'not run here', $rows[ 'bricks/' . $outside ]['run_with'], $outside . ' changes things an options snapshot cannot undo.' );
+		}
 		$one = $this->ok( 'kuduy-bricks-abilities', array( 'name' => 'bricks/regenerate-css-files' ) )['ability'];
 		$this->assertSame( 'object', $one['input_schema']['type'] );
 		$this->assertStringContainsString( 'live output is still inline', $one['description'], 'An unclosed tag in a description keeps the text.' );
@@ -196,6 +199,8 @@ final class BricksTest extends TestCase {
 		delete_option( 'kuduy_fake_bricks_global' );
 		$this->fails( 'kuduy-bricks-site-ability-run', array( 'name' => 'bricks/execute-php' ), 'PHP abilities are never run' );
 		$this->fails( 'kuduy-bricks-site-ability-run', array( 'name' => 'bricks/delete-post' ), 'deleting is never run' );
+		$this->fails( 'kuduy-bricks-site-ability-run', array( 'name' => 'bricks/set-builder-role-access' ), 'roles are outside the snapshot' );
+		$this->assertFalse( get_option( 'kuduy_fake_bricks_outside' ) );
 		$this->fails( 'kuduy-bricks-site-ability-run', array( 'name' => 'bricks/set-page-elements' ), 'page-level abilities go through ability-run' );
 		$this->assertFalse( get_option( 'kuduy_fake_bricks_php' ) );
 	}
