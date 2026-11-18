@@ -7,6 +7,8 @@
 
 namespace Kuduy\Mcp\Modules\Seo\Redirects;
 
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- tool errors are returned to the MCP client as JSON text, never printed as HTML.
+
 use Kuduy\Mcp\Mcp\ToolError;
 
 /**
@@ -44,9 +46,14 @@ final class SeopressRedirects implements RedirectStore {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @throws ToolError When not allowed.
 	 */
 	public function check_access(): void {
-		// SEOPress's own route permission callbacks decide (RestRedirects::call).
+		// Checked before any read (one redirect is read outside the plugin's routes); the routes check again.
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'edit_redirections' ) ) {
+			throw ToolError::of( ToolError::PERMISSION_DENIED, 'SEOPress PRO lets only users who manage redirects (edit_redirections) change them.' );
+		}
 	}
 
 	/**

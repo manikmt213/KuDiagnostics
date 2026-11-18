@@ -95,11 +95,11 @@ final class IntegrationsTest extends TestCase {
 
 		$all = array_column( $this->ok( 'kuduy-integrations', array( 'all' => true ) )['integrations'], null, 'id' );
 		$this->assertCount( count( IntegrationCatalog::all() ), $all );
-		$this->assertFalse( $all['mosaic']['installed'] );
-		$this->assertFalse( $all['mosaic']['active'] );
-		$this->assertSame( 'none', $all['mosaic']['support'], 'A builder nobody has implemented is not dressed up.' );
-		$this->assertArrayNotHasKey( 'tools', $all['mosaic'] );
-		$this->assertArrayNotHasKey( 'version', $all['mosaic'] );
+		$this->assertFalse( $all['weglot']['installed'] );
+		$this->assertFalse( $all['weglot']['active'] );
+		$this->assertSame( 'none', $all['weglot']['support'], 'A builder nobody has implemented is not dressed up.' );
+		$this->assertArrayNotHasKey( 'tools', $all['weglot'] );
+		$this->assertArrayNotHasKey( 'version', $all['weglot'] );
 		$this->assertSame( 'partial', $all['wpbakery']['support'], 'Not verified against the plugin, so not full.' );
 		$this->assertSame( defined( 'WPB_VC_VERSION' ), $all['wpbakery']['tools']['available'], 'Tools count as available only while their plugin is loaded.' );
 

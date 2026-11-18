@@ -268,6 +268,9 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Polylang string translations (`kuduy-lang-strings`, `-string-save`) | Tested 2026-11-18 (L6; Polylang 3.9.2) |
 | WP Rocket settings and cache state (`kuduy-wp-rocket-*`) | Tested 2026-11-18 against a stand-in (WR1; abilities of 3.24) |
 | JetEngine features (`kuduy-jetengine-*`) | Tested 2026-11-18 against a stand-in (JE1; registry of 3.8.15.4) |
+| Dynamic Content for Elementor features and PDF templates (`kuduy-dce-*`) | Tested 2026-11-18 against a stand-in (DC1; source of 3.4.20) |
+| Kadence Shop Kit module switches, read only (`kuduy-shop-kit-modules`) | Tested 2026-11-18 against a stand-in (SK1; source of 3.0.10) |
+| Catalogue rows for GenerateBlocks Pro, Spectra Pro, Kadence Blocks Pro, Oxygen Classic, Mosaic and the Bricks, Divi and WPBakery add-ons | Implemented (detection and what the generic tools cover; `IntegrationsTest`) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |

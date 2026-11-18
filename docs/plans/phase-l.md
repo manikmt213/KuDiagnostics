@@ -28,3 +28,21 @@ Each group is planned in more detail when it starts (its own section here), buil
 ## Blocked until a copy arrives
 
 Etch, Voxel, Bricksforge, ACF Pro, ASE Pro, Kadence Blocks Pro: built from official docs or source with stand-ins and marked "tested against a stand-in" in the catalogue and `FEATURES.md`.
+
+## Status (2026-11-18)
+
+Built from source read on the owner's site and tested against stand-ins (full round green on both pairs):
+
+| # | Done | Left |
+|---|---|---|
+| L1 | Gravity form editing (fields, settings, notifications, undo) | WPForms Pro and Formidable Pro checks need their licensed ZIPs or a live check |
+| L2 | Redirects for Yoast Premium, SEOPress PRO, AIOSEO Pro (D59) | Pro schema types; Yoast Premium related keyphrases |
+| L3 | Dynamic Shortcodes (types, strict check, Power Shortcodes); Code Snippets Pro conditions listed; snippet credential masking fixed | Saving Pro conditions |
+| L4 | WPML backend (D60); missing translations; Polylang string translations | Polylang for WooCommerce product sync (unverified); WPML String Translation |
+| L5 | WP Rocket settings, changes with undo, cache state (its abilities); purge verified | — |
+| L6 | JetEngine features registry (D61) | ACF Pro repeater / flexible content, ASE Pro (no copies) |
+| L7 | JetElements widgets through the Elementor tools (registration read); DCE features and PDF templates | — |
+| L8 | GenerateBlocks Pro switches via the GenerateBlocks settings tool; Spectra Pro via block tools; Kadence Shop Kit modules (read only) | Shop Kit module changes (save path not found); Kadence Blocks Pro (no copy) |
+| L9 | Catalogue rows: Oxygen Classic, Mosaic, Bricks/Divi/WPBakery add-ons (detection) | Reading Oxygen Classic pages; Mosaic deeper (next round); Etch, Voxel, Bricksforge (no copies) |
+
+Live checks on the owner's site (temporary OAuth, one stack at a time) are still to do for every product above.

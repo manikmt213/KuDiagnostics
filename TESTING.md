@@ -579,6 +579,10 @@ Runs 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36. Each stand-in in `tests/integra
 | L6 | Polylang: string translations listed, saved and undone, unknown string refused, editor refused, missing report (real Polylang 3.9.2) | I — `MultilingualTest` |
 | WR1 | WP Rocket: settings (allowlist only), switch and list changed with undo, refused option, cache health and page state, purge of a post and the site | I — `WpRocketTest` |
 | JE1 | JetEngine: features listed, configuration parts, add-cpt run, JetEngine's refusal passed on, unknown feature, editor refused | I — `JetEngineTest` |
+| DC1 | Dynamic Content for Elementor: features listed and filtered, two switched off through its feature store with undo, unknown refused, PDF templates listed and read with credentials masked, editor refused | I — `DceTest` |
+| SK1 | Kadence Shop Kit: 16 module switches read from its option (JSON form), editor refused | I — `ShopKitTest` |
+
+Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
 ## Phase E — fields
 

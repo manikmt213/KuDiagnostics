@@ -32,6 +32,8 @@ use Kuduy\Mcp\Modules\Core\Settings;
 use Kuduy\Mcp\Modules\Code\CodeSnippetSave;
 use Kuduy\Mcp\Modules\Code\CodeSnippets;
 use Kuduy\Mcp\Modules\Code\DynamicShortcodes;
+use Kuduy\Mcp\Modules\Elementor\DceTools;
+use Kuduy\Mcp\Modules\Woo\ShopKitModules;
 use Kuduy\Mcp\Modules\Core\IntegrationDetail;
 use Kuduy\Mcp\Modules\Core\Integrations;
 use Kuduy\Mcp\Modules\Core\SiteInfo;
@@ -153,6 +155,11 @@ final class ToolRegistry {
 		foreach ( array( 'save', 'php-save' ) as $mode ) {
 			$registry->register( new CodeSnippetSave( $mode ) );
 		}
+		// Phase L7/L8: Dynamic Content for Elementor features and PDF templates; Kadence Shop Kit modules.
+		foreach ( array( 'features', 'feature-toggle', 'html-templates' ) as $mode ) {
+			$registry->register( new DceTools( $mode ) );
+		}
+		$registry->register( new ShopKitModules() );
 		// Phase L3: Dynamic Shortcodes, read and checked through its own manager (never evaluated).
 		foreach ( array( 'types', 'lint', 'power' ) as $mode ) {
 			$registry->register( new DynamicShortcodes( $mode ) );

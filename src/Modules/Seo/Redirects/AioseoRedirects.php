@@ -47,9 +47,14 @@ final class AioseoRedirects implements RedirectStore {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @throws ToolError When not allowed.
 	 */
 	public function check_access(): void {
-		// AIOSEO's own route access check decides (RestRedirects::call).
+		// Checked before any read (one redirect is read outside the plugin's routes); the routes check again.
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'aioseo_redirects_manage' ) ) {
+			throw ToolError::of( ToolError::PERMISSION_DENIED, 'All in One SEO Pro lets only users who manage redirects (aioseo_redirects_manage) change them.' );
+		}
 	}
 
 	/**
