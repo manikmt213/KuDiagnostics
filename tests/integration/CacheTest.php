@@ -93,7 +93,7 @@ final class CacheTest extends TestCase {
 			),
 			'URL outside the site'
 		);
-		if ( ! defined( 'LSCWP_V' ) ) {
+		if ( ! defined( 'LSCWP_V' ) && ! defined( 'WP_ROCKET_VERSION' ) ) {
 			$this->assertStringContainsString( 'nothing to purge', $this->fails( 'kuduy-cache-purge', array( 'target' => 'all' ), 'no cache plugin' ) );
 		}
 	}

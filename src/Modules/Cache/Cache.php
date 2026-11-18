@@ -11,7 +11,8 @@ namespace Kuduy\Mcp\Modules\Cache;
  * Detection and purge calls per plugin (RESEARCH.md §10d). Each purge uses the function or action the plugin
  * documents for other plugins: LiteSpeed Cache's litespeed_purge_* actions, W3 Total Cache's w3tc_flush_*(),
  * WP Super Cache's wp_cache_clear_cache() / wpsc_delete_post_cache() / wpsc_delete_url_cache(), WP Fastest Cache's
- * wpfc_clear_all_cache() / wpfc_clear_post_cache_by_id(), WP Rocket's rocket_clean_*() (docs only, UNVERIFIED).
+ * wpfc_clear_all_cache() / wpfc_clear_post_cache_by_id(), WP Rocket's rocket_clean_domain(), rocket_clean_post( $post_id ), rocket_clean_files( $urls ) (signatures read on
+ * WP Rocket 3.24, inc/functions/files.php and inc/common/purge.php; tested against a stand-in).
  */
 final class Cache {
 

@@ -71,6 +71,7 @@ use Kuduy\Mcp\Modules\Blocks\SyncedPatterns;
 use Kuduy\Mcp\Modules\Blocks\TemplateTools;
 use Kuduy\Mcp\Modules\Blocks\WidgetTools;
 use Kuduy\Mcp\Modules\Cache\CacheTools;
+use Kuduy\Mcp\Modules\Cache\WpRocketTools;
 use Kuduy\Mcp\Modules\Dev\DevCode;
 use Kuduy\Mcp\Modules\Dev\DevDatabase;
 use Kuduy\Mcp\Modules\Dev\DevFiles;
@@ -422,6 +423,10 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'status', 'purge' ) as $mode ) {
 			$registry->register( new CacheTools( $mode ) );
+		}
+		// Phase L5: WP Rocket settings and cache state through its own abilities.
+		foreach ( array( 'settings', 'setting-update', 'cache-status' ) as $mode ) {
+			$registry->register( new WpRocketTools( $mode ) );
 		}
 		foreach ( array( 'status', 'get', 'set', 'link', 'translate', 'missing', 'strings', 'string-save' ) as $mode ) {
 			$registry->register( new LanguageTools( $mode ) );

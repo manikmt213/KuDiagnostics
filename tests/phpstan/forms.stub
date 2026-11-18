@@ -472,6 +472,7 @@ namespace {
 		public function add_entry( object $entry ): bool {}
 	}
 	class PLL_Admin_Strings {
+		public static function register_string( string $name, string $string, string $context = 'Polylang', bool $multiline = false ): void {}
 		/** @return array<string, array<string, mixed>> */
 		public static function &get_strings() {}
 	}
