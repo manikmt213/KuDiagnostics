@@ -54,6 +54,7 @@ use Kuduy\Mcp\Modules\Elementor\ThemeBuilder;
 use Kuduy\Mcp\Jobs\JobTools;
 use Kuduy\Mcp\Modules\Acf\AcfDefinitions;
 use Kuduy\Mcp\Modules\Fields\AcptTools;
+use Kuduy\Mcp\Modules\Fields\AseTools;
 use Kuduy\Mcp\Modules\Fields\MetaBoxTools;
 use Kuduy\Mcp\Modules\Fields\PodsTools;
 use Kuduy\Mcp\Modules\Acf\AcfTools;
@@ -325,6 +326,10 @@ final class ToolRegistry {
 		// Phase E4: ACPT through its public API.
 		foreach ( array( 'groups', 'group-create', 'post-type-create', 'taxonomy-create', 'values-get', 'values-update' ) as $mode ) {
 			$registry->register( new AcptTools( $mode ) );
+		}
+		// Phase E5: Admin and Site Enhancements module switches.
+		foreach ( array( 'settings', 'settings-update' ) as $mode ) {
+			$registry->register( new AseTools( $mode ) );
 		}
 		foreach ( array( 'status', 'list', 'get' ) as $mode ) {
 			$registry->register( new FormsTools( $mode ) );
