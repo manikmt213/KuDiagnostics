@@ -57,6 +57,7 @@ use Kuduy\Mcp\Modules\Acf\AcfDefinitions;
 use Kuduy\Mcp\Modules\Fields\AcptTools;
 use Kuduy\Mcp\Modules\Fields\AseTools;
 use Kuduy\Mcp\Modules\Fields\ContentModel;
+use Kuduy\Mcp\Modules\Fields\JetEngineTools;
 use Kuduy\Mcp\Modules\Fields\MetaBoxTools;
 use Kuduy\Mcp\Modules\Fields\PodsTools;
 use Kuduy\Mcp\Modules\Acf\AcfTools;
@@ -351,6 +352,10 @@ final class ToolRegistry {
 		}
 		// Phase E6: the content model across field plugins.
 		$registry->register( new ContentModel() );
+		// Phase L6 (D61): JetEngine through its own features registry.
+		foreach ( array( 'features', 'config', 'run' ) as $mode ) {
+			$registry->register( new JetEngineTools( $mode ) );
+		}
 		foreach ( array( 'status', 'list', 'get' ) as $mode ) {
 			$registry->register( new FormsTools( $mode ) );
 		}
