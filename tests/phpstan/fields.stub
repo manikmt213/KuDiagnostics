@@ -90,3 +90,31 @@ class PodsForm {
 	/** @return list<string> */
 	public static function field_types_list() {}
 }
+
+// ACPT Lite public API.
+/** @return array<int, object> */
+function get_acpt_meta_group_objects( array $args = array() ): array {}
+/**
+ * @param array<string, mixed> $definition
+ * @return array<string, mixed>|WP_Error
+ */
+function save_acpt_meta_group_definition( array $definition ) {}
+/** @return list<string> */
+function acpt_supported_field_types(): array {}
+/** @return list<string> */
+function acpt_supported_field_settings(): array {}
+/** @param array<string, mixed> $touched */
+function flush_acpt_caches( array $touched = array() ): void {}
+/** @param array<string, mixed> $args */
+function register_acpt_post_type( array $args = array() ): bool {}
+/** @param array<string, mixed> $args */
+function register_acpt_taxonomy( array $args = array() ): bool {}
+/**
+ * @param array<string, mixed> $args
+ * @return mixed
+ */
+function get_acpt_field( array $args = array() ) {}
+/** @param array<string, mixed> $args */
+function save_acpt_meta_field_value( array $args = array() ): bool {}
+/** @param array<string, mixed> $args */
+function delete_acpt_meta_field_value( array $args = array() ): bool {}

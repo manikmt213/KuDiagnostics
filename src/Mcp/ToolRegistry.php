@@ -53,6 +53,7 @@ use Kuduy\Mcp\Modules\Elementor\ElementorWrite;
 use Kuduy\Mcp\Modules\Elementor\ThemeBuilder;
 use Kuduy\Mcp\Jobs\JobTools;
 use Kuduy\Mcp\Modules\Acf\AcfDefinitions;
+use Kuduy\Mcp\Modules\Fields\AcptTools;
 use Kuduy\Mcp\Modules\Fields\MetaBoxTools;
 use Kuduy\Mcp\Modules\Fields\PodsTools;
 use Kuduy\Mcp\Modules\Acf\AcfTools;
@@ -320,6 +321,10 @@ final class ToolRegistry {
 		// Phase E3: Pods definitions and items through pods_api() and pods().
 		foreach ( array( 'list', 'get', 'save', 'field-save', 'item-get', 'item-save' ) as $mode ) {
 			$registry->register( new PodsTools( $mode ) );
+		}
+		// Phase E4: ACPT through its public API.
+		foreach ( array( 'groups', 'group-create', 'post-type-create', 'taxonomy-create', 'values-get', 'values-update' ) as $mode ) {
+			$registry->register( new AcptTools( $mode ) );
 		}
 		foreach ( array( 'status', 'list', 'get' ) as $mode ) {
 			$registry->register( new FormsTools( $mode ) );
