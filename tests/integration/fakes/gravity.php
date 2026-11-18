@@ -97,6 +97,12 @@ class GFAPI {
 					continue;
 				}
 				$hay = 0 === ( $filter['key'] ?? null ) ? implode( ' ', array_map( 'strval', $entry ) ) : (string) ( $entry[ $filter['key'] ] ?? '' );
+				if ( 'isnot' === ( $filter['operator'] ?? '' ) ) {
+					if ( $hay === (string) $filter['value'] ) {
+						continue 2;
+					}
+					continue;
+				}
 				if ( false === stripos( $hay, (string) $filter['value'] ) ) {
 					continue 2;
 				}
@@ -116,6 +122,27 @@ class GFAPI {
 		$total_count = count( $rows );
 		$paging      = (array) $paging;
 		return array_slice( $rows, (int) ( $paging['offset'] ?? 0 ), (int) ( $paging['page_size'] ?? 20 ) );
+	}
+
+	public static function add_form( $form_meta, $accessible = true ) {
+		if ( empty( $form_meta['title'] ) ) {
+			return new WP_Error( 'missing_title', 'The form title is missing' );
+		}
+		$form_meta['fields'] = array_map( static fn( $f ) => (array) $f, (array) ( $form_meta['fields'] ?? array() ) );
+		return self::add_test_form( $form_meta );
+	}
+
+	public static function update_form( $form, $form_id = null ) {
+		$id   = (int) ( $form_id ?? $form['id'] ?? 0 );
+		$data = self::data();
+		if ( ! isset( $data['forms'][ $id ] ) ) {
+			return new WP_Error( 'not_found', 'Form not found' );
+		}
+		$form['id']           = $id;
+		$form['fields']       = array_map( static fn( $f ) => json_decode( (string) wp_json_encode( $f ), true ), (array) ( $form['fields'] ?? array() ) );
+		$data['forms'][ $id ] = $form;
+		self::save( $data );
+		return true;
 	}
 
 	public static function get_entry( $entry_id ) {
@@ -167,6 +194,39 @@ class GFAPI {
 		unset( $data['notes'][ (int) $note_id ] );
 		self::save( $data );
 		return 1;
+	}
+}
+
+/**
+ * A field object (Gravity's GF_Field keeps settings as public properties).
+ */
+class GF_Field extends stdClass {
+	public $type = '';
+}
+
+/**
+ * Gravity's field registry: the field classes a site has, and creating field objects from arrays.
+ */
+class GF_Fields {
+
+	private const TYPES = array( 'text', 'textarea', 'select', 'multiselect', 'number', 'checkbox', 'radio', 'hidden', 'html', 'section', 'page', 'name', 'date', 'time', 'phone', 'address', 'website', 'email', 'fileupload', 'consent' );
+
+	public static function get_all() {
+		$out = array();
+		foreach ( self::TYPES as $type ) {
+			$field       = new GF_Field();
+			$field->type = $type;
+			$out[ $type ] = $field;
+		}
+		return $out;
+	}
+
+	public static function create( $properties ) {
+		$field = new GF_Field();
+		foreach ( (array) $properties as $key => $value ) {
+			$field->$key = $value;
+		}
+		return $field;
 	}
 }
 

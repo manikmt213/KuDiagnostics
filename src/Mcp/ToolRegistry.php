@@ -80,6 +80,7 @@ use Kuduy\Mcp\Modules\Forms\Editing\Cf7Tags;
 use Kuduy\Mcp\Modules\Forms\Editing\FluentEditor;
 use Kuduy\Mcp\Modules\Forms\Editing\FormEditTools;
 use Kuduy\Mcp\Modules\Forms\Editing\FormidableEditor;
+use Kuduy\Mcp\Modules\Forms\Editing\GravityEditor;
 use Kuduy\Mcp\Modules\Forms\Editing\NinjaEditor;
 use Kuduy\Mcp\Modules\Forms\Editing\WpformsEditor;
 use Kuduy\Mcp\Modules\Forms\FormEntries;
@@ -344,7 +345,7 @@ final class ToolRegistry {
 			$registry->register( new Cf7Save( $mode ) );
 		}
 		// Phase B2 (D57): form editing per plugin, on each plugin's own save path.
-		foreach ( array( new WpformsEditor(), new FluentEditor(), new NinjaEditor(), new FormidableEditor() ) as $editor ) {
+		foreach ( array( new WpformsEditor(), new FluentEditor(), new NinjaEditor(), new FormidableEditor(), new GravityEditor() ) as $editor ) {
 			foreach ( array( 'field-types', 'form-create', 'form-edit', 'notification-save' ) as $mode ) {
 				$registry->register( new FormEditTools( $editor, $mode ) );
 			}
