@@ -101,6 +101,10 @@ use Kuduy\Mcp\Modules\Seo\SeoAudit;
 use Kuduy\Mcp\Modules\Seo\SeoTerms;
 use Kuduy\Mcp\Modules\Seo\SeoTools;
 use Kuduy\Mcp\Modules\Seo\RankMathExtras;
+use Kuduy\Mcp\Modules\Seo\Redirects\AioseoRedirects;
+use Kuduy\Mcp\Modules\Seo\Redirects\RedirectTools;
+use Kuduy\Mcp\Modules\Seo\Redirects\SeopressRedirects;
+use Kuduy\Mcp\Modules\Seo\Redirects\YoastRedirects;
 use Kuduy\Mcp\Modules\Seo\SeoVerify;
 use Kuduy\Mcp\Modules\Woo\CatalogTools;
 use Kuduy\Mcp\Modules\Woo\CouponTools;
@@ -254,6 +258,12 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'redirects', 'redirect-save', 'redirect-trash', 'schema-get', 'schema-save', 'schema-delete', 'sitemap' ) as $mode ) {
 			$registry->register( new RankMathExtras( $mode ) );
+		}
+		// Phase L2 (D59): redirects of the Pro SEO plugins, each through its own save path.
+		foreach ( array( new YoastRedirects(), new SeopressRedirects(), new AioseoRedirects() ) as $store ) {
+			foreach ( array( 'redirects', 'redirect-save', 'redirect-delete' ) as $mode ) {
+				$registry->register( new RedirectTools( $store, $mode ) );
+			}
 		}
 		foreach ( array( 'list', 'get', 'update' ) as $mode ) {
 			$registry->register( new MediaTools( $mode ) );
