@@ -21,8 +21,29 @@ namespace {
 		public $values;
 		/** @var array<int, string> */
 		public $labels;
+		/** @var array<int, string> */
+		public $options;
+		/** @var array<int, string> */
+		public $raw_values;
+		/** @var string */
+		public $content;
 		public function is_required(): bool {}
 	}
+
+	class WPCF7_FormTagsManager {
+		public static function get_instance(): WPCF7_FormTagsManager {}
+		/**
+		 * @param array<int, string>|string $features
+		 * @return list<string>
+		 */
+		public function collect_tag_types( $features = array(), bool $invert = false ): array {}
+		/** @param array<int, string>|string $features */
+		public function tag_type_supports( string $tag_type, $features ): bool {}
+		public function tag_type_exists( string $tag_type ): bool {}
+		/** @return list<WPCF7_FormTag> */
+		public function scan( string $content, bool $replace = false ): array {}
+	}
+	function wpcf7_is_name( string $text ): bool {}
 
 	class WPCF7_ContactForm {
 		const post_type = 'wpcf7_contact_form';
@@ -53,6 +74,8 @@ namespace {
 		public function scan_form_tags( $cond = null ): array {}
 		/** @param array<string, mixed>|string $options */
 		public function shortcode( $options = '' ): string {}
+		/** @param array<string, mixed>|string $args */
+		public static function get_template( $args = '' ): WPCF7_ContactForm {}
 	}
 
 	class WPCF7_ConfigValidator {
@@ -170,6 +193,66 @@ namespace FluentForm\App\Models {
 		/** @param mixed $operator */
 		public static function where( string $column, $operator = null, $value = null ): Builder {}
 	}
+	class FormMeta {
+		/** @param mixed $operator */
+		public static function where( string $column, $operator = null, $value = null ): Builder {}
+		/**
+		 * @param mixed $default
+		 * @return mixed
+		 */
+		public static function retrieve( string $key, $formId = null, $default = null ) {}
+	}
+}
+
+namespace FluentForm\App\Services\Form {
+	class FormService {
+		/**
+		 * @param array<string, mixed> $attributes
+		 * @return object
+		 */
+		public function store( $attributes = array() ) {}
+		/**
+		 * @param array<string, mixed> $attributes
+		 * @return object
+		 */
+		public function update( $attributes = array() ) {}
+		/** @return array<string, mixed> */
+		public function getDisabledComponents() {}
+	}
+}
+
+namespace FluentForm\App\Modules\MCP\Support {
+	class FormCreator extends \FluentForm\App\Services\Form\FormService {
+		/**
+		 * @param array<int, mixed> $fields
+		 * @return list<array<string, mixed>>
+		 */
+		public function formatFields( array $fields ) {}
+	}
+}
+
+namespace FluentForm\App\Services\FormBuilder {
+	class Components {
+		/** @param array<string, mixed> $items */
+		public function __construct( array $items ) {}
+		/** @return array<string, mixed> */
+		public function toArray() {}
+	}
+}
+
+namespace FluentForm\App\Services\Settings {
+	class SettingsService {
+		/**
+		 * @param array<string, mixed> $attributes
+		 * @return array<int, mixed>
+		 */
+		public function store( $attributes = array() ) {}
+	}
+}
+
+namespace {
+	/** @return mixed */
+	function fluentformLoadFile( string $path ) {}
 }
 
 namespace FluentForm\App\Modules\Acl {
@@ -202,6 +285,14 @@ namespace {
 	function Ninja_Forms() {}
 	class Ninja_Forms {
 		const VERSION = '3.16.1';
+	}
+	class NF_Abstracts_ModelFactory {
+		/** @param int|string $id */
+		public function __construct( object $db, $id ) {}
+	}
+	class WPN_Helper {
+		/** @param int|string $id */
+		public static function delete_nf_cache( $id ): void {}
 	}
 
 	class FrmAppHelper {
@@ -375,4 +466,28 @@ namespace {
 		public $model;
 	}
 	function PLL(): PLL_Base {}
+}
+
+namespace WPForms\Integrations\Abilities {
+	// WPForms 2.0.4 abilities registries (src/Integrations/Abilities): only what the form editor calls.
+	class FieldRegistry {
+		/** @return list<string> */
+		public function available_types(): array {}
+		public function get_type_label( string $type ): string {}
+		public function is_field_type_available( string $type ): bool {}
+		/** @return list<string> */
+		public function allowed_properties( string $type ): array {}
+		/**
+		 * @param array<string, mixed> $input
+		 * @return array{values: array<string, mixed>, ignored: list<string>}
+		 */
+		public function sanitize_properties( string $type, array $input ): array {}
+	}
+	class SettingsRegistry {
+		/**
+		 * @param array<string, mixed> $input
+		 * @return array{sanitized: array<string, mixed>, ignored: list<string>}
+		 */
+		public function sanitize( array $input ): array {}
+	}
 }

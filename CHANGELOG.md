@@ -42,6 +42,12 @@ Phase G2 — SEO (`docs/plans/phase-g2-seo.md`):
 - Added: each plugin's title templates and archive settings, read only (`kuduy-yoast-settings`, `kuduy-rank-math-settings`, `kuduy-seopress-settings`).
 - Added: `kuduy-seo-audit` can now find noindexed posts (`check: "noindex"`) and duplicate SEO titles or descriptions (`check: "duplicates"`).
 
+Phase B2 — form editing (`docs/plans/phase-b2-forms.md`, D57):
+
+- Added: `kuduy-wpforms-*`, `kuduy-fluent-forms-*`, `kuduy-ninja-forms-*`, `kuduy-formidable-*` — field types, form create, form edit (add, change, move and remove fields; title, submit button, confirmation message; up to 30 operations checked before anything is saved) and email notifications, each through the plugin's own save path, with undo.
+- Added: `kuduy-cf7-form-tags`, `kuduy-cf7-form-edit`, `kuduy-cf7-validate` — Contact Form 7 form-tags read, added, changed, moved and removed, and CF7's own configuration check.
+- Safety: a field is not removed while entries hold a value for it; changing where notifications are sent needs the admin scope and a confirmation; forms are not deleted.
+
 Phase Q (`docs/plans/phase-q.md`):
 
 - Fixed (found in the live check of 2026-11-18): `kuduy-kirki-edit` was missing from the tool list; creating a synced pattern with `sync: "synced"` was refused by WordPress; the Bricks, Breakdance and Oxygen site tool no longer runs abilities that change roles, builder capabilities, menus, files, fonts, form submissions, WooCommerce settings, indexes or pages, which the options snapshot cannot undo.

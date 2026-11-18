@@ -300,7 +300,7 @@ final class Cf7Save implements Tool, Snapshottable, MasksAuditArgs {
 	 * @param \WPCF7_ContactForm $form Form.
 	 * @return array<int|string, mixed>|\stdClass
 	 */
-	private static function config_errors( \WPCF7_ContactForm $form ): array|\stdClass {
+	public static function config_errors( \WPCF7_ContactForm $form ): array|\stdClass {
 		if ( ! function_exists( 'wpcf7_validate_configuration' ) || ! wpcf7_validate_configuration() || ! class_exists( 'WPCF7_ConfigValidator' ) ) {
 			return new \stdClass();
 		}

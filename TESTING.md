@@ -565,6 +565,21 @@ Also seen: a browser request that sends both the WordPress login cookie and a Be
 
 Run after the fixes (2026-11-18): full suites 263 tests, 0 failures on WordPress 7.1.4 / PHP 8.3.36 and 6.9.11 / PHP 8.1.34; with all builder stand-ins active (Bricks, Divi/Etch, Breakdance, Oxygen, Avada, WPBakery, Elementor Pro forms) 298 tests, 0 failures (TL1 covers every listed builder tool); Kirki 6.4.2 suite with TL1 on 6.9 / 8.1 and 7.1 / 8.3: 0 failures; real-HTTP smoke 26/26; PHPCS and PHPStan clean.
 
+## Phase B2 — form editing
+
+Run 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36 with the real plugins (wordpress.org ZIPs installed with `KUDUY_LOCAL_PLUGINS` after two downloads broke off): WPForms Lite 2.0.4 (2 tests); Contact Form 7 6.2.4.1, Fluent Forms 6.2.17, Ninja Forms 3.16.1 and Formidable 7.0 (7 tests): 0 failures. First runs found: Formidable needs its tables installed in the test setup; Ninja Forms keeps one model factory per form for the whole request, so the editor reads through a new factory and refreshes the shared one before Ninja's own functions run (they also load only when the ability registry starts); Ninja's option items take label, value and calc only; CF7's configuration check does not flag mail tags that no longer exist (test corrected).
+
+| # | Feature | Type |
+|---|---|---|
+| FB1 | WPForms Lite: types from WPForms' registry (Pro types absent); form created with name, email and select; one edit adds two fields (one by position), changes, moves and removes fields and sets title, submit text and confirmation; WPForms renders the new field; undo; Pro type, wrong property, missing field and a field removed earlier in the same call refused with nothing changed; author refused; notification recipient confirm-first, subject not, undo; Bcc and a second notification refused on Lite; editor refused | I — `FormEditWpformsTest` |
+| FB2 | Fluent Forms: types from Fluent's elements; form created through FormCreator with unique storage names; edit, Fluent renders it, undo; removal refused while an entry holds a value; Fluent's own duplicate-name check; unknown type and property refused; author refused; notification created after confirmation, Bcc changed and undone, empty subject refused by Fluent's validator | I — `FormEditFluentTest` |
+| FB3 | Ninja Forms: types from Ninja's registry; form created by Ninja's create-form (submit button, success message, admin email); edit with options, move, remove, title, submit text, success message; undo (a removed field comes back with its key); removal refused while a submission holds a value; textbox with options refused; editor refused; email action routing confirm-first, Cc, undo; a second email action created | I — `FormEditNinjaTest` |
+| FB4 | Formidable: types (aliases left out); form created and edited through Formidable's ability controllers; Formidable renders the new field; undo; removal refused while an entry holds a value (Formidable would delete it); raw field_options refused; author refused; email action created after confirmation with the sender split into name and address, switched off and undone | I — `FormEditFormidableTest` |
+| FB5 | Contact Form 7: tag types; tags of the default template with labels; add (with label, before submit), update options and values, move with its label, remove; CF7 renders the new tag; undo restores the markup byte for byte; taken name, unknown type, bad name, quote in a value, rename and move without a place refused with nothing changed; validate on unsaved markup reports CF7's warning and saves nothing; author refused | I — `Cf7TagsTest` |
+| FB6 | Permissions: each plugin's own check (WPForms `edit_form_single`, Fluent `fluentform_forms_manager`, Ninja `manage_options`, Formidable's ability permission, CF7 meta caps); notifications need the admin scope and manage_options | I — in FB1–FB5 |
+
+Full round after B2 (2026-11-18): bare suites 263 tests, 0 failures on WordPress 7.1.4 / PHP 8.3.36 and 6.9.11 / PHP 8.1.34; with CF7 (6.2.4.1 on 7.1, 6.1.7 on 6.9), Flamingo 2.6.4, Fluent 6.2.17 and WPForms Lite 2.0.4: 286 tests, 0 failures on both pairs; with Ninja 3.16.1 and Formidable 7.0: 273 tests, 0 failures on both pairs; all builder stand-ins: 298 tests, 0 failures; real-HTTP smoke 26/26; PHPCS and PHPStan clean.
+
 ## SEO + Image SEO
 
 | # | Feature | Type |

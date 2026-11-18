@@ -70,6 +70,12 @@ use Kuduy\Mcp\Modules\Dev\DevFiles;
 use Kuduy\Mcp\Modules\Multilingual\LanguageTools;
 use Kuduy\Mcp\Modules\Types\TypeTools;
 use Kuduy\Mcp\Modules\Forms\Cf7Save;
+use Kuduy\Mcp\Modules\Forms\Editing\Cf7Tags;
+use Kuduy\Mcp\Modules\Forms\Editing\FluentEditor;
+use Kuduy\Mcp\Modules\Forms\Editing\FormEditTools;
+use Kuduy\Mcp\Modules\Forms\Editing\FormidableEditor;
+use Kuduy\Mcp\Modules\Forms\Editing\NinjaEditor;
+use Kuduy\Mcp\Modules\Forms\Editing\WpformsEditor;
 use Kuduy\Mcp\Modules\Forms\FormEntries;
 use Kuduy\Mcp\Modules\Forms\FormsTools;
 use Kuduy\Mcp\Modules\Kirki\KirkiEdit;
@@ -308,6 +314,15 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'save', 'mail' ) as $mode ) {
 			$registry->register( new Cf7Save( $mode ) );
+		}
+		// Phase B2 (D57): form editing per plugin, on each plugin's own save path.
+		foreach ( array( new WpformsEditor(), new FluentEditor(), new NinjaEditor(), new FormidableEditor() ) as $editor ) {
+			foreach ( array( 'field-types', 'form-create', 'form-edit', 'notification-save' ) as $mode ) {
+				$registry->register( new FormEditTools( $editor, $mode ) );
+			}
+		}
+		foreach ( array( 'form-tags', 'form-edit', 'validate' ) as $mode ) {
+			$registry->register( new Cf7Tags( $mode ) );
 		}
 		foreach ( array( 'types', 'post' ) as $mode ) {
 			$registry->register( new BlockTools( $mode ) );
