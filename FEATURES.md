@@ -254,6 +254,12 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Divi 5 / Etch page editing with `kuduy-block-edit` (merge for nested settings) | Tested 2026-11-18 against a stand-in (BK4); Divi 5 live on 5.19.0 (LQ3); Etch not checked |
 | Form editing per plugin: field types, create, edit, notifications (`kuduy-wpforms-*`, `kuduy-fluent-forms-*`, `kuduy-ninja-forms-*`, `kuduy-formidable-*`) | Tested 2026-11-18 (FB1–FB4, FB6; WPForms Lite 2.0.4, Fluent 6.2.17, Ninja 3.16.1, Formidable 7.0; WP 7.1 and 6.9) |
 | Contact Form 7 form-tags and configuration check (`kuduy-cf7-form-tags`, `-form-edit`, `-validate`) | Tested 2026-11-18 (FB5; CF7 6.2.4.1 on WP 7.1, 6.1.7 on WP 6.9) |
+| ACF field groups, post types and taxonomies (`kuduy-acf-field-group-save`, `-field-group-trash`, `-post-type-save`, `-taxonomy-save`) | Tested 2026-11-18 (FE1; ACF 6.8.11) |
+| Meta Box boxes and values (`kuduy-meta-box-*`) | Tested 2026-11-18 (FE2; Meta Box 5.15.5) |
+| Pods pods, fields and items (`kuduy-pods-*`) | Tested 2026-11-18 (FE3; Pods 3.3.9.2) |
+| ACPT groups, post types, taxonomies and values (`kuduy-acpt-*`) | Tested 2026-11-18 (FE4; ACPT Lite 2.1.3) |
+| ASE module switches (`kuduy-ase-*`) | Tested 2026-11-18 (FE5; ASE 9.3.3) |
+| Content model across plugins (`kuduy-content-model`) | Tested 2026-11-18 (FE6) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |
 | Phase B — forms: Gravity Forms; WPForms Pro entries | Implemented — tested 2026-11-14 against stand-ins only (F10, F11: `FormsGravityTest`, `FormsWpformsProTest`); **not verified against the paid plugins** (phase L) |

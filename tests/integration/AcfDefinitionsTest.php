@@ -310,7 +310,7 @@ final class AcfDefinitionsTest extends TestCase {
 		$type = $this->ok(
 			'kuduy-acf-post-type-save',
 			array(
-				'post_type'    => 'kuduy_book',
+				'post_type'    => 'kuduy_acf_book',
 				'singular'     => 'Book',
 				'plural'       => 'Books',
 				'public'       => true,
@@ -325,10 +325,10 @@ final class AcfDefinitionsTest extends TestCase {
 		$tax = $this->ok(
 			'kuduy-acf-taxonomy-save',
 			array(
-				'taxonomy'   => 'kuduy_genre',
+				'taxonomy'   => 'kuduy_acf_genre',
 				'singular'   => 'Genre',
 				'plural'     => 'Genres',
-				'post_types' => array( 'kuduy_book' ),
+				'post_types' => array( 'kuduy_acf_book' ),
 			)
 		);
 		$this->assertTrue( $tax['created'] );
@@ -336,7 +336,7 @@ final class AcfDefinitionsTest extends TestCase {
 		$renamed = $this->ok(
 			'kuduy-acf-post-type-save',
 			array(
-				'post_type' => 'kuduy_book',
+				'post_type' => 'kuduy_acf_book',
 				'plural'    => 'Novels',
 			)
 		);
@@ -345,7 +345,7 @@ final class AcfDefinitionsTest extends TestCase {
 		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $renamed['_snapshot_id'] ) );
 		$saved = null;
 		foreach ( acf_get_internal_post_type_posts( 'acf-post-type' ) as $item ) {
-			if ( 'kuduy_book' === $item['post_type'] ) {
+			if ( 'kuduy_acf_book' === $item['post_type'] ) {
 				$saved = $item;
 			}
 		}

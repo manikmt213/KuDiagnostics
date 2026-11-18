@@ -565,6 +565,21 @@ Also seen: a browser request that sends both the WordPress login cookie and a Be
 
 Run after the fixes (2026-11-18): full suites 263 tests, 0 failures on WordPress 7.1.4 / PHP 8.3.36 and 6.9.11 / PHP 8.1.34; with all builder stand-ins active (Bricks, Divi/Etch, Breakdance, Oxygen, Avada, WPBakery, Elementor Pro forms) 298 tests, 0 failures (TL1 covers every listed builder tool); Kirki 6.4.2 suite with TL1 on 6.9 / 8.1 and 7.1 / 8.3: 0 failures; real-HTTP smoke 26/26; PHPCS and PHPStan clean.
 
+## Phase E — fields
+
+Runs 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36 with the real plugins (wordpress.org ZIPs through `KUDUY_LOCAL_PLUGINS`): ACF 6.8.11 (FE1 + the existing ACF tests: 11, 0 failures), Meta Box 5.15.5 (FE2), Pods 3.3.9.2 (FE3), ACPT Lite 2.1.3 (FE4), ASE 9.3.3 (FE5), ACF + Meta Box (FE6): 0 failures. Found while building: ACF's export drops the post id, so imports without it made a second group with the same key; ACF's getters skip trashed groups; ACF and Pods keep request caches that hide fresh changes; `pods_error()` exits (or sends its own JSON during REST calls) unless its error mode is exception; a partial `save_pod()` crashed PHP; Meta Box values named like secrets are already masked by the global redactor.
+
+| # | Feature | Type |
+|---|---|---|
+| FE1 | ACF: field group created with fields and location; changed (add by position, update, move, remove) with one group kept; undo; removal refused while a value uses the field; conditional logic, unknown type, taken name and unknown location rule refused with nothing changed; PHP-registered group refused; trash and undo; editor refused; ACF post type and taxonomy created, relabelled and undone; core keys refused | I — `AcfDefinitionsTest` |
+| FE2 | Meta Box: box registered as Meta Box does; boxes listed and filtered; values read (password hidden), changed through its abilities (text, select, clone), deleted, undone; non-Meta-Box keys refused; author refused | I — `MetaBoxTest` |
+| FE3 | Pods: post type pod created; text, number, password fields added; field relabelled and undone; pod relabelled and undone; item added, read (password hidden), changed and undone; unknown type, setting and field refused; core post type refused; author refused | I — `PodsTest` |
+| FE4 | ACPT: post type and taxonomy registered (existing key refused); meta group created through the public API; invalid definition refused by ACPT with nothing saved; values written, read (all or listed), changed and undone; unknown field refused; editor refused | I — `AcptTest` |
+| FE5 | ASE: modules listed with refused ones marked, secrets hidden; two modules switched on with other settings kept; undo; four refused switches and an unknown one change nothing; editor refused | I — `AseTest` |
+| FE6 | Content model: core part; with ACF and Meta Box, fields per post type by source; clashes for a meta key used by both and a post type defined by KuDiagnostics and ACF | I — `ContentModelTest` |
+
+Full round after E (2026-11-18): bare suites 265 tests, 0 failures on WordPress 7.1.4 / PHP 8.3.36 and 6.9.11 / PHP 8.1.34; with ACF 6.8.11 + Meta Box 5.15.5: 277 tests, 0 failures on both pairs (first run: an ACF post-type key in AcfDefinitionsTest collided with ContentTypesTest, renamed); with Pods 3.3.9.2 + ACPT Lite 2.1.3 + ASE 9.3.3: 268 tests, 0 failures on both pairs; real-HTTP smoke 26/26; PHPCS and PHPStan clean.
+
 ## Phase B2 — form editing
 
 Run 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36 with the real plugins (wordpress.org ZIPs installed with `KUDUY_LOCAL_PLUGINS` after two downloads broke off): WPForms Lite 2.0.4 (2 tests); Contact Form 7 6.2.4.1, Fluent Forms 6.2.17, Ninja Forms 3.16.1 and Formidable 7.0 (7 tests): 0 failures. First runs found: Formidable needs its tables installed in the test setup; Ninja Forms keeps one model factory per form for the whole request, so the editor reads through a new factory and refreshes the shared one before Ninja's own functions run (they also load only when the ability registry starts); Ninja's option items take label, value and calc only; CF7's configuration check does not flag mail tags that no longer exist (test corrected).

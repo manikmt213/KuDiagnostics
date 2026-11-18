@@ -45,6 +45,15 @@ Phase G2 — SEO (`docs/plans/phase-g2-seo.md`):
 - Fixed (CI, red since phase C1): with two SEO plugins active, `kuduy-yoast-term-seo` and the other term SEO tools threw while the tool list was built, so `tools/list` failed on such sites; they now report themselves unavailable. PHPCS warnings cleared (CI fails on warnings). Tests that assumed one SEO plugin or a single gallery shortcode were corrected. The test runner now gives local ZIPs the same setup as downloaded plugins (Rank Math's skipped wizard, Polylang's languages, WooCommerce's order storage).
 - Fixed: Mosaic installed as `builder-mosaic/init.php` (the folder its own ZIP uses, seen on the owner's site 2026-11-18) is now detected.
 
+Phase E — fields (`docs/plans/phase-e-fields.md`, D58):
+
+- Added: `kuduy-acf-field-group-save`, `-field-group-trash`, `-post-type-save`, `-taxonomy-save` — ACF definitions through ACF's own import, with undo.
+- Added: `kuduy-meta-box-boxes`, `-get`, `-update` — Meta Box boxes and values through Meta Box's own abilities.
+- Added: `kuduy-pods-list`, `-get`, `-save`, `-field-save`, `-item-get`, `-item-save` — Pods through its own API.
+- Added: `kuduy-acpt-groups`, `-group-create`, `-post-type-create`, `-taxonomy-create`, `-values-get`, `-values-update` — ACPT through its public API.
+- Added: `kuduy-ase-settings`, `-settings-update` — Admin and Site Enhancements module switches (risky ones refused).
+- Added: `kuduy-content-model` — post types, taxonomies and fields across plugins, with clashes.
+
 Phase B2 — form editing (`docs/plans/phase-b2-forms.md`, D57):
 
 - Added: `kuduy-wpforms-*`, `kuduy-fluent-forms-*`, `kuduy-ninja-forms-*`, `kuduy-formidable-*` — field types, form create, form edit (add, change, move and remove fields; title, submit button, confirmation message; up to 30 operations checked before anything is saved) and email notifications, each through the plugin's own save path, with undo.
