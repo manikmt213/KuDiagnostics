@@ -593,6 +593,21 @@ Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures o
 
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
+## Phase O — administration (2026-11-20)
+
+| ID | What | Type — file |
+|---|---|---|
+| AO1 | Plugin ZIP from the media library installed (not active) with confirmation; existing folder refused; inspect shows header and the upload in its history; delete with confirmation reports the uninstall routine and removes the folder | I — `AdminToolsTest` |
+| AO2 | Refusals: deleting or uploading over KuDiagnostics, deleting an active plugin, a ZIP entry with `..` (nothing written), unknown plugin, editors | I — `AdminToolsTest` |
+| AO3 | Permanent delete only from the trash; undo puts it back in the trash with the same id and its meta | I — `AdminToolsTest` |
+| AO4 | User delete: not yourself; content reassigned (preview counts it); the last administrator refused for a custom role with `delete_users`; password reset asks first, sends one email, never returns the link | I — `AdminToolsTest` |
+| AO5 | Cron: key shown by kuduy-cron-list; run queues a one-off next to the schedule; unschedule and undo (same recurrence); unknown key and editors refused | I — `AdminToolsTest` |
+| AO6 | Dependencies: an inactive plugin needing a missing plugin is listed, not a problem; conflicts reported exactly when two SEO plugins are active (bare and Rank Math + Yoast rows); editors refused | I — `AdminToolsTest` |
+| AO7 | UpdraftPlus: history read, start asks first, then queues its database backup event with a 12-character nonce shown by status; editors refused; without UpdraftPlus the tools are not offered | I — `BackupTest` (UpdraftPlus 1.26.16) |
+| AO8 | File move and delete in the sandbox with undo; KuDiagnostics, must-use plugins and leaving the folders refused; a file that becomes .php must parse; active plugin files confirm-first | I — `DeveloperTest` (code-execution job) |
+
+Round 2026-11-20: bare suites 312 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1 (report checked: AO1–AO6 ran on both, AO7 skipped there as designed); UpdraftPlus 1.26.16 row: 6.9.12/8.1 7 tests, 7.1.5/8.3 1 test (BackupTest), 0 failures; Rank Math + Yoast row (AdminToolsTest, SEO) 6 tests, 0 failures; code-execution job (DeveloperTest) 5 tests, 0 failures on both pairs; real-HTTP smoke 29/29; PHPCS and PHPStan clean. Found while writing AO1: text object ids were stored as 0 in the audit and snapshot tables (fixed, see `SECURITY.md`). The PclZip fallback of the package check was needed because Playground's PHP has no zip extension. Not yet checked on a live site.
+
 ## Phase N — resources and prompts (2026-11-20)
 
 | ID | What | Type — file |

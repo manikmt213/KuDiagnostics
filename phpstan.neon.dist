@@ -20,6 +20,7 @@ parameters:
     - tests/phpstan/fields.stub
     - tests/phpstan/lms-code.stub
     - tests/phpstan/elementor-addons.stub
+    - tests/phpstan/updraftplus.stub
     # Stand-ins for paid plugins (WPBakery): their names, not ours, so they are scanned but not analysed.
     - tests/integration/fakes/wpbakery.php
   paths:

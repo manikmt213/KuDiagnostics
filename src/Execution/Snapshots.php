@@ -42,7 +42,9 @@ final class Snapshots {
 						'state' => $snap['payload'],
 					)
 				),
-			)
+			),
+			// Explicit formats: WordPress maps the column name object_id to %d, which stored text ids as 0.
+			array( '%s', '%d', '%s', '%s', '%s', '%s' )
 		);
 		return (int) $wpdb->insert_id;
 	}

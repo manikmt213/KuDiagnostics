@@ -1,0 +1,36 @@
+<?php
+/**
+ * PHPStan declarations of the UpdraftPlus API that KuDiagnostics calls (phase O; signatures from UpdraftPlus 1.26.16).
+ */
+
+namespace {
+	class UpdraftPlus {
+		/** @return string */
+		public function backup_time_nonce( $nonce = false ) {}
+		/**
+		 * @param array<string, mixed> $backup
+		 * @return int
+		 */
+		public function get_total_backup_size( $backup ) {}
+		/**
+		 * @param string $non
+		 * @return array<string, mixed>|false
+		 */
+		public function jobdata_getarray( $non ) {}
+	}
+
+	class UpdraftPlus_Backup_History {
+		/** @return array<int, array<string, mixed>> */
+		public static function get_history( $timestamp = false, $populate_sizes = false ) {}
+		/**
+		 * @param array<int, array<string, mixed>> $backup_history
+		 * @return void
+		 */
+		public static function save_history( $backup_history, $use_cache = true ) {}
+	}
+
+	class UpdraftPlus_Options {
+		/** @return bool */
+		public static function user_can_manage() {}
+	}
+}

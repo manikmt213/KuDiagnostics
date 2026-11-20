@@ -66,7 +66,10 @@ final class AuditLog {
 				'snapshot_id'   => $snapshot_id,
 				'object_type'   => $target[0] ?? null,
 				'object_id'     => $target[1] ?? null,
-			)
+			),
+			// Explicit formats: WordPress maps the column name object_id to %d (term relationships), which turned
+			// every text id (plugin file, cron hook, option name) into 0 (found 2026-11-20).
+			array( '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s' )
 		);
 	}
 

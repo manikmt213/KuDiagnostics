@@ -87,6 +87,15 @@ use Kuduy\Mcp\Modules\Blocks\WidgetTools;
 use Kuduy\Mcp\Modules\Cache\CacheTools;
 use Kuduy\Mcp\Modules\Cache\WpRocketTools;
 use Kuduy\Mcp\Modules\Dev\DevCode;
+use Kuduy\Mcp\Modules\Dev\DevFileOps;
+use Kuduy\Mcp\Modules\Backup\UpdraftBackups;
+use Kuduy\Mcp\Modules\Core\CronActions;
+use Kuduy\Mcp\Modules\Core\IntegrationChecks;
+use Kuduy\Mcp\Modules\Core\PluginAdmin;
+use Kuduy\Mcp\Modules\Core\PluginAdminConfirm;
+use Kuduy\Mcp\Modules\Core\PostDelete;
+use Kuduy\Mcp\Modules\Core\UserAdmin;
+use Kuduy\Mcp\Modules\Core\UserAdminConfirm;
 use Kuduy\Mcp\Modules\Dev\DevDatabase;
 use Kuduy\Mcp\Modules\Dev\DevFiles;
 use Kuduy\Mcp\Modules\Multilingual\LanguageTools;
@@ -183,6 +192,22 @@ final class ToolRegistry {
 		// Phase N: workflows and site skills as tools, for clients without MCP prompts (D73).
 		$registry->register( new Skills( 'list' ) );
 		$registry->register( new Skills( 'get' ) );
+		// Phase O: administration (D74-D78).
+		$registry->register( new PluginAdmin( 'inspect' ) );
+		$registry->register( new PluginAdminConfirm( 'upload' ) );
+		$registry->register( new PluginAdminConfirm( 'delete' ) );
+		$registry->register( new PostDelete() );
+		$registry->register( new UserAdminConfirm( 'delete' ) );
+		$registry->register( new UserAdmin( 'password-reset' ) );
+		foreach ( array( 'run', 'unschedule' ) as $mode ) {
+			$registry->register( new CronActions( $mode ) );
+		}
+		foreach ( array( 'dependencies', 'conflicts' ) as $mode ) {
+			$registry->register( new IntegrationChecks( $mode ) );
+		}
+		foreach ( array( 'status', 'start' ) as $mode ) {
+			$registry->register( new UpdraftBackups( $mode ) );
+		}
 		// Phase R: WPCode through its own abilities (D62); PHP snippets only under D4.
 		foreach ( array( 'snippets', 'snippet-get', 'snippet-deactivate', 'snippet-trash', 'headers-footers' ) as $mode ) {
 			$registry->register( new WpCode( $mode ) );
@@ -496,6 +521,9 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'write', 'php' ) as $mode ) {
 			$registry->register( new DevCode( $mode ) );
+		}
+		foreach ( array( 'move', 'delete' ) as $mode ) {
+			$registry->register( new DevFileOps( $mode ) );
 		}
 		foreach ( array( 'list', 'save', 'remove' ) as $mode ) {
 			$registry->register( new TypeTools( $mode ) );

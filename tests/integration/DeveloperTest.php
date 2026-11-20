@@ -229,6 +229,61 @@ final class DeveloperTest extends TestCase {
 		$this->assertFalse( $active['done'], 'Files of an active plugin are confirm-first.' );
 		$this->assertFileDoesNotExist( WP_PLUGIN_DIR . '/elementor/kuduy-note.txt' );
 
+		// AO8 (phase O, D79): move and delete in the same folders, with undo.
+		$this->ok(
+			'kuduy-dev-file-write',
+			array(
+				'path'    => 'kuduy-sandbox/old.txt',
+				'content' => 'keep me',
+			)
+		);
+		$moved = $this->ok(
+			'kuduy-dev-file-move',
+			array(
+				'path' => 'kuduy-sandbox/old.txt',
+				'to'   => 'kuduy-sandbox/sub/new.txt',
+			)
+		);
+		$this->assertTrue( $moved['done'] );
+		$this->assertFileExists( WP_CONTENT_DIR . '/kuduy-sandbox/sub/new.txt' );
+		$this->assertFileDoesNotExist( WP_CONTENT_DIR . '/kuduy-sandbox/old.txt' );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $moved['_snapshot_id'] ) );
+		$this->assertFileExists( WP_CONTENT_DIR . '/kuduy-sandbox/old.txt', 'Undo moves it back.' );
+		$deleted = $this->ok( 'kuduy-dev-file-delete', array( 'path' => 'kuduy-sandbox/old.txt' ) );
+		$this->assertTrue( $deleted['done'] );
+		$this->assertFileDoesNotExist( WP_CONTENT_DIR . '/kuduy-sandbox/old.txt' );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $deleted['_snapshot_id'] ) );
+		$this->assertSame( 'keep me', (string) file_get_contents( WP_CONTENT_DIR . '/kuduy-sandbox/old.txt' ), 'Undo writes the deleted file again.' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- test check.
+		$this->fails( 'kuduy-dev-file-delete', array( 'path' => 'plugins/kuduy-mcp/kuduy-mcp.php' ), 'KuDiagnostics never deletes its own files' );
+		$this->fails( 'kuduy-dev-file-delete', array( 'path' => 'mu-plugins/x.php' ), 'must-use plugins are not changed' );
+		$this->fails(
+			'kuduy-dev-file-move',
+			array(
+				'path' => 'kuduy-sandbox/old.txt',
+				'to'   => '../wp-config.php',
+			),
+			'a move cannot leave the approved folders'
+		);
+		$this->ok(
+			'kuduy-dev-file-write',
+			array(
+				'path'    => 'kuduy-sandbox/broken.txt',
+				'content' => '<?php if ( {',
+			)
+		);
+		$this->fails(
+			'kuduy-dev-file-move',
+			array(
+				'path' => 'kuduy-sandbox/broken.txt',
+				'to'   => 'kuduy-sandbox/broken.php',
+			),
+			'a file that becomes PHP must parse'
+		);
+		wp_delete_file( WP_CONTENT_DIR . '/kuduy-sandbox/broken.txt' );
+		$this->assertFalse( $this->ok( 'kuduy-dev-file-delete', array( 'path' => 'plugins/elementor/elementor.php' ) )['done'], 'Files of an active plugin are confirm-first.' );
+		$this->assertFileExists( WP_PLUGIN_DIR . '/elementor/elementor.php' );
+		wp_delete_file( WP_CONTENT_DIR . '/kuduy-sandbox/old.txt' );
+
 		$run = $this->ok( 'kuduy-dev-php', array( 'code' => 'echo "hi"; return 6 * 7;' ) );
 		$this->assertTrue( $run['ok'] );
 		$this->assertSame( 42, $run['result'] );

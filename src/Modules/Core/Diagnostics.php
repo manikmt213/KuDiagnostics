@@ -309,8 +309,10 @@ final class Diagnostics implements Tool {
 						'schedule'     => $event['schedule'] ? (string) $event['schedule'] : 'once',
 						// Allow a minute of slack before calling an event overdue.
 						'overdue'      => (int) $time < time() - MINUTE_IN_SECONDS,
-						// Arguments can hold private data; only their number is shown.
+						// Arguments can hold private data; only their number is shown, and the key WordPress itself uses
+						// for them (md5 of the serialised arguments) to name the event in kuduy-cron-run / -unschedule.
 						'args'         => count( $event['args'] ),
+						'key'          => md5( serialize( $event['args'] ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- WordPress' own cron key (wp_schedule_event()).
 					);
 				}
 			}

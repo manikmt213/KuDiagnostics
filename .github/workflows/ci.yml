@@ -113,6 +113,9 @@ jobs:
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'tutor@4.2.1', label: '+ Tutor LMS' }
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'themify-builder@7.8.5', fakes: 'mosaic', label: '+ Themify Builder, Mosaic (stand-in)' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'themify-builder@7.8.5', fakes: 'mosaic', label: '+ Themify Builder, Mosaic (stand-in)' }
+          # Phase O: backups through UpdraftPlus (D77).
+          - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'updraftplus@1.26.16', label: '+ UpdraftPlus' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'updraftplus@1.26.16', label: '+ UpdraftPlus' }
           # Cache plugins (Phase 7, D19): LiteSpeed Cache purges through its own actions.
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'litespeed-cache@7.9.3', label: '+ cache' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'litespeed-cache@7.9.3', label: '+ cache' }
