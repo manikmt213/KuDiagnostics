@@ -7,7 +7,7 @@ Format: user-facing releases first (newest on top), then the dated development h
 Phase N (`docs/plans/phase-n.md`, D72–D73):
 
 - Added: MCP resources — `kuduy://site/overview`, `kuduy://site/integrations`, `kuduy://site/content-model`, `kuduy://memory/context`, `kuduy://design/tokens` (read-only JSON, each as its tool returns it and under the same permissions), in both protocol versions.
-- Added: MCP prompts — six workflows (site-audit, build-page, seo-review, safe-change, start-session, match-design) and the site's own skills (shared memories of kind "skill"); `kuduy-skills` and `kuduy-skill-get` give the same to clients without prompts. Not yet checked in a Claude client.
+- Added: MCP prompts — six workflows (site-audit, build-page, seo-review, safe-change, start-session, match-design) and the site's own skills (shared memories of kind "skill"); `kuduy-skills` and `kuduy-skill-get` give the same to clients without prompts. Checked in claude.ai: both appear under "Add from" the connector in the chat composer.
 
 Phase I (`docs/plans/phase-i-memory.md`, D70–D71):
 

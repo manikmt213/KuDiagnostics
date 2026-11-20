@@ -28,4 +28,4 @@ Built-in workflow prompts, each a user message that names the tools to use in or
 
 ## Status
 
-Built and tested 2026-11-20 (RP1–RP6 on both pairs, smoke 29/29; results in `TESTING.md`). Not released; **not yet verified with a Claude client** (rule 9).
+Built and tested 2026-11-20 (RP1–RP6 on both pairs, smoke 29/29; results in `TESTING.md`). Verified in claude.ai on the owner's site 2026-11-20 (exit gate met for claude.ai web; Desktop and Code not checked). Not released.
