@@ -117,11 +117,11 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Spectra Pro | 1.2.11 (2026-11-19) | **Verified live**: Spectra status reports Pro and its extension switches | Paid |
 | Kadence Shop Kit | 3.0.10 (2026-11-19) | **Verified live**: 16 modules read (none configured on the site) | Paid; read only |
 | Builder add-ons (BricksExtras, Divi Pixel, Divi Supreme Pro, Mega Addons, Ultimate Addons for WPBakery), Oxygen Classic, Mosaic | owner's test site, 2026-11-19 | **Detection verified live**. Found: Advanced Themer sits in a folder with a random suffix and was not detected — detection now also matches the main file name; rechecked live 2026-11-20 | Paid |
-| WPCode Lite | 2.4.2 (Playground, WP 7.1.5 + 6.9.12, 2026-11-20) | **Tested** (WC1–WC5) with "AI & Automation Access" on; saving PHP snippets not run in CI | Free |
-| Masteriyo LMS | 3.5.2 (Playground, WP 7.1.5 + 6.9.12, 2026-11-20) | **Tested** (MY1–MY4) through its abilities | Free |
-| Tutor LMS | 4.2.1 (Playground, WP 7.1.5 + 6.9.12, 2026-11-20) | **Tested** (TU1–TU4) | Free; Tutor Pro not tested |
-| Themify Builder | 7.8.5 (Playground, WP 7.1.5 + 6.9.12, 2026-11-20) | **Tested** (TB1, TB2) | Free |
-| Builder Mosaic | 3.6.2 (source read on the owner's site, 2026-11-20) | Tested against a stand-in (TB3); not live-checked (Themify Builder is not installed on the owner's site) | Paid |
+| WPCode Lite | 2.4.2 (Playground, WP 7.1.5 + 6.9.12, and the owner's site, 2026-11-20) | **Tested** (WC1–WC5) and **verified live**: setting gate, CSS snippet served on the front page, change/switch-off undo, masking, PHP refused, footer code. Saving PHP snippets not run (no code execution on either). Gap: no trash tool for WPCode snippets | Free |
+| Masteriyo LMS | 3.5.2 (Playground and the owner's site, 2026-11-20) | **Tested** (MY1–MY4) and **verified live** (81 abilities; course create, rename, trash with undo; refusals; settings read without secrets) | Free |
+| Tutor LMS | 4.2.1 (Playground and the owner's site, 2026-11-20) | **Tested** (TU1–TU4) and **verified live** (curriculum, enroll, cancel with undo); reads also with Tutor Pro 4.2.1 active | Free; Tutor Pro features not covered |
+| Themify Builder | 7.8.5 (Playground), 7.8.6 (owner's site), 2026-11-20 | **Tested** (TB1, TB2) and **verified live** on 7.8.6 | Free |
+| Builder Mosaic | 3.6.2 (owner's site, 2026-11-20) | Tested against a stand-in (TB3) and **verified live** against the real add-on (sources match the stand-in; unavailable source refused; module saved and rendered) | Paid |
 | CF7, WPForms, Fluent | — | Tested in Playground (phase B2) | |
 | Plugins that print output during REST requests | — | **Tested** | Output guard (F2) |
 
