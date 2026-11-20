@@ -127,7 +127,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | Tutor LMS | 4.2.1 (Playground and the owner's site, 2026-11-20) | **Tested** (TU1–TU4) and **verified live** (curriculum, enroll, cancel with undo); reads also with Tutor Pro 4.2.1 active | Free; Tutor Pro features not covered |
 | Themify Builder | 7.8.5 (Playground), 7.8.6 (owner's site), 2026-11-20 | **Tested** (TB1, TB2) and **verified live** on 7.8.6 | Free |
 | Builder Mosaic | 3.6.2 (owner's site, 2026-11-20) | Tested against a stand-in (TB3) and **verified live** against the real add-on (sources match the stand-in; unavailable source refused; module saved and rendered) | Paid |
-| UpdraftPlus | 1.26.16 (Playground, WP 7.1.5 + 6.9.12, 2026-11-20) | **Tested** (AO7): history read, backup queued through its own event, status shows it; a full backup run not part of the tests; not checked on a live site | Free; restore not offered |
+| UpdraftPlus | 1.26.16 (Playground, WP 7.1.5 + 6.9.12, and the owner's site, 2026-11-20) | **Tested** (AO7) and **verified live**: a database backup started through its own event, ran on the owner's LiteSpeed host and appeared in the history with its size | Free; restore not offered |
 | CF7, WPForms, Fluent | — | Tested in Playground (phase B2) | |
 | Plugins that print output during REST requests | — | **Tested** | Output guard (F2) |
 

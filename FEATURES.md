@@ -294,7 +294,7 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Permanent delete of trashed content with undo (`kuduy-post-delete`, D46) | Tested 2026-11-20 (AO3) and **verified live** |
 | User delete with reassignment, password reset email (`kuduy-user-delete`, `kuduy-user-password-reset`, D75) | Tested 2026-11-20 (AO4; never yourself, never the last administrator) and **verified live** (self refused, reassignment, reset email) |
 | WP-Cron run now and unschedule with undo (`kuduy-cron-run`, `-unschedule`, D76) | Tested 2026-11-20 (AO5) and **verified live** (one finding fixed: undo no longer duplicates a re-created event) |
-| Backups through UpdraftPlus: history, running jobs, start (`kuduy-backup-status`, `-start`, D77) | Tested 2026-11-20 (AO7, UpdraftPlus 1.26.16; the backup itself not run in tests); restore not offered |
+| Backups through UpdraftPlus: history, running jobs, start (`kuduy-backup-status`, `-start`, D77) | Tested 2026-11-20 (AO7, UpdraftPlus 1.26.16) and **verified live** (database backup started, finished and listed; one finding fixed: stale job data no longer shown as running); restore not offered |
 | Plugin dependency and conflict checks (`kuduy-integration-dependencies`, `-conflicts`, D78) | Tested 2026-11-20 (AO6, incl. the Rank Math + Yoast row) and **verified live** (dependencies) |
 | File move and delete under D4 (`kuduy-dev-file-move`, `-delete`, D79) | Tested 2026-11-20 (AO8, code-execution job) |
 | LearnWorlds | Blocked — D66: hosted service needing a stored client secret; official API docs not read (UNVERIFIED); owner to decide |

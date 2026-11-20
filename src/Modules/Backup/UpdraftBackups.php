@@ -221,17 +221,22 @@ final class UpdraftBackups implements Tool {
 				'label'       => wp_strip_all_tags( (string) ( $set['label'] ?? '' ) ),
 			);
 		}
-		global $wpdb;
-		$jobs    = (array) $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( 'updraft_jobdata_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- names only, to list UpdraftPlus' running jobs.
+		// Running = what UpdraftPlus' own screen shows (UpdraftPlus_Admin::print_active_jobs()): a job with its next
+		// updraft_backup_resume event scheduled (arguments: resumption, job id). Job data left behind by a finished
+		// or abandoned job is not a running backup (found live 2026-11-20).
 		$running = array();
-		foreach ( $jobs as $option ) {
-			$nonce = substr( (string) $option, strlen( 'updraft_jobdata_' ) );
-			$data  = (array) $updraftplus->jobdata_getarray( $nonce );
-			if ( ! empty( $data['backup_time'] ) && 'finished' !== ( $data['jobstatus'] ?? '' ) ) {
+		foreach ( (array) _get_cron_array() as $time => $hooks ) {
+			foreach ( (array) ( $hooks['updraft_backup_resume'] ?? array() ) as $scheduled ) {
+				$nonce = (string) ( $scheduled['args'][1] ?? '' );
+				$data  = '' === $nonce ? array() : (array) $updraftplus->jobdata_getarray( $nonce );
+				if ( empty( $data['backup_time'] ) ) {
+					continue;
+				}
 				$running[] = array(
-					'nonce'  => $nonce,
-					'status' => (string) ( $data['jobstatus'] ?? '' ),
-					'since'  => gmdate( 'c', (int) $data['backup_time'] ),
+					'nonce'       => $nonce,
+					'status'      => (string) ( $data['jobstatus'] ?? 'unknown' ),
+					'since'       => gmdate( 'c', (int) $data['backup_time'] ),
+					'next_resume' => gmdate( 'c', (int) $time ),
 				);
 			}
 		}

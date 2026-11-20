@@ -30,4 +30,4 @@ Not in this round (from the gap table): a separate `-compatibility` tool and an 
 
 ## Status
 
-Built and tested 2026-11-20 (see `TESTING.md`, Phase O); live-checked on the owner's test site the same day (one finding fixed: cron undo could duplicate an event its plugin had already re-created). Backups not checked live (owner skipped).
+Built and tested 2026-11-20 (see `TESTING.md`, Phase O); live-checked on the owner's test site the same day (one finding fixed: cron undo could duplicate an event its plugin had already re-created). Backups live-checked afterwards with UpdraftPlus 1.26.16 (one finding fixed: running jobs follow UpdraftPlus' own rule).

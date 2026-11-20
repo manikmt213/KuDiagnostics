@@ -59,6 +59,20 @@ final class BackupTest extends TestCase {
 		$this->assertContains( 'db', $status['backups'][0]['contains'] );
 		$this->assertTrue( $status['backups'][0]['always_keep'] );
 
+		// Job data alone (left by a finished or abandoned job) is not running; with its resume event it is (found live).
+		update_site_option(
+			'updraft_jobdata_deadbeef0000',
+			array(
+				'backup_time' => time() - 60,
+				'jobstatus'   => 'filescreating',
+			)
+		);
+		$this->assertNotContains( 'deadbeef0000', array_column( $this->ok( 'kuduy-backup-status', array() )['running'], 'nonce' ), 'Stale job data is not a running backup.' );
+		wp_schedule_single_event( time() + 300, 'updraft_backup_resume', array( 1, 'deadbeef0000' ) );
+		$this->assertContains( 'deadbeef0000', array_column( $this->ok( 'kuduy-backup-status', array() )['running'], 'nonce' ), 'A job with its resume event is running.' );
+		wp_clear_scheduled_hook( 'updraft_backup_resume', array( 1, 'deadbeef0000' ) );
+		delete_site_option( 'updraft_jobdata_deadbeef0000' );
+
 		$plan = $this->ok( 'kuduy-backup-start', array( 'kind' => 'database' ) );
 		$this->assertFalse( $plan['started'], 'Asks first.' );
 		$this->assertSame( 0, self::queued(), 'Nothing queued before confirm.' );
