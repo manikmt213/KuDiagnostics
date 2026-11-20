@@ -7,6 +7,9 @@
 
 namespace Kuduy\Mcp\Tests\Integration;
 
+use Kuduy\Mcp\Execution\Confirmable;
+use Kuduy\Mcp\Mcp\ToolError;
+use Kuduy\Mcp\Mcp\ToolRegistry;
 use Kuduy\Mcp\Plugin;
 use PHPUnit\Framework\TestCase;
 
@@ -226,11 +229,22 @@ final class AdminToolsTest extends TestCase {
 		}
 		wp_set_current_user( $manager );
 		$message = $this->fails( 'kuduy-user-delete', array( 'user_id' => self::$admin ), 'the last administrator is not deleted' );
+		// KuDiagnostics' own guard, checked directly: with WooCommerce active, WooCommerce already denies non-administrators
+		// any change to an administrator (wc_modify_map_meta_cap), so the call above stops at the capability check.
+		$guard = '';
+		$tool  = ToolRegistry::create()->get( 'kuduy-user-delete' );
+		$this->assertInstanceOf( Confirmable::class, $tool );
+		try {
+			$tool->preview( array( 'user_id' => self::$admin ) );
+		} catch ( ToolError $e ) {
+			$guard = $e->getMessage();
+		}
 		foreach ( $others as $other ) {
 			( new \WP_User( $other ) )->set_role( 'administrator' );
 		}
 		wp_set_current_user( self::$admin );
-		$this->assertStringContainsString( 'last administrator', $message );
+		$this->assertStringContainsString( 'last administrator', $guard );
+		$this->assertMatchesRegularExpression( '/last administrator|not allowed/', $message );
 		$this->assertInstanceOf( \WP_User::class, get_userdata( self::$admin ) );
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 		wp_delete_user( $manager );
