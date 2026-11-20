@@ -2,7 +2,7 @@
 
 Format: user-facing releases first (newest on top), then the dated development history. Versions follow semantic versioning; tags `vX.Y.Z` publish a GitHub Release that installed sites receive through the built-in updater.
 
-## Unreleased
+## 1.7.2 — 2026-11-21
 
 - Fixed: updates were not offered while GitHub's API refused this server (its anonymous limit of 60 requests an hour is per IP address, which shared hosts share between many sites). The updater now reads the latest release from GitHub's release page instead; the download is still checked against its published SHA-256.
 - Added: `kuduy-check-update` shows the last check (when, the API's answer, where the release came from, and why it failed).
