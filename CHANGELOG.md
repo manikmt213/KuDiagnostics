@@ -4,6 +4,11 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+Phase I (`docs/plans/phase-i-memory.md`, D70–D71):
+
+- Added: memory — `kuduy-memory-save`, `-get`, `-search`, `-list`, `-delete`, `-export`, `-import`, `-context`. Notes, facts, decisions, preferences and design notes kept across connections and sessions, shared or private, grouped by project, with status, version, expiry and a warning when an integration a memory refers to is no longer active. Passwords, keys and tokens are refused, also in the audit log of a refused save. New table `kuduy_memory` (database version 3, created on update).
+- Added: `kuduy-design-scan` — the site's colors, fonts, font sizes, spacing and widths from the theme, global styles, Elementor Kit and Customizer in one place, each with its source, and a summary to keep as a design memory.
+
 Phase F2 (`docs/plans/phase-f2.md`, D67–D69; built from source, tests written with the code and run after the phase was built):
 
 - Added: `kuduy-elementor-usage` — where Elementor widget and element types are used across the site (per type: uses, pages, providing plugin; for one widget or one add-on: the pages), counting only posts you can edit.

@@ -592,6 +592,22 @@ Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures o
 
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
+## Phase I — memory and design scan (2026-11-20)
+
+| ID | What | Type — file |
+|---|---|---|
+| ME1 | Save, read, change with version check (stale refused), undo; stored in the table (outlives the connection) | I — `MemoryTest` |
+| ME2 | Secrets refused: payment key, password and api_key assignments, GitHub token, AWS key, private key, bearer JWT, OpenAI key, a token in the title, one bad import item (nothing written); describing where a key lives is accepted | I — `MemoryTest` |
+| ME3 | Private memories hidden from other users and admins; others' shared memories not changed or deleted by an editor, changed by an admin; subscribers refused | I — `MemoryTest` |
+| ME4 | Relevance: title hit before body hit; expired memory left out of search, shown with include_expired | I — `MemoryTest` |
+| ME5 | Context: conflicts for an unknown integration and an inactive WooCommerce; count by kind | I — `MemoryTest` |
+| ME6 | Export and import round trip (editors cannot import); bulk delete needs confirm and an admin, undo puts the rows back | I — `MemoryTest` |
+| ME7 | The audit row of a refused save holds no secret | I — `MemoryTest` |
+| DS2 | Design scan: tokens with sources, Customizer background, theme palette, Elementor Kit colors, summary | I — `DesignScanTest` |
+| DS3 | Summary saved as a design memory; subscribers refused | I — `DesignScanTest` |
+
+Round 2026-11-20: bare suites 299 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1 (report checked: ME1–ME7, DS2–DS3 and the lifecycle tests — table created, upgrade from an older schema version, dropped on uninstall — all ran); `check:release` with 6 tables; real-HTTP smoke 26/26; PHPCS and PHPStan clean. ME7 was written after review found that a refused save would have put the secret into the audit row (the redactor masks by field name, and `body` is not one); memory tools now mask secret-bearing text in their audit arguments.
+
 ## Phase F2 — Elementor add-on extras (2026-11-20)
 
 Real plugins in Playground: Happy Addons 3.52.0, HT Mega 3.2.9, Element Pack Lite 10.0.12, Unlimited Elements 2.0.28 (CI row "+ add-on extras", both pairs); EX4 also runs in the existing add-on rows (Happy 3.51.3, HT Mega 3.2.8, Element Pack 10.0.5).

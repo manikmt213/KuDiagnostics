@@ -12,7 +12,7 @@ namespace Kuduy\Mcp\Lifecycle;
  */
 final class Migrations {
 
-	public const DB_VERSION = 2;
+	public const DB_VERSION = 3;
 
 	public const OPTION = 'kuduy_mcp_db_version';
 
@@ -28,6 +28,7 @@ final class Migrations {
 		'kuduy_audit_log',
 		'kuduy_snapshots',
 		'kuduy_jobs',
+		'kuduy_memory',
 	);
 
 	/**
@@ -146,6 +147,25 @@ items longtext NOT NULL,
 results longtext NOT NULL,
 PRIMARY KEY  (id),
 KEY user_status (user_id,status),
+KEY updated_at (updated_at)
+) {$collate};",
+			"CREATE TABLE {$p}kuduy_memory (
+id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+kind varchar(30) NOT NULL DEFAULT 'note',
+title varchar(200) NOT NULL,
+body longtext NOT NULL,
+tags text NOT NULL,
+project varchar(100) NOT NULL DEFAULT '',
+user_id bigint(20) unsigned NOT NULL DEFAULT 0,
+refs text NOT NULL,
+status varchar(10) NOT NULL DEFAULT 'current',
+version int(10) unsigned NOT NULL DEFAULT 1,
+expires_at datetime NULL,
+created_by bigint(20) unsigned NOT NULL DEFAULT 0,
+created_at datetime NOT NULL,
+updated_at datetime NOT NULL,
+PRIMARY KEY  (id),
+KEY project_user (project,user_id),
 KEY updated_at (updated_at)
 ) {$collate};",
 		);

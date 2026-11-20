@@ -25,6 +25,7 @@ final class LifecycleTest extends TestCase {
 		'kuduy_audit_log',
 		'kuduy_snapshots',
 		'kuduy_jobs',
+		'kuduy_memory',
 	);
 
 	/**

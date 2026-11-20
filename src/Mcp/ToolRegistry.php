@@ -33,6 +33,8 @@ use Kuduy\Mcp\Modules\Code\CodeSnippetSave;
 use Kuduy\Mcp\Modules\Code\CodeSnippets;
 use Kuduy\Mcp\Modules\Code\DynamicShortcodes;
 use Kuduy\Mcp\Modules\Code\WpCode;
+use Kuduy\Mcp\Modules\Core\DesignScan;
+use Kuduy\Mcp\Modules\Memory\MemoryTools;
 use Kuduy\Mcp\Modules\Code\WpCodeSave;
 use Kuduy\Mcp\Modules\Lms\MasteriyoAbilities;
 use Kuduy\Mcp\Modules\Lms\TutorTools;
@@ -172,6 +174,11 @@ final class ToolRegistry {
 		foreach ( array( 'types', 'lint', 'power' ) as $mode ) {
 			$registry->register( new DynamicShortcodes( $mode ) );
 		}
+		// Phase I: memory (D70) and design scan (D71).
+		foreach ( array( 'save', 'get', 'search', 'list', 'delete', 'export', 'import', 'context' ) as $mode ) {
+			$registry->register( new MemoryTools( $mode ) );
+		}
+		$registry->register( new DesignScan() );
 		// Phase R: WPCode through its own abilities (D62); PHP snippets only under D4.
 		foreach ( array( 'snippets', 'snippet-get', 'snippet-deactivate', 'snippet-trash', 'headers-footers' ) as $mode ) {
 			$registry->register( new WpCode( $mode ) );

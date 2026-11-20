@@ -24,7 +24,7 @@ $f = 'kuduy-mcp/kuduy-mcp.php';
 $out = array(
   'active'   => is_plugin_active( $f ),
   'version'  => get_plugin_data( WP_PLUGIN_DIR . '/' . $f, false, false )['Version'] ?? null,
-  'tables'   => count( array_filter( array( 'kuduy_oauth_clients', 'kuduy_oauth_codes', 'kuduy_oauth_tokens', 'kuduy_audit_log', 'kuduy_snapshots' ), fn( $t ) => false !== $wpdb->query( "SELECT 1 FROM {$wpdb->prefix}{$t} LIMIT 1" ) && '' === $wpdb->last_error ) ),
+  'tables'   => count( array_filter( array( 'kuduy_oauth_clients', 'kuduy_oauth_codes', 'kuduy_oauth_tokens', 'kuduy_audit_log', 'kuduy_snapshots', 'kuduy_memory' ), fn( $t ) => false !== $wpdb->query( "SELECT 1 FROM {$wpdb->prefix}{$t} LIMIT 1" ) && '' === $wpdb->last_error ) ),
   'routes'   => array_values( array_filter( array_keys( rest_get_server()->get_routes() ), fn( $r ) => str_starts_with( $r, '/kuduy-mcp/' ) ) ),
   'devfiles' => array_values( array_filter( array( 'tests', 'node_modules', 'docs', 'scripts', 'vendor/phpunit', 'vendor/phpstan', 'composer.lock', 'package.json' ), fn( $p ) => file_exists( WP_PLUGIN_DIR . '/kuduy-mcp/' . $p ) ) ),
 );
@@ -52,7 +52,7 @@ const r = JSON.parse(readFileSync(resultFile, 'utf8'));
 const checks = [
   ['installed from ZIP and active', r.active === true],
   [`version ${r.version}`, typeof r.version === 'string'],
-  ['5 tables created', r.tables === 5],
+  ['6 tables created', r.tables === 6],
   ['MCP + OAuth routes registered', r.routes.includes('/kuduy-mcp/v1/mcp') && r.routes.includes('/kuduy-mcp/v1/oauth/token')],
   [`no dev files shipped${r.devfiles.length ? `: ${r.devfiles.join(', ')}` : ''}`, r.devfiles.length === 0],
 ];

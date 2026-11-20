@@ -285,6 +285,9 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Add-on widget/extension/feature switches with undo: HT Mega, Element Pack, Happy Addons (`kuduy-elementor-addon-modules`, `-addon-module-set`, D68) | Tested 2026-11-20 (EX4; HT Mega 3.2.9 and 3.2.8, Element Pack Lite 10.0.12 and 10.0.5, Happy Addons 3.52.0 and 3.51.3) |
 | Unlimited Elements installed widgets (`kuduy-unlimited-elements-widgets`, D69) | Tested 2026-11-20 (EX5; Unlimited Elements 2.0.28) |
 | Happy Addons mega menu | Not started — Pro feature, not in the free plugin |
+| Memory: save, read, search, list, delete (one or bulk), export, import, session context with conflict flags (`kuduy-memory-*`, D70) | Tested 2026-11-20 (ME1–ME7; WP 7.1.5 + 6.9.12) |
+| Memory never stores secrets (refused on save and import, masked in the audit row) | Tested 2026-11-20 (ME2, ME7) |
+| Design tokens scan (`kuduy-design-scan`, D71) | Tested 2026-11-20 (DS2, DS3; theme.json, Elementor Kit 4.3.6, Customizer) |
 | LearnWorlds | Blocked — D66: hosted service needing a stored client secret; official API docs not read (UNVERIFIED); owner to decide |
 | Catalogue rows for GenerateBlocks Pro, Spectra Pro, Kadence Blocks Pro, Oxygen Classic, Mosaic and the Bricks, Divi and WPBakery add-ons | Implemented (detection and what the generic tools cover; `IntegrationsTest`) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
