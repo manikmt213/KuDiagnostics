@@ -72,6 +72,10 @@ final class CheckUpdate implements Tool {
 					'type'        => 'string',
 					'description' => 'Where updates are installed (the Plugins screen).',
 				),
+				'last_check'        => array(
+					'type'        => array( 'object', 'null' ),
+					'description' => 'The last check: time, HTTP status of the GitHub API, where the release came from (api, release page, none) and why it failed, if it did.',
+				),
 			),
 			'required'   => array( 'installed_version', 'latest_version', 'update_available', 'install_from' ),
 		);
@@ -125,6 +129,7 @@ final class CheckUpdate implements Tool {
 			'release_url'       => $release['url'] ?? null,
 			'release_notes'     => null === $release ? null : mb_substr( wp_strip_all_tags( $release['notes'] ), 0, 2000 ),
 			'install_from'      => admin_url( 'plugins.php' ),
+			'last_check'        => GitHubUpdater::last_check(),
 		);
 	}
 }

@@ -2,6 +2,11 @@
 
 Format: user-facing releases first (newest on top), then the dated development history. Versions follow semantic versioning; tags `vX.Y.Z` publish a GitHub Release that installed sites receive through the built-in updater.
 
+## Unreleased
+
+- Fixed: updates were not offered while GitHub's API refused this server (its anonymous limit of 60 requests an hour is per IP address, which shared hosts share between many sites). The updater now reads the latest release from GitHub's release page instead; the download is still checked against its published SHA-256.
+- Added: `kuduy-check-update` shows the last check (when, the API's answer, where the release came from, and why it failed).
+
 ## 1.7.1 — 2026-11-21
 
 - Fixed: `kuduy-post-delete` no longer deletes trashed WooCommerce products, orders or coupons with plain WordPress; it points to the WooCommerce tools, which use WooCommerce's own delete.

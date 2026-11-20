@@ -194,6 +194,7 @@ final class GitHubUpdater {
 		);
 		$code     = is_wp_error( $response ) ? 0 : (int) wp_remote_retrieve_response_code( $response );
 		$fetched  = time();
+		$source   = 'api';
 
 		if ( 304 === $code ) {
 			// Unchanged: keep the cached release.
@@ -210,8 +211,31 @@ final class GitHubUpdater {
 			}
 			$etag = (string) wp_remote_retrieve_header( $response, 'etag' );
 		} else {
-			// GitHub unreachable or rate-limited: keep what we had, try again in an hour.
-			$fetched = time() - self::TTL + self::RETRY;
+			// The API refused or failed. Its anonymous limit (60 requests an hour) is per IP address, which shared
+			// hosts share between many sites, so "rate limited" is common there (found 2026-11-21: 1.7.1 not offered
+			// on the owner's Hostinger site). Ask the release page instead (stable channel; not under that limit).
+			$web = $beta ? null : self::from_web();
+			if ( null !== $web ) {
+				$release = $web;
+				$etag    = '';
+				$source  = 'release page';
+			} else {
+				$source = 'none';
+				// Keep what we had, try again in an hour.
+				$fetched = time() - self::TTL + self::RETRY;
+			}
+		}//end if
+
+		$status = array(
+			'checked' => time(),
+			'http'    => $code,
+			'source'  => $source,
+		);
+		if ( 0 === $code || $code >= 400 ) {
+			$reset            = is_wp_error( $response ) ? '' : (string) wp_remote_retrieve_header( $response, 'x-ratelimit-reset' );
+			$status['reason'] = is_wp_error( $response )
+				? 'GitHub could not be reached: ' . wp_strip_all_tags( $response->get_error_message() )
+				: 'GitHub API answered ' . $code . ( '0' === (string) wp_remote_retrieve_header( $response, 'x-ratelimit-remaining' ) ? ' (hourly limit for this server\'s IP address reached' . ( '' !== $reset ? ', resets ' . gmdate( 'H:i', (int) $reset ) . ' UTC' : '' ) . ')' : '' );
 		}
 
 		set_site_transient(
@@ -221,10 +245,57 @@ final class GitHubUpdater {
 				'etag'    => $etag,
 				'release' => $release,
 				'fetched' => $fetched,
+				'status'  => $status,
 			),
 			7 * DAY_IN_SECONDS
 		);
 		return $release;
+	}
+
+	/**
+	 * The last check: when, the HTTP status of the API, where the release came from, and why it failed (if it did).
+	 *
+	 * @return array<string, mixed>|null
+	 */
+	public static function last_check(): ?array {
+		$cache = get_site_transient( self::CACHE );
+		return is_array( $cache ) && is_array( $cache['status'] ?? null ) ? $cache['status'] : null;
+	}
+
+	/**
+	 * Latest stable release from github.com's release page (no API): /releases/latest redirects to the tag of the
+	 * latest release that is neither a draft nor a pre-release; both assets must exist. The ZIP is still checked
+	 * against its published SHA-256 before installing (download()).
+	 *
+	 * @return array{version:string, package:string, checksum:string, notes:string, url:string, published:string}|null
+	 */
+	private static function from_web(): ?array {
+		$args = array(
+			'timeout'     => 10,
+			'redirection' => 0,
+			'headers'     => array( 'User-Agent' => self::user_agent() ),
+		);
+		$page = wp_safe_remote_head( 'https://github.com/' . self::REPO . '/releases/latest', $args );
+		$to   = is_wp_error( $page ) ? '' : (string) wp_remote_retrieve_header( $page, 'location' );
+		if ( ! preg_match( '#/' . preg_quote( self::REPO, '#' ) . '/releases/tag/(v?(\d+\.\d+\.\d+))$#', $to, $m ) ) {
+			return null;
+		}
+		$base = 'https://github.com/' . self::REPO . '/releases/download/' . $m[1] . '/';
+		foreach ( array( self::ZIP, self::ZIP . '.sha256' ) as $asset ) {
+			$head = wp_safe_remote_head( $base . $asset, $args );
+			$code = is_wp_error( $head ) ? 0 : (int) wp_remote_retrieve_response_code( $head );
+			if ( $code < 200 || $code >= 400 ) {
+				return null;
+			}
+		}
+		return array(
+			'version'   => $m[2],
+			'package'   => $base . self::ZIP,
+			'checksum'  => $base . self::ZIP . '.sha256',
+			'notes'     => '',
+			'url'       => 'https://github.com/' . self::REPO . '/releases/tag/' . $m[1],
+			'published' => '',
+		);
 	}
 
 	/**

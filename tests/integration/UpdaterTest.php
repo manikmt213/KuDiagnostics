@@ -163,6 +163,52 @@ final class UpdaterTest extends TestCase {
 		$this->assertStringStartsWith( 'KUDUY-MCP/', $github[0][1]['headers']['User-Agent'] ?? '' );
 	}
 
+	/**
+	 * The API's hourly limit per IP address is reached (common on shared hosting): the release page gives the
+	 * latest release instead, and the last check says why (found 2026-11-21 on the owner's Hostinger site).
+	 */
+	public function test_rate_limited_api_falls_back_to_the_release_page(): void {
+		$this->routes = array_merge(
+			array(
+				'api.github.com/repos/manikmt213/KuDiagnostics/releases/latest' => array(
+					403,
+					'{"message":"API rate limit exceeded"}',
+					array(
+						'x-ratelimit-remaining' => '0',
+						'x-ratelimit-reset'     => '1795200000',
+					),
+				),
+				'github.com/manikmt213/KuDiagnostics/releases/latest' => array( 302, '', array( 'location' => 'https://github.com/manikmt213/KuDiagnostics/releases/tag/v9.9.9' ) ),
+				self::DL . 'v9.9.9/' => array( 302, '', array( 'location' => 'https://objects.githubusercontent.com/x' ) ),
+			),
+			$this->routes
+		);
+		$update       = $this->offered();
+		$this->assertNotNull( $update );
+		$this->assertSame( '9.9.9', $update->new_version );
+		$this->assertSame( self::DL . 'v9.9.9/kuduy-mcp.zip', $update->package );
+		$check = GitHubUpdater::last_check();
+		$this->assertSame( 'release page', $check['source'] ?? null );
+		$this->assertSame( 403, $check['http'] ?? null );
+		$this->assertStringContainsString( 'hourly limit', (string) ( $check['reason'] ?? '' ) );
+		$head = array_values( array_filter( $this->seen, static fn( $r ) => str_ends_with( $r[0], '/releases/latest' ) && ! str_contains( $r[0], 'api.github.com' ) ) );
+		$this->assertSame( 0, $head[0][1]['redirection'] ?? null, 'The redirect is read, not followed.' );
+	}
+
+	public function test_rate_limited_api_and_no_release_page_offers_nothing(): void {
+		$this->routes = array_merge(
+			array(
+				'api.github.com/repos/manikmt213/KuDiagnostics/releases/latest' => array( 403, '{}', array( 'x-ratelimit-remaining' => '0' ) ),
+				'github.com/manikmt213/KuDiagnostics/releases/latest' => array( 302, '', array( 'location' => 'https://github.com/manikmt213/KuDiagnostics/releases/tag/v9.9.9' ) ),
+				self::DL . 'v9.9.9/kuduy-mcp.zip.sha256' => array( 404, '' ),
+				self::DL . 'v9.9.9/kuduy-mcp.zip'        => array( 302, '' ),
+			),
+			$this->routes
+		);
+		$this->assertNull( $this->offered(), 'Without its checksum file a release is not offered.' );
+		$this->assertSame( 'none', GitHubUpdater::last_check()['source'] ?? null );
+	}
+
 	public function test_current_version_or_missing_checksum_is_not_offered(): void {
 		$this->latest_is( self::release( 'v' . Plugin::VERSION ) );
 		$this->assertNull( $this->offered(), 'same version' );
