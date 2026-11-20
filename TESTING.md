@@ -616,10 +616,10 @@ Round 2026-11-20: bare suites 305 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1 
 | ME5 | Context: conflicts for an unknown integration and an inactive WooCommerce; count by kind | I — `MemoryTest` |
 | ME6 | Export and import round trip (editors cannot import); bulk delete needs confirm and an admin, undo puts the rows back | I — `MemoryTest` |
 | ME7 | The audit row of a refused save holds no secret | I — `MemoryTest` |
-| DS2 | Design scan: tokens with sources, Customizer background, theme palette, Elementor Kit colors, summary | I — `DesignScanTest` |
+| DS2 | Design scan: tokens with sources, Customizer background, exactly the theme (and user) palette colors, Elementor Kit colors, summary | I — `DesignScanTest` (also run with Astra, Kadence, Blocksy, GeneratePress, OceanWP, Ollie, Spectra One) |
 | DS3 | Summary saved as a design memory; subscribers refused | I — `DesignScanTest` |
 
-Round 2026-11-20: bare suites 299 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1 (report checked: ME1–ME7, DS2–DS3 and the lifecycle tests — table created, upgrade from an older schema version, dropped on uninstall — all ran); `check:release` with 6 tables; real-HTTP smoke 26/26; PHPCS and PHPStan clean. ME7 was written after review found that a refused save would have put the secret into the audit row (the redactor masks by field name, and `body` is not one); memory tools now mask secret-bearing text in their audit arguments.
+Round 2026-11-20: bare suites 299 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1 (report checked: ME1–ME7, DS2–DS3 and the lifecycle tests — table created, upgrade from an older schema version, dropped on uninstall — all ran); `check:release` with 6 tables; real-HTTP smoke 26/26; PHPCS and PHPStan clean. ME7 was written after review found that a refused save would have put the secret into the audit row (the redactor masks by field name, and `body` is not one); memory tools now mask secret-bearing text in their audit arguments. **CI on the 1.6.0 commit (2026-11-20)** failed DS2 in the OceanWP row: the test asked `wp_get_global_settings()` for the path color.palette.theme, which a classic theme without a palette does not have, and WordPress then returns all settings instead of nothing, so the test expected theme colors the scan rightly did not report. The test now reads the full settings and checks the count exactly; DS2 green on all seven theme rows locally before the push. The scan itself was correct.
 
 ## Phase F2 — Elementor add-on extras (2026-11-20)
 

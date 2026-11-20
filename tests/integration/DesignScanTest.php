@@ -37,9 +37,12 @@ final class DesignScanTest extends TestCase {
 		}
 		$by_name = array_column( $scan['colors'], 'value', 'name' );
 		$this->assertSame( '#f5f5f0', $by_name['background (Customizer)'] ?? null );
-		if ( function_exists( 'wp_get_global_settings' ) && ! empty( wp_get_global_settings( array( 'color', 'palette', 'theme' ) ) ) ) {
-			$this->assertNotEmpty( array_filter( $scan['colors'], static fn( array $c ): bool => str_starts_with( (string) $c['source'], 'theme.json' ) ), 'The theme palette is read.' );
-		}
+		// Read the full settings: asked for a path that does not exist (a classic theme without a palette, e.g. OceanWP),
+		// wp_get_global_settings() returns all settings instead of nothing (found on CI with OceanWP 4.2.8).
+		$settings      = function_exists( 'wp_get_global_settings' ) ? (array) wp_get_global_settings() : array();
+		$theme_palette = array_merge( (array) ( $settings['color']['palette']['theme'] ?? array() ), (array) ( $settings['color']['palette']['custom'] ?? array() ) );
+		$from_theme    = array_filter( $scan['colors'], static fn( array $c ): bool => str_starts_with( (string) $c['source'], 'theme.json' ) );
+		$this->assertSame( count( $theme_palette ), count( $from_theme ), 'Every theme palette color is read, and none is invented. Scan sources: ' . wp_json_encode( array_count_values( array_column( $scan['colors'], 'source' ) ) ) );
 		if ( did_action( 'elementor/loaded' ) && (int) \Elementor\Plugin::$instance->kits_manager->get_active_id() > 0 ) {
 			$this->assertContains( 'Elementor Kit', $scan['sources'] );
 			$this->assertNotEmpty( array_filter( $scan['colors'], static fn( array $c ): bool => str_starts_with( (string) $c['source'], 'Elementor Kit' ) ) );
