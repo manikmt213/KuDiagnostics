@@ -19,7 +19,7 @@ final class IntegrationCatalog {
 	/**
 	 * Categories, in display order.
 	 */
-	public const CATEGORIES = array( 'builder', 'theme', 'blocks', 'store', 'forms', 'fields', 'addon', 'dynamic', 'code', 'seo', 'translation', 'cache' );
+	public const CATEGORIES = array( 'builder', 'theme', 'blocks', 'store', 'forms', 'fields', 'addon', 'dynamic', 'code', 'seo', 'translation', 'cache', 'lms' );
 
 	/**
 	 * Support classes.
@@ -45,7 +45,8 @@ final class IntegrationCatalog {
 		array( 'divi-builder', 'Divi Builder (plugin)', 'builder', 'plugin', array( 'divi-builder' ), 'partial', array( 'kuduy-divi-' ), 'paid', 'L', 'Same read-only tools as the Divi theme (checked on the Divi 5.19.0 theme; the plugin itself not yet).' ),
 		array( 'breakdance', 'Breakdance', 'builder', 'plugin', array( 'breakdance' ), 'partial', array( 'kuduy-breakdance-' ), 'paid', 'L', 'Breakdance 3: pages are read and edited through the abilities Breakdance itself registers (verified live on 3.0.0-beta.4, 2026-11-15). Site-wide settings run in two steps with a confirmation and an options snapshot for undo (verified live 2026-11-18).' ),
 		array( 'etch', 'Etch', 'builder', 'plugin', array( 'etch' ), 'partial', array( 'kuduy-etch-', 'kuduy-block-edit' ), 'paid', 'L', 'Etch pages (WordPress blocks) are listed, read and changed with kuduy-block-edit. Tested against a stand-in, not against Etch itself (its block names are unverified).' ),
-		array( 'mosaic', 'Mosaic', 'builder', 'plugin', array( 'mosaic', 'builder-mosaic' ), 'detection', array(), 'paid', 'L', 'Builder Mosaic 3.6.2 is a Themify Builder module (tile layouts from posts, products, galleries, RSS); detected only. Deeper support is planned for the next round.' ),
+		array( 'mosaic', 'Mosaic', 'builder', 'plugin', array( 'mosaic', 'builder-mosaic' ), 'partial', array( 'kuduy-mosaic-', 'kuduy-themify-builder-' ), 'paid', 'R', 'Builder Mosaic 3.6.2 is a Themify Builder module (tile layouts from posts, products, galleries, RSS). Its sources and saved presets are listed, and Mosaic modules on a page are read and changed through the Themify Builder tools with undo; the source is checked against what Mosaic offers on the site. Built from the source read on the owner\'s site and tested against a stand-in; needs Themify Builder.' ),
+		array( 'themify-builder', 'Themify Builder', 'builder', 'plugin', array( 'themify-builder' ), 'partial', array( 'kuduy-themify-builder-' ), 'free', 'R', 'Layouts are read as a tree (rows, columns, sub-rows, modules) and one module\'s settings at a time are changed through Themify Builder\'s own save (escaping, revision, static content), with undo (tested with 7.8.5). Not yet: adding, moving or removing rows and modules, styling.' ),
 
 		array( 'ollie', 'Ollie', 'theme', 'theme', array( 'ollie' ), 'full', array( 'kuduy-site-template', 'kuduy-global-styles-', 'kuduy-nav-menu', 'kuduy-theme-facts' ), 'free', '', 'Block theme: templates, Global Styles and navigation through the Site Editor tools (tested with 1.6.6).' ),
 		array( 'spectra-one', 'Spectra One', 'theme', 'theme', array( 'spectra-one' ), 'full', array( 'kuduy-site-template', 'kuduy-global-styles-', 'kuduy-nav-menu', 'kuduy-theme-facts' ), 'free', '', 'Block theme: templates, Global Styles and navigation through the Site Editor tools (tested with 1.2.6).' ),
@@ -110,6 +111,7 @@ final class IntegrationCatalog {
 
 		array( 'dynamic-shortcodes', 'Dynamic Shortcodes', 'dynamic', 'plugin', array( 'dynamic-shortcodes' ), 'partial', array( 'kuduy-dynamic-shortcodes-' ), 'paid', '', 'Shortcode types listed (privileged ones marked), text checked with its own strict parser (never evaluated), Power Shortcodes read with credentials masked. Built from the source of 1.9.4 and tested against a stand-in.' ),
 		array( 'code-snippets', 'Code Snippets', 'code', 'plugin', array( 'code-snippets', 'code-snippets-pro' ), 'full', array( 'kuduy-code-snippets-' ), 'free', 'G', 'Snippets listed, read with a syntax check and risky-call report, HTML/CSS/JS snippets saved with a confirmation step, PHP snippets only where the site allows code execution (kuduy:code), switched off and trashed with undo (tested with 4.1.0); hard-coded credentials in code are shown masked and masked code is never saved back. Code Snippets Pro 3.10.2 has the same functions (read on the owner\'s site); its condition snippets are listed and read. Not yet: import/export, saving conditions, cloud.' ),
+		array( 'wpcode', 'WPCode', 'code', 'plugin', array( 'insert-headers-and-footers', 'wpcode-premium' ), 'full', array( 'kuduy-wpcode-' ), 'free', 'R', 'Snippets listed and read with a syntax check and risky-call report; HTML, CSS, JS, text and blocks snippets saved with a confirmation step, PHP and universal snippets only where the site allows code execution (kuduy:code); switched off with undo; site-wide header, body and footer code read and changed with a confirmation and undo. Writes go through WPCode\'s own abilities, which exist only when the site owner switches on its "AI & Automation Access" setting (tested with WPCode Lite 2.4.2). Credentials in code are masked. Not offered: WPCode Library installs (code from WPCode\'s cloud).' ),
 
 		array( 'rank-math', 'Rank Math SEO', 'seo', 'plugin', array( 'seo-by-rank-math' ), 'full', array( 'kuduy-seo-', 'kuduy-rank-math-' ), 'free', 'G', 'Post and term meta, redirects, schema, sitemap status, title templates (read). Audits for missing data, noindex and duplicate titles/descriptions. Not yet: heading and link audits, settings changes.' ),
 		array( 'yoast', 'Yoast SEO', 'seo', 'plugin', array( 'wordpress-seo', 'wordpress-seo-premium' ), 'full', array( 'kuduy-seo-status', 'kuduy-seo-get', 'kuduy-seo-update', 'kuduy-seo-verify', 'kuduy-seo-audit', 'kuduy-seo-sitemap', 'kuduy-yoast-' ), 'free', 'G', 'Post and term meta, sitemap status, title templates and archive settings (read). Audits for missing data, noindex and duplicates. Premium: redirects created, changed and deleted with undo through its redirect manager and validator (read on 28.8; tested against a stand-in). Not yet: schema type, settings changes, related keyphrases (Premium).' ),
@@ -125,6 +127,8 @@ final class IntegrationCatalog {
 		array( 'wp-super-cache', 'WP Super Cache', 'cache', 'plugin', array( 'wp-super-cache' ), 'full', array( 'kuduy-cache-' ), 'free', '', '' ),
 		array( 'wp-fastest-cache', 'WP Fastest Cache', 'cache', 'plugin', array( 'wp-fastest-cache' ), 'full', array( 'kuduy-cache-' ), 'free', '', '' ),
 		array( 'wp-rocket', 'WP Rocket', 'cache', 'plugin', array( 'wp-rocket' ), 'full', array( 'kuduy-cache-', 'kuduy-wp-rocket-' ), 'paid', '', 'Purge (site, post, URL) with the functions read on 3.24; settings read and changed with undo, and cache state, through WP Rocket\'s own abilities. Tested against a stand-in, not against the plugin itself.' ),
+		array( 'masteriyo', 'Masteriyo LMS', 'lms', 'plugin', array( 'learning-management-system', 'learning-management-system-pro' ), 'partial', array( 'kuduy-masteriyo-' ), 'free', 'R', 'Through Masteriyo\'s own abilities (3.5+), checked by its own permissions: everything read (courses, curriculum, quizzes, enrollments, progress, orders, reviews); courses, sections, lessons, quizzes, questions, categories, tags, difficulties and enrollments created and changed, lessons and quizzes cloned, courses and lessons trashed and restored, with undo for changes (tested with 3.5.2). Not run: orders, users, settings, builder saves, reviews, Q&A, progress, permanent deletes.' ),
+		array( 'tutor-lms', 'Tutor LMS', 'lms', 'plugin', array( 'tutor', 'tutor-pro' ), 'partial', array( 'kuduy-tutor-' ), 'free', 'R', 'Courses, curriculum (topics, lessons, quizzes, assignments), students with progress and quiz attempts read through Tutor\'s own models; users enrolled and enrollments switched between completed, pending and cancel through its EnrollmentModel (undo for status changes); topics and lessons added as Tutor\'s course builder adds them (tested with 4.2.1). Courses themselves are created and edited with the post tools. Not yet: quizzes and questions, assignments, Tutor Pro features.' ),
 	);
 
 	/**
@@ -134,6 +138,7 @@ final class IntegrationCatalog {
 	 */
 	private const REQUIRES = array(
 		'elementor-pro'              => array( 'elementor' ),
+		'mosaic'                     => array( 'themify-builder' ),
 		'ultimate-addons-elementor'  => array( 'elementor' ),
 		'essential-addons-elementor' => array( 'elementor' ),
 		'premium-addons-elementor'   => array( 'elementor' ),

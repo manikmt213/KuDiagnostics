@@ -27,7 +27,8 @@ One row per integration in the upgrade brief (58), plus what KuDiagnostics suppo
 | Divi 5 | paid (theme; 5.19.0 on the owner's test site) | **Partial** (verified live on 5.19.0 read, 2026-11-16; BK4 2026-11-18 against a stand-in) | `kuduy-divi-pages`, `-get`; pages changed block by block with `kuduy-block-edit` (merge for nested settings). Divi 4 pages recognised and left alone | L (verify edit live) |
 | Breakdance | paid (3.0.0-beta.4 on the owner's test site) | **Partial** (verified live on 3.0.0-beta.4, 2026-11-15; BA5 2026-11-18 against a stand-in) | Breakdance's own abilities with undo; site-wide settings with a confirmation and an options snapshot | L (verify site tool live) |
 | Etch | paid | **Partial** (BK2–BK4 against a stand-in) | `kuduy-etch-pages`, `-get`; changed with `kuduy-block-edit`. Not verified against Etch (block names unverified) | L (verify) |
-| Mosaic | unknown source | None | — | L |
+| Mosaic | paid (3.6.2 on the owner's test site) | **Partial** (TB3 against a stand-in, 2026-11-20) | `kuduy-mosaic-sources`; Mosaic modules read and changed through the Themify Builder tools with the source checked. Needs Themify Builder | R |
+| Themify Builder | free 7.8.5 | **Partial** (TB1, TB2, 2026-11-20) | `kuduy-themify-builder-get`, `-module-update` with undo. Missing: adding, moving, removing elements; styling | R |
 
 ## B. Themes
 
@@ -107,6 +108,10 @@ Elementor add-on widgets need no per-add-on code: the generic Elementor tools di
 |---|---|---|---|---|
 | Dynamic Shortcodes | paid | None | — | L |
 | Code Snippets | free 4.1.0 | **Full** (CS1–CS3, 2026-11-17) | List, read with checks, HTML/CSS/JS saves with confirmation, PHP saves only with code execution allowed, switch off, trash. Missing: import/export, Pro conditions | — |
+| WPCode | free 2.4.2 | **Full** (WC1–WC5, 2026-11-20) | Through its own abilities (its "AI & Automation Access" setting must be on): list, read with checks and masking, HTML/CSS/JS/text/blocks saves with confirmation, PHP only with code execution allowed, switch off, header/footer code, undo. Not offered: Library installs | R |
+| Masteriyo LMS | free 3.5.2 | **Partial** (MY1–MY4, 2026-11-20) | Its own abilities: all reads; allowlisted writes (course content, enrollments, trash/restore) with undo. Not run: orders, users, settings, builder saves, reviews, Q&A, progress | R |
+| Tutor LMS | free 4.2.1 | **Partial** (TU1–TU4, 2026-11-20) | Courses, curriculum, students, quiz attempts; enroll and enrollment status (admins); topics and lessons. Missing: quizzes, assignments, Pro | R |
+| LearnWorlds | hosted (SaaS) | None | Open decision D66 (would store a third-party secret; API docs not read) | — |
 | Rank Math | free 1.0.281 | **Full** | Post and term meta, redirects, schema, sitemap status, title templates (read), audits incl. noindex and duplicates. Missing: settings changes, heading/link audits | G |
 | Yoast SEO | free 28.8 | **Full** (meta) | Post and term meta, sitemap status, title templates and archive settings (read), audits. Missing: schema type, settings changes, redirects (Premium) | G, L |
 | All in One SEO | free 5.0.5 | **Full** (meta) | Post meta, audits. Term SEO is Pro only | L (Pro) |

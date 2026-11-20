@@ -100,6 +100,16 @@ jobs:
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'dce,shop-kit', label: '+ Dynamic Content for Elementor, Kadence Shop Kit (stand-ins)' }
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'wpforms-lite@2.0.4', fakes: 'wpforms-pro', label: '+ WPForms Pro entries (stand-in)' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'wpforms-lite@2.0.4', fakes: 'wpforms-pro', label: '+ WPForms Pro entries (stand-in)' }
+          # Phase R: WPCode (its abilities, write setting switched on by the test script), Masteriyo, Tutor LMS,
+          # Themify Builder with a Builder Mosaic stand-in (paid add-on).
+          - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'insert-headers-and-footers@2.4.2', label: '+ WPCode' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'insert-headers-and-footers@2.4.2', label: '+ WPCode' }
+          - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'learning-management-system@3.5.2', label: '+ Masteriyo' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'learning-management-system@3.5.2', label: '+ Masteriyo' }
+          - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'tutor@4.2.1', label: '+ Tutor LMS' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'tutor@4.2.1', label: '+ Tutor LMS' }
+          - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'themify-builder@7.8.5', fakes: 'mosaic', label: '+ Themify Builder, Mosaic (stand-in)' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'themify-builder@7.8.5', fakes: 'mosaic', label: '+ Themify Builder, Mosaic (stand-in)' }
           # Cache plugins (Phase 7, D19): LiteSpeed Cache purges through its own actions.
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'litespeed-cache@7.9.3', label: '+ cache' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'litespeed-cache@7.9.3', label: '+ cache' }

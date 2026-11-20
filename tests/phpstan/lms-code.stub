@@ -1,0 +1,124 @@
+<?php
+/**
+ * PHPStan declarations of the WPCode, Tutor LMS, Themify Builder and Builder Mosaic API that KuDiagnostics calls
+ * (phase R; signatures from WPCode 2.4.2, Tutor LMS 4.2.1, Themify Builder 7.8.5, Builder Mosaic 3.6.2).
+ */
+
+namespace {
+	const WPCODE_VERSION    = '2.4.2';
+	const MASTERIYO_VERSION = '3.5.2';
+	const TUTOR_VERSION     = '4.2.1';
+
+	class WPCode_Snippet {
+		/** @param int|WP_Post|array<string, mixed> $snippet */
+		public function __construct( $snippet ) {}
+		/** @return int */
+		public function get_id() {}
+		/** @return string */
+		public function get_title() {}
+		/** @return string */
+		public function get_code() {}
+		/** @return string */
+		public function get_code_type() {}
+		/** @return bool */
+		public function is_active() {}
+		/** @return int */
+		public function get_auto_insert() {}
+		/** @return string */
+		public function get_location() {}
+		/** @return int */
+		public function get_auto_insert_number() {}
+		/** @return string */
+		public function get_location_extra() {}
+		/** @return int */
+		public function get_priority() {}
+		/** @return array<int, string> */
+		public function get_tags() {}
+		/** @return string */
+		public function get_note() {}
+		/** @return array<string, mixed>|false */
+		public function get_last_error() {}
+		/** @return int|false */
+		public function save() {}
+	}
+
+	class WPCode_Snippet_Cache {
+		/** @return void */
+		public function cache_all_loaded_snippets() {}
+	}
+
+	class WPCode {
+		/** @var WPCode_Snippet_Cache */
+		public $cache;
+	}
+
+	/** @return WPCode */
+	function wpcode() {}
+
+	class Tutor_Utils {
+		/** @return \WP_Query */
+		public function get_topics( int $course_id = 0, array $custom_args = array() ) {}
+		/** @return \WP_Query */
+		public function get_course_contents_by_topic( int $topics_id = 0, int $limit = 10, array $custom_args = array() ) {}
+		/** @return int|float */
+		public function get_course_completed_percent( int $course_id = 0, int $user_id = 0, bool $get_stats = false ) {}
+		/** @return bool */
+		public function can_user_manage( string $content, int $object_id, int $user_id = 0, bool $allow_current_admin = true ) {}
+		/** @return int */
+		public function get_next_topic_order_id( int $course_id, ?int $content_id = null ) {}
+		/** @return int */
+		public function get_next_course_content_order_id( int $topic_id, ?int $content_id = null ) {}
+		/** @return string */
+		public function price_type( int $course_id = 0 ) {}
+		/** @return int */
+		public function count_enrolled_users_by_course( int $course_id = 0 ) {}
+	}
+
+	/** @return Tutor_Utils */
+	function tutor_utils() {}
+
+	/** @return object{course_post_type: string, lesson_post_type: string} */
+	function tutor() {}
+
+	class ThemifyBuilder_Data_Manager {
+		const META_KEY = '_themify_builder_settings_json';
+		/** @return array<int, mixed>|string */
+		public static function get_data( int $post_id, bool $plain_return = false ) {}
+		/**
+		 * @param array<int, mixed> $builder_data
+		 * @param array<string, mixed> $save_options
+		 * @return array<string, mixed>
+		 */
+		public static function save_data( $builder_data, int $post_id, string $action = 'frontend', ?string $custom_css = null, ?string $custom_js = null, array $save_options = array() ): array {}
+	}
+
+	class Builder_Mosaic {}
+
+	class Builder_Mosaic_Provider {
+		/** @return array<string, string>|null */
+		public static function get_providers( string $id = 'all' ) {}
+	}
+}
+
+namespace Tutor\Models {
+	class EnrollmentModel {
+		const STATUS_COMPLETED = 'completed';
+		const STATUS_PENDING   = 'pending';
+		const STATUS_CANCEL    = 'cancel';
+		const POST_TYPE        = 'tutor_enrolled';
+		/** @return int */
+		public static function do_enroll( int $course_id = 0, int $order_id = 0, int $user_id = 0, bool $fire_hook = true ) {}
+		/** @return \WP_Post|false|null */
+		public static function is_enrolled( int $course_id = 0, int $user_id = 0, bool $is_complete = true ) {}
+		/** @param array<int, int> $enrollment_ids */
+		public static function update_enrollments( string $status, array $enrollment_ids, bool $trigger_hook = true ): bool {}
+	}
+
+	class QuizModel {
+		/**
+		 * @param array<int, int> $course_ids
+		 * @return array<int, object>|int|string|null
+		 */
+		public static function get_quiz_attempts_by_course_ids( int $start = 0, int $limit = 10, array $course_ids = array(), string $search_filter = '', string $course_filter = '', string $date_filter = '', string $order_filter = '', ?int $user_id = null, bool $count_only = false, bool $all_attempt = false ) {}
+	}
+}

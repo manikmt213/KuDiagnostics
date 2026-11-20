@@ -91,6 +91,14 @@ function setup(slug) {
       code: "<?php require '/wordpress/wp-load.php'; $m = new PLL_Model( new WP_Syntex\\Polylang\\Options\\Options() ); foreach ( array( 'en_US', 'de_DE' ) as $l ) { $m->languages->add( array( 'locale' => $l ) ); }",
     });
   }
+  if (slug === 'insert-headers-and-footers') {
+    // WPCode registers its write abilities only with "AI & Automation Access" on (WPCode > Settings); switch it on as
+    // that screen does, through WPCode's settings API.
+    steps.push({
+      step: 'runPHP',
+      code: "<?php require '/wordpress/wp-load.php'; wpcode()->settings->update_option( 'abilities_write_enabled', true );",
+    });
+  }
   if (slug === 'woocommerce') {
     // KUDUY_HPOS=on|off picks the order storage (fresh shop, no orders yet, so WooCommerce accepts the switch).
     // kuduy_test_hpos tells the tests which mode was asked for, so a silent fallback fails them.

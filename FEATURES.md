@@ -162,7 +162,8 @@ Format and APIs read from an installed Avada 7.16.4 / Avada Builder 3.16.4 / Ava
 | Divi 5: list pages and read their block structure and module text; Divi 4 pages recognised (`kuduy-divi-pages`, `-get`) | Tested (BK1, BK3 with markup saved by Divi 5.19.0; read live on Divi 5.19.0, 2026-11-16) |
 | Etch: list pages and read their block structure (`kuduy-etch-pages`, `-get`) | Implemented — stand-in only (BK2, BK3) |
 | Divi 5 and Etch: change pages | Not started — neither builder documents how its blocks may be changed outside its editor |
-| Mosaic, Voxel, MyListing | Not started — no developer documentation found; waiting for the products on the owner's test site to read their code |
+| Mosaic | See phase R (Themify Builder module; D65) |
+| Voxel, MyListing | Not started — no developer documentation found; waiting for the products on the owner's test site to read their code |
 
 ## Breakdance 3 and Oxygen 6 — added 2026-11-15 (D40)
 
@@ -270,6 +271,14 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | JetEngine features (`kuduy-jetengine-*`) | Tested 2026-11-18 against a stand-in (JE1; registry of 3.8.15.4) |
 | Dynamic Content for Elementor features and PDF templates (`kuduy-dce-*`) | Tested 2026-11-18 against a stand-in (DC1; source of 3.4.20) |
 | Kadence Shop Kit module switches, read only (`kuduy-shop-kit-modules`) | Tested 2026-11-18 against a stand-in (SK1; source of 3.0.10) |
+| WPCode snippets: list, read with check and masking, save HTML/CSS/JS/text/blocks with confirmation, switch off, undo (`kuduy-wpcode-*`, D62) | Tested 2026-11-20 (WC1–WC5; WPCode Lite 2.4.2 on WP 7.1.5 + 6.9.12) |
+| WPCode PHP and universal snippets (`kuduy-wpcode-snippet-php-save`, D4) | Implemented — WC3 tests the guard (refused by the normal save, absent without code execution); saving PHP itself is not run in CI |
+| WPCode site-wide header, body and footer code: read masked, append or replace with confirmation, undo (`kuduy-wpcode-headers-footers*`) | Tested 2026-11-20 (WC4) |
+| Masteriyo through its own abilities: list, read, allowlisted writes with undo (`kuduy-masteriyo-*`, D63) | Tested 2026-11-20 (MY1–MY4; Masteriyo 3.5.2 on WP 7.1.5 + 6.9.12) |
+| Tutor LMS courses, curriculum, students, quiz attempts; enroll, enrollment status with undo, topics and lessons (`kuduy-tutor-*`, D64) | Tested 2026-11-20 (TU1–TU4; Tutor LMS 4.2.1 on WP 7.1.5 + 6.9.12) |
+| Themify Builder layouts: tree, one element, module settings with undo (`kuduy-themify-builder-*`, D65) | Tested 2026-11-20 (TB1, TB2; Themify Builder 7.8.5 on WP 7.1.5 + 6.9.12) |
+| Builder Mosaic sources and presets; Mosaic modules changed with the source checked (`kuduy-mosaic-sources`, D65) | Tested 2026-11-20 against a stand-in (TB3; source of 3.6.2) |
+| LearnWorlds | Blocked — D66: hosted service needing a stored client secret; official API docs not read (UNVERIFIED); owner to decide |
 | Catalogue rows for GenerateBlocks Pro, Spectra Pro, Kadence Blocks Pro, Oxygen Classic, Mosaic and the Bricks, Divi and WPBakery add-ons | Implemented (detection and what the generic tools cover; `IntegrationsTest`) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |
 | Phase B — forms: Ninja Forms and Formidable Forms adapters (real plugins) | Tested 2026-11-14 in Playground, WP 6.9 + 7.1 (F8, F9: Ninja Forms 3.16.1, Formidable 7.0; `FormsNinjaTest`, `FormsFormidableTest`) |

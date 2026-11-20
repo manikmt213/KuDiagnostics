@@ -591,6 +591,31 @@ Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures o
 
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
+## Phase R — WPCode, Masteriyo, Tutor LMS, Themify Builder, Mosaic (2026-11-20)
+
+Real plugins in Playground (each its own CI row); Builder Mosaic against a stand-in (`tests/integration/fakes/mosaic.php`, from the source read on the owner's site). Tests were written with the code and run after the phase was built.
+
+| ID | What | Type — file |
+|---|---|---|
+| WC1 | WPCode 2.4.2: CSS snippet created (confirmation step), listed, read, changed and undone, switched off and undone, through WPCode's own abilities | I — `WpCodeTest` |
+| WC2 | WPCode: credential in code masked on read; saving masked code refused | I — `WpCodeTest` |
+| WC3 | WPCode: PHP refused by the normal save (new and existing snippet); PHP tool needs `kuduy:code` and exists only with code execution | I — `WpCodeTest` |
+| WC4 | WPCode: header and footer code appended (confirmation), read masked, undone | I — `WpCodeTest` |
+| WC5 | WPCode: an author is refused list and header code | I — `WpCodeTest` |
+| MY1 | Masteriyo 3.5.2: abilities listed with read/write and why not; payment settings update not registered | I — `MasteriyoTest` |
+| MY2 | Masteriyo: course created, read, renamed and undone, trashed and undone; write ability refused by the read tool | I — `MasteriyoTest` |
+| MY3 | Masteriyo: permanent delete, orders, update without id and unknown ability refused before Masteriyo runs | I — `MasteriyoTest` |
+| MY4 | Masteriyo: a subscriber is refused a write | I — `MasteriyoTest` |
+| TU1 | Tutor LMS 4.2.1: topics and a lesson added in Tutor's order; curriculum read back; lesson under a non-topic refused | I — `TutorTest` |
+| TU2 | Tutor: enroll (free course: completed), enrolling again returns the same enrollment, students listed, cancel and undo, enrollment of another course refused | I — `TutorTest` |
+| TU3 | Tutor: course list and quiz attempts | I — `TutorTest` |
+| TU4 | Tutor: an editor who is not the course's instructor is refused the course and enrolling | I — `TutorTest` |
+| TB1 | Themify Builder 7.8.5: layout tree (row, column, modules with preview and Mosaic source) and one element with settings | I — `ThemifyBuilderTest` |
+| TB2 | Themify Builder: module settings set and a key removed through its save, undone; column and unknown element refused | I — `ThemifyBuilderTest` |
+| TB3 | Mosaic (stand-in): sources listed; unavailable source refused, available one saved | I — `ThemifyBuilderTest` |
+
+Round 2026-11-20: bare suites 284 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1; + WPCode 284, 0 (both); + Masteriyo 284, 0 (both); + Tutor LMS 284, 0 (both, after two fixes found by TU2: Tutor's `is_enrolled()` caches a "not enrolled" answer for the request, and Tutor registers no post statuses for enrollments, so WP_Query cannot filter them — enrollments are now read with a prepared SELECT like Tutor's own); + Themify Builder and Mosaic stand-in 284, 0 (both; the first 6.9 attempt failed to download the plugin from wordpress.org and was run again); PHPCS and PHPStan clean; real-HTTP smoke 26/26. Earlier in the round FuzzTest caught two input schemas declared with an object for `properties` (fixed).
+
 ## Phase E — fields
 
 Runs 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36 with the real plugins (wordpress.org ZIPs through `KUDUY_LOCAL_PLUGINS`): ACF 6.8.11 (FE1 + the existing ACF tests: 11, 0 failures), Meta Box 5.15.5 (FE2), Pods 3.3.9.2 (FE3), ACPT Lite 2.1.3 (FE4), ASE 9.3.3 (FE5), ACF + Meta Box (FE6): 0 failures. Found while building: ACF's export drops the post id, so imports without it made a second group with the same key; ACF's getters skip trashed groups; ACF and Pods keep request caches that hide fresh changes; `pods_error()` exits (or sends its own JSON during REST calls) unless its error mode is exception; a partial `save_pod()` crashed PHP; Meta Box values named like secrets are already masked by the global redactor.

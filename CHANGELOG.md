@@ -2,6 +2,17 @@
 
 Format: user-facing releases first (newest on top), then the dated development history. Versions follow semantic versioning; tags `vX.Y.Z` publish a GitHub Release that installed sites receive through the built-in updater.
 
+## Unreleased
+
+Phase R (`docs/plans/phase-r.md`, D62–D66; built from source, tests written with the code and run after the whole phase was built, so the failing-first run was not observed):
+
+- Added: WPCode — `kuduy-wpcode-snippets`, `-snippet-get` (code with credentials masked, syntax check, risky calls), `-snippet-save` (HTML, CSS, JS, text, blocks; confirmation step), `-snippet-php-save` (PHP and universal, only where the site allows code execution), `-snippet-deactivate`, `-headers-footers`, `-headers-footers-save`. Writes run through WPCode's own abilities, which exist only with its "AI & Automation Access" setting on; changes can be undone.
+- Added: Masteriyo LMS — `kuduy-masteriyo-abilities`, `-ability-get`, `-ability-run` through Masteriyo's own abilities; course content and enrollments created and changed, courses and lessons trashed and restored, with undo for changes. Orders, users, settings, builder saves, reviews, Q&A, progress and permanent deletes are not run.
+- Added: Tutor LMS — `kuduy-tutor-courses`, `-course-get` (curriculum), `-students` (with progress), `-quiz-attempts`, `-enroll`, `-enrollment-status` (with undo), `-curriculum-add` (topics and lessons as Tutor's builder adds them).
+- Added: Themify Builder — `kuduy-themify-builder-get` (layout tree, one element), `-module-update` (one module's settings, with undo); Builder Mosaic — `kuduy-mosaic-sources`, Mosaic modules changed with the source checked against what Mosaic offers.
+- Changed: the integration catalogue has an LMS category; WPCode, Masteriyo, Tutor LMS and Themify Builder rows; Mosaic is no longer detection-only.
+- Not built: LearnWorlds (D66, open for the owner: it would store a third-party secret and its API documentation could not be read).
+
 ## 1.4.0 — 2026-11-20
 
 Phase M of the ecosystem plan (`docs/plans/phase-m-contract.md`).

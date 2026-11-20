@@ -32,6 +32,11 @@ use Kuduy\Mcp\Modules\Core\Settings;
 use Kuduy\Mcp\Modules\Code\CodeSnippetSave;
 use Kuduy\Mcp\Modules\Code\CodeSnippets;
 use Kuduy\Mcp\Modules\Code\DynamicShortcodes;
+use Kuduy\Mcp\Modules\Code\WpCode;
+use Kuduy\Mcp\Modules\Code\WpCodeSave;
+use Kuduy\Mcp\Modules\Lms\MasteriyoAbilities;
+use Kuduy\Mcp\Modules\Lms\TutorTools;
+use Kuduy\Mcp\Modules\Themify\ThemifyBuilder;
 use Kuduy\Mcp\Modules\Elementor\DceTools;
 use Kuduy\Mcp\Modules\Woo\ShopKitModules;
 use Kuduy\Mcp\Modules\Core\IntegrationDetail;
@@ -163,6 +168,24 @@ final class ToolRegistry {
 		// Phase L3: Dynamic Shortcodes, read and checked through its own manager (never evaluated).
 		foreach ( array( 'types', 'lint', 'power' ) as $mode ) {
 			$registry->register( new DynamicShortcodes( $mode ) );
+		}
+		// Phase R: WPCode through its own abilities (D62); PHP snippets only under D4.
+		foreach ( array( 'snippets', 'snippet-get', 'snippet-deactivate', 'headers-footers' ) as $mode ) {
+			$registry->register( new WpCode( $mode ) );
+		}
+		foreach ( array( 'snippet-save', 'snippet-php-save', 'headers-footers-save' ) as $mode ) {
+			$registry->register( new WpCodeSave( $mode ) );
+		}
+		// Phase R: Masteriyo through its own abilities (D63), Tutor LMS through its models (D64).
+		foreach ( array( 'abilities', 'ability-get', 'ability-run' ) as $mode ) {
+			$registry->register( new MasteriyoAbilities( $mode ) );
+		}
+		foreach ( array( 'courses', 'course-get', 'students', 'quiz-attempts', 'enroll', 'enrollment-status', 'curriculum-add' ) as $mode ) {
+			$registry->register( new TutorTools( $mode ) );
+		}
+		// Phase R: Themify Builder layouts and Builder Mosaic (D65).
+		foreach ( array( 'get', 'module-update', 'mosaic-sources' ) as $mode ) {
+			$registry->register( new ThemifyBuilder( $mode ) );
 		}
 		$registry->register( new SnapshotList() );
 		$registry->register( new SnapshotRestore() );
