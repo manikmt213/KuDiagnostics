@@ -96,6 +96,16 @@ final class WpCodeTest extends TestCase {
 		$this->assertFalse( $off['active'] );
 		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $off['_snapshot_id'] ) );
 		$this->assertTrue( $this->ok( 'kuduy-wpcode-snippet-get', array( 'id' => $id ) )['active'], 'Undo switches it on again.' );
+
+		$trash = $this->ok( 'kuduy-wpcode-snippet-trash', array( 'id' => $id ) );
+		$this->assertTrue( $trash['trashed'] );
+		$this->assertSame( 'trash', get_post_status( $id ) );
+		$this->assertArrayNotHasKey( $id, array_column( $this->ok( 'kuduy-wpcode-snippets' )['snippets'], 'title', 'id' ) );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $trash['_snapshot_id'] ) );
+		clean_post_cache( $id );
+		$this->assertSame( 'publish', get_post_status( $id ), 'Undo puts the snippet back, active as it was.' );
+		$this->assertEmpty( get_post_meta( $id, '_wp_trash_meta_status', true ) );
+		$this->assertTrue( $this->ok( 'kuduy-wpcode-snippet-get', array( 'id' => $id ) )['active'] );
 		wp_delete_post( $id, true );
 	}
 

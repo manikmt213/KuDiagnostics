@@ -1,6 +1,6 @@
 <?php
 /**
- * Tools: kuduy-wpcode-snippets, -snippet-get, -snippet-save, -snippet-php-save, -snippet-deactivate,
+ * Tools: kuduy-wpcode-snippets, -snippet-get, -snippet-save, -snippet-php-save, -snippet-deactivate, -snippet-trash,
  * -headers-footers, -headers-footers-save.
  *
  * @package Kuduy\Mcp
@@ -64,7 +64,7 @@ class WpCode implements Tool, Snapshottable {
 	/**
 	 * Mode.
 	 *
-	 * @param string $mode snippets | snippet-get | snippet-save | snippet-php-save | snippet-deactivate | headers-footers | headers-footers-save.
+	 * @param string $mode snippets | snippet-get | snippet-save | snippet-php-save | snippet-deactivate | snippet-trash | headers-footers | headers-footers-save.
 	 */
 	public function __construct( private string $mode ) {}
 
@@ -85,6 +85,7 @@ class WpCode implements Tool, Snapshottable {
 			'snippet-save'         => __( 'Save a WPCode snippet (HTML, CSS, JS, text)', 'kuduy-mcp' ),
 			'snippet-php-save'     => __( 'Save a WPCode PHP snippet', 'kuduy-mcp' ),
 			'snippet-deactivate'   => __( 'Switch a WPCode snippet off', 'kuduy-mcp' ),
+			'snippet-trash'        => __( 'Trash a WPCode snippet', 'kuduy-mcp' ),
 			'headers-footers'      => __( 'Read WPCode header and footer code', 'kuduy-mcp' ),
 			default                => __( 'Change WPCode header and footer code', 'kuduy-mcp' ),
 		};
@@ -102,6 +103,7 @@ class WpCode implements Tool, Snapshottable {
 			'snippet-save'         => 'Creates (no id) or changes (id) an HTML, CSS, JavaScript, text or blocks snippet through WPCode\'s own create-snippet / update-snippet abilities: title, code, code_type, active, auto_insert, location (must suit the code type, e.g. site_wide_header, site_wide_footer, before_content), insert_number, location_extra, priority, tags, note. Fields not given stay. WPCode checks the location and its permissions. PHP and universal snippets are refused here (kuduy-wpcode-snippet-php-save). Needs the admin access level; undo with kuduy-snapshot-restore.' . $switch . $two,
 			'snippet-php-save'     => 'Creates (no id), changes or switches on (id) a PHP or universal snippet of WPCode through its own abilities (same fields as kuduy-wpcode-snippet-save, code without the opening <?php). PHP runs on the server with full access: WPCode runs an active snippet once when it is switched on, to test it, and refuses it if it fails. Code with a syntax error is not saved active. Only exists when the site allows code execution (KUDUY_MCP_ALLOW_CODE_EXEC) and needs the code access level; use on development or staging sites. Undo with kuduy-snapshot-restore.' . $switch . $two,
 			'snippet-deactivate'   => 'Switches a WPCode snippet off (any type) through WPCode\'s set-snippet-status ability; its code stays. Undo with kuduy-snapshot-restore switches it on again.' . $switch,
+			'snippet-trash'        => 'Moves a WPCode snippet to WPCode\x27s trash, as WPCode\x27s own Trash action does (it stops running and can be restored in WPCode). Undo with kuduy-snapshot-restore puts it back as it was, active or not.' . $switch,
 			'headers-footers'      => 'Returns WPCode\'s site-wide header, body and footer code (scripts added to every page: analytics, pixels, verification tags), with credentials masked, and whether the theme supports the body section. Needs the admin access level and the right to post unfiltered HTML.',
 			default                => 'Adds to (mode append, the default) or replaces (mode replace) WPCode\'s site-wide header, body and/or footer code through WPCode\'s update-headers-footers ability. This code runs on every page for every visitor. Needs the admin access level and the right to post unfiltered HTML; undo with kuduy-snapshot-restore puts the previous code back.' . $switch . $two,
 		};
@@ -212,7 +214,7 @@ class WpCode implements Tool, Snapshottable {
 			'properties'           => $properties,
 			'additionalProperties' => false,
 		);
-		if ( in_array( $this->mode, array( 'snippet-get', 'snippet-deactivate' ), true ) ) {
+		if ( in_array( $this->mode, array( 'snippet-get', 'snippet-deactivate', 'snippet-trash' ), true ) ) {
 			$schema['required'] = array( 'id' );
 		}
 		return $schema;
@@ -253,7 +255,7 @@ class WpCode implements Tool, Snapshottable {
 		return array(
 			'readOnlyHint'    => false,
 			'destructiveHint' => true,
-			'idempotentHint'  => 'snippet-deactivate' === $this->mode,
+			'idempotentHint'  => in_array( $this->mode, array( 'snippet-deactivate', 'snippet-trash' ), true ),
 			'openWorldHint'   => false,
 		);
 	}
@@ -277,7 +279,7 @@ class WpCode implements Tool, Snapshottable {
 	public function capability( array $input ): string {
 		return match ( $this->mode ) {
 			'headers-footers', 'headers-footers-save' => 'unfiltered_html',
-			'snippet-deactivate'                      => 'wpcode_activate_snippets',
+			'snippet-deactivate', 'snippet-trash'     => 'wpcode_activate_snippets',
 			default                                   => 'wpcode_edit_snippets',
 		};
 	}
@@ -523,7 +525,7 @@ class WpCode implements Tool, Snapshottable {
 				'payload'     => array( 'sections' => self::sections() ),
 			);
 		}
-		if ( ! isset( $input['id'] ) || ! in_array( $this->mode, array( 'snippet-save', 'snippet-php-save', 'snippet-deactivate' ), true ) ) {
+		if ( ! isset( $input['id'] ) || ! in_array( $this->mode, array( 'snippet-save', 'snippet-php-save', 'snippet-deactivate', 'snippet-trash' ), true ) ) {
 			return null;
 		}
 		$post = get_post( (int) $input['id'] );
@@ -587,6 +589,9 @@ class WpCode implements Tool, Snapshottable {
 		foreach ( (array) ( $payload['terms'] ?? array() ) as $taxonomy => $slugs ) {
 			wp_set_object_terms( $id, array_map( 'strval', (array) $slugs ), (string) $taxonomy );
 		}
+		// Back from the trash: WordPress keeps the pre-trash status in these; they are not the snippet's.
+		delete_post_meta( $id, '_wp_trash_meta_status' );
+		delete_post_meta( $id, '_wp_trash_meta_time' );
 		$done = wp_update_post(
 			wp_slash(
 				array(
@@ -631,6 +636,8 @@ class WpCode implements Tool, Snapshottable {
 					)
 				);
 				return self::detail( self::snippet( (int) $input['id'] ) );
+			case 'snippet-trash':
+				return self::trash( (int) $input['id'] );
 			case 'headers-footers':
 				$out = array();
 				foreach ( self::sections() as $section => $code ) {
@@ -654,6 +661,41 @@ class WpCode implements Tool, Snapshottable {
 			default:
 				return $this->save( $input );
 		}//end switch
+	}
+
+	/**
+	 * Trash a snippet as WPCode's own Trash action does (status trash, then its snippet errors cleared). Gated by the
+	 * same "AI & Automation Access" setting as WPCode's write abilities, so the owner's choice holds here too.
+	 *
+	 * @param int $id Snippet id.
+	 * @return array<string, mixed>
+	 * @throws ToolError When the setting is off, the snippet is unknown, or WordPress refuses.
+	 */
+	private static function trash( int $id ): array {
+		if ( ! class_exists( 'WPCode_Abilities_API' ) || ! \WPCode_Abilities_API::write_enabled() ) {
+			throw ToolError::of( ToolError::FEATURE_NOT_SUPPORTED, 'WPCode lets assistants change snippets only with "AI & Automation Access" switched on in WPCode > Settings; KuDiagnostics does not change that setting. Nothing was changed.' );
+		}
+		self::snippet( $id );
+		AuditLog::target( 'wpcode_snippet', (string) $id );
+		$done = wp_update_post(
+			array(
+				'ID'          => $id,
+				'post_status' => 'trash',
+			),
+			true
+		);
+		if ( is_wp_error( $done ) ) {
+			throw ToolError::of( ToolError::OPERATION_FAILED, 'WordPress did not trash the snippet: ' . wp_strip_all_tags( $done->get_error_message() ) );
+		}
+		if ( function_exists( 'wpcode' ) ) {
+			wpcode()->error->clear_snippets_errors();
+			wpcode()->cache->cache_all_loaded_snippets();
+		}
+		return array(
+			'id'      => $id,
+			'trashed' => true,
+			'active'  => false,
+		);
 	}
 
 	/**

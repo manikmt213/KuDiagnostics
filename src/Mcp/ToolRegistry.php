@@ -170,7 +170,7 @@ final class ToolRegistry {
 			$registry->register( new DynamicShortcodes( $mode ) );
 		}
 		// Phase R: WPCode through its own abilities (D62); PHP snippets only under D4.
-		foreach ( array( 'snippets', 'snippet-get', 'snippet-deactivate', 'headers-footers' ) as $mode ) {
+		foreach ( array( 'snippets', 'snippet-get', 'snippet-deactivate', 'snippet-trash', 'headers-footers' ) as $mode ) {
 			$registry->register( new WpCode( $mode ) );
 		}
 		foreach ( array( 'snippet-save', 'snippet-php-save', 'headers-footers-save' ) as $mode ) {

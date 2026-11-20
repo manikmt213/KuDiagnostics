@@ -47,9 +47,21 @@ namespace {
 		public function cache_all_loaded_snippets() {}
 	}
 
+	class WPCode_Error {
+		/** @return void */
+		public function clear_snippets_errors() {}
+	}
+
+	class WPCode_Abilities_API {
+		/** @return bool */
+		public static function write_enabled() {}
+	}
+
 	class WPCode {
 		/** @var WPCode_Snippet_Cache */
 		public $cache;
+		/** @var WPCode_Error */
+		public $error;
 	}
 
 	/** @return WPCode */
