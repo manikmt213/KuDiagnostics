@@ -182,6 +182,18 @@ try {
   [body] = await json(res);
   check('MCP tools/call with OAuth bearer', res.status === 200 && body?.result?.isError === false && body.result.structuredContent?.user?.id === 1, `${res.status}`);
 
+  // Phase N: resources and prompts over the same OAuth connection (D72, D73).
+  const bearer = { Authorization: `Bearer ${t1.access_token}` };
+  res = await modern('resources/list', {}, bearer);
+  [body] = await json(res);
+  check('resources/list with OAuth bearer', res.status === 200 && (body?.result?.resources ?? []).some((r) => r.uri === 'kuduy://site/overview'), `${res.status}`);
+  res = await modern('resources/read', { uri: 'kuduy://site/overview' }, { ...bearer, 'Mcp-Name': 'kuduy://site/overview' });
+  [body] = await json(res);
+  check('resources/read returns the site overview as JSON', res.status === 200 && body?.result?.contents?.[0]?.mimeType === 'application/json' && JSON.parse(body.result.contents[0].text)?.user?.id === 1, `${res.status}`);
+  res = await modern('prompts/list', {}, bearer);
+  [body] = await json(res);
+  check('prompts/list with OAuth bearer', res.status === 200 && (body?.result?.prompts ?? []).some((p) => p.name === 'safe-change'), `${res.status}`);
+
   res = await tokenReq({ grant_type: 'refresh_token', refresh_token: t1.refresh_token, client_id: client.client_id, resource: url });
   const t2 = await res.json();
   check('refresh rotates', res.status === 200 && t2.refresh_token && t2.refresh_token !== t1.refresh_token, JSON.stringify(t2).slice(0, 200));

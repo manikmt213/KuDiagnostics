@@ -118,7 +118,17 @@ final class Server {
 				return $this->authed( $id ) ?? self::ok( $id, self::modern_result( array( 'tools' => self::list_tools() ), true ) );
 			case 'tools/call':
 				return $this->authed( $id ) ?? $this->call( $id, $params, true );
-		}
+			case 'resources/list':
+				return $this->authed( $id ) ?? self::ok( $id, self::modern_result( array( 'resources' => Resources::list() ), true ) );
+			case 'resources/templates/list':
+				return $this->authed( $id ) ?? self::ok( $id, self::modern_result( array( 'resourceTemplates' => array() ), true ) );
+			case 'resources/read':
+				return $this->authed( $id ) ?? $this->read( $id, $params, true );
+			case 'prompts/list':
+				return $this->authed( $id ) ?? self::ok( $id, self::modern_result( array( 'prompts' => Prompts::list() ), true ) );
+			case 'prompts/get':
+				return $this->authed( $id ) ?? $this->prompt( $id, $params, true );
+		}//end switch
 		return self::fail( $id, -32601, 'Method not found', 404 );
 	}
 
@@ -157,6 +167,16 @@ final class Server {
 				return $this->authed( $id ) ?? self::ok( $id, array( 'tools' => self::list_tools() ) );
 			case 'tools/call':
 				return $this->authed( $id ) ?? $this->call( $id, $params, false );
+			case 'resources/list':
+				return $this->authed( $id ) ?? self::ok( $id, array( 'resources' => Resources::list() ) );
+			case 'resources/templates/list':
+				return $this->authed( $id ) ?? self::ok( $id, array( 'resourceTemplates' => array() ) );
+			case 'resources/read':
+				return $this->authed( $id ) ?? $this->read( $id, $params, false );
+			case 'prompts/list':
+				return $this->authed( $id ) ?? self::ok( $id, array( 'prompts' => Prompts::list() ) );
+			case 'prompts/get':
+				return $this->authed( $id ) ?? $this->prompt( $id, $params, false );
 		}
 		return self::fail( $id, -32601, 'Method not found', 200 );
 	}
@@ -208,6 +228,58 @@ final class Server {
 			return $out;
 		}
 		$result = Executor::call( $tool, $params['arguments'] ?? null );
+		return self::ok( $id, $modern ? self::modern_result( $result, false ) : $result );
+	}
+
+	/**
+	 * Handle resources/read for either era (D72). Unknown or not allowed: -32602 (2026-07-28; -32002 for older clients), never
+	 * an empty contents list.
+	 *
+	 * @param mixed                $id     Request id.
+	 * @param array<string, mixed> $params Params.
+	 * @param bool                 $modern Add modern result fields.
+	 * @return array{status:int, body:array<string, mixed>, headers?:array<string, string>}
+	 */
+	private function read( mixed $id, array $params, bool $modern ): array {
+		$uri = $params['uri'] ?? null;
+		if ( ! is_string( $uri ) ) {
+			return self::fail( $id, -32602, 'Invalid params: uri is required.', $modern ? 400 : 200 );
+		}
+		$wait = RateLimiter::hit( get_current_user_id(), AuditLog::client_label() );
+		if ( $wait > 0 ) {
+			$out            = self::fail( $id, -32029, 'Rate limit exceeded; retry after ' . $wait . ' seconds.', 429 );
+			$out['headers'] = array( 'Retry-After' => (string) $wait );
+			return $out;
+		}
+		try {
+			$result = Resources::read( $uri );
+		} catch ( ToolError $e ) {
+			return self::fail( $id, -32603, $e->getMessage(), $modern ? 500 : 200 );
+		}
+		if ( null === $result ) {
+			return self::fail( $id, $modern ? -32602 : -32002, 'Resource not found', $modern ? 400 : 200, array( 'uri' => $uri ) );
+		}
+		return self::ok( $id, $modern ? self::modern_result( $result, true ) : $result );
+	}
+
+	/**
+	 * Handle prompts/get for either era (D73). Unknown prompt or a missing required argument: -32602.
+	 *
+	 * @param mixed                $id     Request id.
+	 * @param array<string, mixed> $params Params.
+	 * @param bool                 $modern Add modern result fields.
+	 * @return array{status:int, body:array<string, mixed>}
+	 */
+	private function prompt( mixed $id, array $params, bool $modern ): array {
+		$name = $params['name'] ?? null;
+		if ( ! is_string( $name ) ) {
+			return self::fail( $id, -32602, 'Invalid params: name is required.', $modern ? 400 : 200 );
+		}
+		try {
+			$result = Prompts::get( $name, is_array( $params['arguments'] ?? null ) ? $params['arguments'] : array() );
+		} catch ( \InvalidArgumentException $e ) {
+			return self::fail( $id, -32602, $e->getMessage(), $modern ? 400 : 200 );
+		}
 		return self::ok( $id, $modern ? self::modern_result( $result, false ) : $result );
 	}
 
@@ -306,7 +378,14 @@ final class Server {
 	 * @return array<string, mixed>
 	 */
 	private static function capabilities(): array {
-		return array( 'tools' => array( 'listChanged' => false ) );
+		return array(
+			'tools'     => array( 'listChanged' => false ),
+			'resources' => array(
+				'subscribe'   => false,
+				'listChanged' => false,
+			),
+			'prompts'   => array( 'listChanged' => false ),
+		);
 	}
 
 	/**

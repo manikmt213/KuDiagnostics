@@ -121,6 +121,7 @@ Only versions listed as **Tested** have passing evidence (see `TESTING.md`). Eve
 | HT Mega | 3.2.8, 3.2.9 (Playground, 2026-11-20) | **Tested** (EL9b; EX4 switches through its REST route) | Free |
 | Element Pack Lite | 10.0.5, 10.0.12 (Playground, 2026-11-20) | **Tested** (EL9b; EX4 switches through element-pack/v1/modules) | Free |
 | Unlimited Elements | 2.0.28 (Playground, 2026-11-20) | **Tested** (EX5) | Free; widgets from its online library not installed |
+| MCP resources and prompts | 2026-07-28 and 2025-11-25 (Playground and real HTTP, 2026-11-20) | Tested at the protocol level; **not verified with claude.ai, Claude Desktop or Claude Code** (rule 9) | — |
 | WPCode Lite | 2.4.2 (Playground, WP 7.1.5 + 6.9.12, and the owner's site, 2026-11-20) | **Tested** (WC1–WC5) and **verified live**: setting gate, CSS snippet served on the front page, change/switch-off undo, masking, PHP refused, footer code. Saving PHP snippets not run (no code execution on either). Trash tool added after the live check and verified live 2026-11-20 (snippet off the front page while trashed, back after undo) | Free |
 | Masteriyo LMS | 3.5.2 (Playground and the owner's site, 2026-11-20) | **Tested** (MY1–MY4) and **verified live** (81 abilities; course create, rename, trash with undo; refusals; settings read without secrets) | Free |
 | Tutor LMS | 4.2.1 (Playground and the owner's site, 2026-11-20) | **Tested** (TU1–TU4) and **verified live** (curriculum, enroll, cancel with undo); reads also with Tutor Pro 4.2.1 active | Free; Tutor Pro features not covered |

@@ -244,7 +244,7 @@ final class McpEndpointTest extends TestCase {
 	}
 
 	public function test_unknown_modern_method_is_404_method_not_found(): void {
-		[ $status, $body ] = $this->modern( 'resources/list' );
+		[ $status, $body ] = $this->modern( 'completion/complete' );
 
 		$this->assertSame( 404, $status );
 		$this->assertSame( -32601, $body['error']['code'] );

@@ -35,6 +35,7 @@ use Kuduy\Mcp\Modules\Code\DynamicShortcodes;
 use Kuduy\Mcp\Modules\Code\WpCode;
 use Kuduy\Mcp\Modules\Core\DesignScan;
 use Kuduy\Mcp\Modules\Memory\MemoryTools;
+use Kuduy\Mcp\Modules\Memory\Skills;
 use Kuduy\Mcp\Modules\Code\WpCodeSave;
 use Kuduy\Mcp\Modules\Lms\MasteriyoAbilities;
 use Kuduy\Mcp\Modules\Lms\TutorTools;
@@ -179,6 +180,9 @@ final class ToolRegistry {
 			$registry->register( new MemoryTools( $mode ) );
 		}
 		$registry->register( new DesignScan() );
+		// Phase N: workflows and site skills as tools, for clients without MCP prompts (D73).
+		$registry->register( new Skills( 'list' ) );
+		$registry->register( new Skills( 'get' ) );
 		// Phase R: WPCode through its own abilities (D62); PHP snippets only under D4.
 		foreach ( array( 'snippets', 'snippet-get', 'snippet-deactivate', 'snippet-trash', 'headers-footers' ) as $mode ) {
 			$registry->register( new WpCode( $mode ) );

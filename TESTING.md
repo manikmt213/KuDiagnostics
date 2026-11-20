@@ -592,6 +592,19 @@ Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures o
 
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
+## Phase N — resources and prompts (2026-11-20)
+
+| ID | What | Type — file |
+|---|---|---|
+| RP1 | Capabilities: resources (subscribe false) and prompts in server/discover and in the 2025-11-25 initialize | I — `ResourcesPromptsTest` |
+| RP2 | resources/list and resources/read in both eras: the five URIs, JSON text equal to the tool's result, modern resultType/ttlMs/cacheScope; empty resourceTemplates | I — `ResourcesPromptsTest` |
+| RP3 | Unknown URI: -32602 with the uri (modern, HTTP 400), -32002 (legacy); a subscriber does not see or read the memory resource; not signed in: 401 | I — `ResourcesPromptsTest` |
+| RP4 | prompts/list and prompts/get in both eras: six workflows, argument filled into the user message; missing required argument and unknown prompt: -32602 | I — `ResourcesPromptsTest` |
+| RP5 | Every tool a workflow prompt names exists | I — `ResourcesPromptsTest` |
+| RP6 | A shared memory of kind skill is a prompt (private ones are not), filled with details; kuduy-skills and kuduy-skill-get return the same; missing argument refused | I — `ResourcesPromptsTest` |
+
+Round 2026-11-20: bare suites 305 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1 (report checked: RP1–RP6 ran on both; the first 6.9 attempt failed to download Elementor from wordpress.org and was run again); real-HTTP smoke 29/29 (new: resources/list, resources/read, prompts/list over OAuth); PHPCS and PHPStan clean. McpEndpointTest now uses completion/complete as the method the server does not serve (resources/list is served now). **Not yet verified with a Claude client** (rule 9).
+
 ## Phase I — memory and design scan (2026-11-20)
 
 | ID | What | Type — file |

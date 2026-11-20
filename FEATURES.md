@@ -288,6 +288,8 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Memory: save, read, search, list, delete (one or bulk), export, import, session context with conflict flags (`kuduy-memory-*`, D70) | Tested 2026-11-20 (ME1–ME7; WP 7.1.5 + 6.9.12) |
 | Memory never stores secrets (refused on save and import, masked in the audit row) | Tested 2026-11-20 (ME2, ME7) |
 | Design tokens scan (`kuduy-design-scan`, D71) | Tested 2026-11-20 (DS2, DS3; theme.json, Elementor Kit 4.3.6, Customizer) |
+| MCP resources: site overview, integrations, content model, memory context, design tokens (D72) | Implemented — tested 2026-11-20 over the REST endpoint in both protocol versions (RP1–RP3) and real HTTP with OAuth (smoke); **not verified with a Claude client** (rule 9) |
+| MCP prompts: six workflows and site skills; `kuduy-skills`, `kuduy-skill-get` (D73) | Implemented — tested 2026-11-20 (RP1, RP4–RP6, smoke); **not verified with a Claude client** (rule 9) |
 | LearnWorlds | Blocked — D66: hosted service needing a stored client secret; official API docs not read (UNVERIFIED); owner to decide |
 | Catalogue rows for GenerateBlocks Pro, Spectra Pro, Kadence Blocks Pro, Oxygen Classic, Mosaic and the Bricks, Divi and WPBakery add-ons | Implemented (detection and what the generic tools cover; `IntegrationsTest`) |
 | Catalogue covers the 58 target integrations and what is supported beyond them (68 rows since Brizy was added 2026-11-15) | Tested (IR1: consistency test) |

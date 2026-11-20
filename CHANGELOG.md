@@ -4,6 +4,11 @@ Format: user-facing releases first (newest on top), then the dated development h
 
 ## Unreleased
 
+Phase N (`docs/plans/phase-n.md`, D72–D73):
+
+- Added: MCP resources — `kuduy://site/overview`, `kuduy://site/integrations`, `kuduy://site/content-model`, `kuduy://memory/context`, `kuduy://design/tokens` (read-only JSON, each as its tool returns it and under the same permissions), in both protocol versions.
+- Added: MCP prompts — six workflows (site-audit, build-page, seo-review, safe-change, start-session, match-design) and the site's own skills (shared memories of kind "skill"); `kuduy-skills` and `kuduy-skill-get` give the same to clients without prompts. Not yet checked in a Claude client.
+
 Phase I (`docs/plans/phase-i-memory.md`, D70–D71):
 
 - Added: memory — `kuduy-memory-save`, `-get`, `-search`, `-list`, `-delete`, `-export`, `-import`, `-context`. Notes, facts, decisions, preferences and design notes kept across connections and sessions, shared or private, grouped by project, with status, version, expiry and a warning when an integration a memory refers to is no longer active. Passwords, keys and tokens are refused, also in the audit log of a refused save. New table `kuduy_memory` (database version 3, created on update).
