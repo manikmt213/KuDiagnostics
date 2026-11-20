@@ -20,7 +20,7 @@ Owner's order (2026-11-18, relayed): after the 1.4.0 release, a round of its own
 | `kuduy-wpcode-snippets`, `-snippet-get` | `kuduy:read` + `wpcode_edit_snippets` | `wpcode/list-snippets`, `wpcode/get-snippet` (+ `detect-snippet-errors`); credentials in code masked; syntax check and risky calls as Code Snippets |
 | `kuduy-wpcode-snippet-save` (HTML, CSS, JS, text, blocks) | `kuduy:admin` + confirmation token (D45) | `wpcode/create-snippet` / `update-snippet`; PHP and universal refused; snapshot for undo |
 | `kuduy-wpcode-snippet-php-save` | `kuduy:code` + `KUDUY_MCP_ALLOW_CODE_EXEC` (D4) + token | same abilities for PHP and universal (WPCode test-runs them when switched on) |
-| `kuduy-wpcode-snippet-deactivate` | `kuduy:admin`, undo | `wpcode/set-snippet-status` active false |
+| `kuduy-wpcode-snippet-deactivate`, `-snippet-trash` | `kuduy:admin`, undo; trash as WPCode's own Trash action, behind its write setting | `wpcode/set-snippet-status` active false |
 | `kuduy-wpcode-headers-footers`, `-headers-footers-save` | read: `kuduy:admin`; save: `kuduy:admin` + token; both `unfiltered_html` | `wpcode/get-headers-footers`, `update-headers-footers` (append or replace); undo replaces with the previous text |
 | `kuduy-masteriyo-abilities`, `-ability-get`, `-ability-run` | list/get `kuduy:read`; run `kuduy:admin`; Masteriyo checks the user | its abilities; writes limited to an allowlist (below); post-backed changes snapshotted |
 | `kuduy-tutor-courses`, `-course-get`, `-students`, `-quiz-attempts` | `kuduy:read`; course content only for users who can manage the course | Tutor's models |
@@ -36,4 +36,4 @@ Real plugins in Playground: WPCode 2.4.2, Masteriyo 3.5.2, Tutor LMS 4.2.1, Them
 
 ## Status
 
-Built and tested 2026-11-20 (WC1–WC5, MY1–MY4, TU1–TU4, TB1–TB3 on both pairs; results in `TESTING.md`). Live-checked on the owner's site 2026-11-20 (results in `TESTING.md`); gap found: no trash tool for WPCode snippets. LearnWorlds open (D66).
+Built and tested 2026-11-20 (WC1–WC5, MY1–MY4, TU1–TU4, TB1–TB3 on both pairs; results in `TESTING.md`). Live-checked on the owner's site 2026-11-20 (results in `TESTING.md`); gap found: no trash tool for WPCode snippets — added the same day (`kuduy-wpcode-snippet-trash`, WC1). LearnWorlds open (D66).

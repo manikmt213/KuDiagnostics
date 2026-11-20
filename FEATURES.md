@@ -273,6 +273,7 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Kadence Shop Kit module switches, read only (`kuduy-shop-kit-modules`) | Tested 2026-11-18 against a stand-in (SK1; source of 3.0.10) |
 | WPCode snippets: list, read with check and masking, save HTML/CSS/JS/text/blocks with confirmation, switch off, undo (`kuduy-wpcode-*`, D62) | Tested 2026-11-20 (WC1–WC5; WPCode Lite 2.4.2 on WP 7.1.5 + 6.9.12) |
 | WPCode PHP and universal snippets (`kuduy-wpcode-snippet-php-save`, D4) | Implemented — WC3 tests the guard (refused by the normal save, absent without code execution); saving PHP itself is not run in CI |
+| WPCode snippet trash with undo (`kuduy-wpcode-snippet-trash`; WPCode's own trash path, behind its "AI & Automation Access" setting) | Tested 2026-11-20 (WC1; WPCode Lite 2.4.2 on WP 7.1.5 + 6.9.12) — added after the live check found the gap |
 | WPCode site-wide header, body and footer code: read masked, append or replace with confirmation, undo (`kuduy-wpcode-headers-footers*`) | Tested 2026-11-20 (WC4) |
 | Masteriyo through its own abilities: list, read, allowlisted writes with undo (`kuduy-masteriyo-*`, D63) | Tested 2026-11-20 (MY1–MY4; Masteriyo 3.5.2 on WP 7.1.5 + 6.9.12) |
 | Tutor LMS courses, curriculum, students, quiz attempts; enroll, enrollment status with undo, topics and lessons (`kuduy-tutor-*`, D64) | Tested 2026-11-20 (TU1–TU4; Tutor LMS 4.2.1 on WP 7.1.5 + 6.9.12) |

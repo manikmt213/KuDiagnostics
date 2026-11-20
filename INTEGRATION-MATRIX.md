@@ -108,7 +108,7 @@ Elementor add-on widgets need no per-add-on code: the generic Elementor tools di
 |---|---|---|---|---|
 | Dynamic Shortcodes | paid | None | — | L |
 | Code Snippets | free 4.1.0 | **Full** (CS1–CS3, 2026-11-17) | List, read with checks, HTML/CSS/JS saves with confirmation, PHP saves only with code execution allowed, switch off, trash. Missing: import/export, Pro conditions | — |
-| WPCode | free 2.4.2 | **Full** (WC1–WC5, 2026-11-20) | Through its own abilities (its "AI & Automation Access" setting must be on): list, read with checks and masking, HTML/CSS/JS/text/blocks saves with confirmation, PHP only with code execution allowed, switch off, header/footer code, undo. Not offered: Library installs | R |
+| WPCode | free 2.4.2 | **Full** (WC1–WC5, 2026-11-20) | Through its own abilities (its "AI & Automation Access" setting must be on): list, read with checks and masking, HTML/CSS/JS/text/blocks saves with confirmation, PHP only with code execution allowed, switch off, trash, header/footer code, undo. Not offered: Library installs | R |
 | Masteriyo LMS | free 3.5.2 | **Partial** (MY1–MY4, 2026-11-20) | Its own abilities: all reads; allowlisted writes (course content, enrollments, trash/restore) with undo. Not run: orders, users, settings, builder saves, reviews, Q&A, progress | R |
 | Tutor LMS | free 4.2.1 | **Partial** (TU1–TU4, 2026-11-20) | Courses, curriculum, students, quiz attempts; enroll and enrollment status (admins); topics and lessons. Missing: quizzes, assignments, Pro | R |
 | LearnWorlds | hosted (SaaS) | None | Open decision D66 (would store a third-party secret; API docs not read) | — |
