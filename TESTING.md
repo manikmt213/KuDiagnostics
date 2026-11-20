@@ -586,6 +586,8 @@ Runs 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36. Each stand-in in `tests/integra
 
 Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1; Gravity stand-in 273, 0 (both); Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 (both); PHPCS and PHPStan clean; real-HTTP smoke 26/26 (its WordPress check now accepts any 7.1.x, since Playground's 7.1 moved to 7.1.5).
 
+**Live recheck 2026-11-20** of the five fixes on the owner's test site (build of commit 344dfa9 uploaded over 1.3.8, temporary OAuth approved by the owner, each plugin switched on for its check and off again, start state restored, both tokens revoked and refused afterwards): Gravity Forms 3.2.2 offers 19 field types, none of submit/honeypot/password/repeater/price; Dynamic Shortcodes 1.9.4 marks 14 of 70 types privileged (0 before); `kuduy-jetengine-config` succeeds through `resource-get-configuration` (the site has no JetEngine definitions, which JetEngine's callback drops with `array_filter`, so only `success` comes back); Advanced Themer 3.5 in its suffixed folder detected; WP Rocket 3.24 reads its 59 settings. The WP Rocket "settings not yet created" message is not reproducible live (its option exists since 2026-11-19 and was not deleted); covered by the stand-in only.
+
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
 ## Phase E — fields
