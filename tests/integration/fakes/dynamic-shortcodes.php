@@ -64,7 +64,7 @@ namespace DynamicShortcodes\Core\Shortcodes {
 		}
 
 		public function get_shortcode_type_class( $type ) {
-			return self::TYPES[ $type ] ?? false;
+			return isset( self::TYPES[ $type ] ) ? array( self::TYPES[ $type ], null ) : array( false, null );
 		}
 
 		public function lint( string $shortcode ) {

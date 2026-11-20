@@ -231,6 +231,10 @@ final class WpRocketTools implements Tool, Snapshottable {
 		}
 		$option   = (string) $input['option'];
 		$settings = self::settings();
+		if ( ! $settings ) {
+			// Found live: right after activation WP Rocket has not set up its settings yet.
+			throw ToolError::of( ToolError::CONFLICT, 'WP Rocket has not set up its settings yet (open its settings screen once, or try again). Nothing was changed.' );
+		}
 		if ( ! array_key_exists( $option, $settings ) ) {
 			throw ToolError::of( ToolError::INVALID_ARGUMENT, 'WP Rocket does not let tools change "' . $option . '". Options: ' . implode( ', ', array_keys( $settings ) ) . '.' );
 		}

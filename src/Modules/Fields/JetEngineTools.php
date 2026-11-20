@@ -58,7 +58,7 @@ final class JetEngineTools implements Tool {
 	 */
 	public function description(): string {
 		return match ( $this->mode ) {
-			'features' => 'Lists the features JetEngine offers to AI tools on this site (e.g. tool-add-cpt, tool-add-meta-box, tool-add-query, tool-get-configuration, tool-manage-modules) with their descriptions and input schemas, to use with kuduy-jetengine-run.',
+			'features' => 'Lists the features JetEngine offers to AI tools on this site (e.g. tool-add-cpt, tool-add-meta-box, tool-add-query, resource-get-configuration, tool-manage-modules) with their descriptions and input schemas, to use with kuduy-jetengine-run.',
 			'config'   => 'Reads JetEngine\'s configuration through its own get-configuration feature: post types, taxonomies, meta boxes and their fields, options pages, queries, relations, custom content types, REST API endpoints and glossaries. Choose parts or leave empty for all.',
 			default    => 'Runs one JetEngine feature (name from kuduy-jetengine-features) with its input, as the signed-in user: JetEngine checks its own permission and validates the input. Features add definitions (post types, taxonomies, meta boxes, queries, listings, custom content types, glossaries) or switch modules. There is no undo for additions here: remove them in JetEngine.',
 		};
@@ -217,7 +217,9 @@ final class JetEngineTools implements Tool {
 			if ( ! $parts ) {
 				$parts = array( 'post_types', 'taxonomies', 'meta_boxes', 'options_pages', 'queries', 'relations', 'custom_content_types', 'rest_api_endpoints', 'glossaries' );
 			}
-			return array( 'result' => self::run( 'tool-get-configuration', array( 'parts' => array_fill_keys( $parts, true ) ) ) );
+			// JetEngine registers get-configuration as a resource (found live on 3.8.15.4); older builds as a tool.
+			$name = null !== call_user_func( array( self::REGISTRY, 'instance' ) )->get_feature( 'resource-get-configuration' ) ? 'resource-get-configuration' : 'tool-get-configuration';
+			return array( 'result' => self::run( $name, array( 'parts' => array_fill_keys( $parts, true ) ) ) );
 		}
 		$name = (string) $input['feature'];
 		AuditLog::target( 'jetengine_feature', $name );

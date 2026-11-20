@@ -99,7 +99,7 @@ try {
 
   res = await modern('tools/call', { name: 'kuduy-site-info' }, { Authorization: auth });
   [body, text] = await json(res);
-  check('tools/call site-info with Application Password', res.status === 200 && body?.result?.isError === false && body.result.structuredContent?.wordpress_version === '7.1.4', `${res.status} ${text.slice(0, 300)}`);
+  check('tools/call site-info with Application Password', res.status === 200 && body?.result?.isError === false && /^7\.1(\.\d+)?$/.test(body.result.structuredContent?.wordpress_version ?? ''), `${res.status} ${text.slice(0, 300)}`);
 
   const initBody = JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'smoke', version: '1' } } });
   res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: initBody });

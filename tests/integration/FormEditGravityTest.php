@@ -53,6 +53,7 @@ final class FormEditGravityTest extends TestCase {
 		$this->assertContains( 'choices', $types['select']['properties'] );
 		$this->assertNotContains( 'choices', $types['text']['properties'] );
 		$this->assertArrayNotHasKey( 'page', $types, 'Page breaks are not offered.' );
+		$this->assertArrayNotHasKey( 'submit', $types, 'Types that need settings this tool does not set are not offered (found live on 3.2.2).' );
 
 		$form = $this->ok(
 			'kuduy-gravity-forms-form-create',

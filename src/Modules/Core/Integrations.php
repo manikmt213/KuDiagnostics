@@ -141,6 +141,14 @@ final class Integrations implements Tool {
 				$out[ $folder ] = array( (string) $file, (string) ( $data['Version'] ?? '' ) );
 			}
 		}
+		// Also by main file name, for copies unpacked into a folder with a suffix (found live: Advanced Themer in
+		// "bricks-advanced-themer-1-…/bricks-advanced-themer.php"). A real folder of that name wins.
+		foreach ( get_plugins() as $file => $data ) {
+			$main = basename( (string) $file, '.php' );
+			if ( '.' !== dirname( (string) $file ) && ! isset( $out[ $main ] ) ) {
+				$out[ $main ] = array( (string) $file, (string) ( $data['Version'] ?? '' ) );
+			}
+		}
 		return $out;
 	}
 

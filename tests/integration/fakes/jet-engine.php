@@ -60,6 +60,7 @@ namespace Jet_Engine\MCP_Tools {
 				self::$instance->add_feature(
 					'get-configuration',
 					array(
+						'type'             => 'resource',
 						'label'            => 'Get configuration',
 						'description'      => 'Returns JetEngine configuration parts.',
 						'input_schema'     => array( 'parts' => array( 'type' => 'object' ) ),

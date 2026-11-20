@@ -173,7 +173,9 @@ final class DynamicShortcodes implements Tool {
 	private static function types( object $manager ): array {
 		$out = array();
 		foreach ( (array) $manager->get_shortcode_types_ids() as $type ) {
-			$class                 = (string) $manager->get_shortcode_type_class( (string) $type );
+			// Dynamic Shortcodes keeps [ class, context ] per type (manager.php register(); found by the live check).
+			$entry                 = $manager->get_shortcode_type_class( (string) $type );
+			$class                 = (string) ( is_array( $entry ) ? ( $entry[0] ?? '' ) : $entry );
 			$out[ (string) $type ] = array(
 				'class'      => $class,
 				'privileged' => self::privileged( $class ),

@@ -209,7 +209,7 @@ class GF_Field extends stdClass {
  */
 class GF_Fields {
 
-	private const TYPES = array( 'text', 'textarea', 'select', 'multiselect', 'number', 'checkbox', 'radio', 'hidden', 'html', 'section', 'page', 'name', 'date', 'time', 'phone', 'address', 'website', 'email', 'fileupload', 'consent' );
+	private const TYPES = array( 'text', 'textarea', 'select', 'multiselect', 'number', 'checkbox', 'radio', 'hidden', 'html', 'section', 'page', 'name', 'date', 'time', 'phone', 'address', 'website', 'email', 'fileupload', 'consent', 'submit', 'honeypot' );
 
 	public static function get_all() {
 		$out = array();

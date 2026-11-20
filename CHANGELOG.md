@@ -55,6 +55,7 @@ Phase L — paid products (`docs/plans/phase-l.md`, D59–D61; built from source
 - Added: `kuduy-jetengine-features`, `-config`, `-run`.
 - Added: `kuduy-dce-features`, `-feature-toggle`, `-html-templates` (Dynamic Content for Elementor); `kuduy-shop-kit-modules` (Kadence Shop Kit, read only).
 - Added: catalogue rows for GenerateBlocks Pro, Spectra Pro, Kadence Blocks Pro, Kadence Shop Kit, Oxygen Classic and the Bricks, Divi and WPBakery add-ons; Mosaic and Bricksforge now detected.
+- Fixed (live checks 2026-11-19): Gravity Forms field types that need settings the tool does not set are no longer offered; Dynamic Shortcodes privileged types are marked (types are stored as [class, context]); `kuduy-jetengine-config` uses JetEngine's resource-get-configuration; WP Rocket gives a clear message before its settings exist; plugins unpacked into a folder with a suffix are detected by their main file name.
 - Fixed (security): `kuduy-code-snippets-get` now masks hard-coded credentials in snippet code as its description said, and saving code that contains the mask is refused.
 
 Phase E — fields (`docs/plans/phase-e-fields.md`, D58):

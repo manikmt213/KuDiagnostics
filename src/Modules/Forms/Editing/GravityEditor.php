@@ -34,7 +34,7 @@ final class GravityEditor implements FormEditor {
 	/**
 	 * Types with choices.
 	 */
-	private const CHOICES = array( 'select', 'multiselect', 'radio', 'checkbox' );
+	private const CHOICES = array( 'select', 'multiselect', 'radio', 'checkbox', 'multi_choice', 'image_choice' );
 
 	/**
 	 * Types with an input box.
@@ -128,7 +128,8 @@ final class GravityEditor implements FormEditor {
 		$out = array();
 		foreach ( array_keys( (array) \GF_Fields::get_all() ) as $type ) {
 			$type = (string) $type;
-			if ( in_array( $type, array( 'page', 'section', 'captcha', 'creditcard', 'post_title', 'post_content', 'post_excerpt', 'post_tags', 'post_category', 'post_image', 'post_custom_field', 'product', 'quantity', 'option', 'shipping', 'total', 'donation', 'calculation', 'hiddenproduct', 'singleproduct', 'singleshipping' ), true ) ) {
+			// Live check on 3.2.2: submit, honeypot, password and repeater also need settings or handling this tool does not do.
+			if ( in_array( $type, array( 'submit', 'honeypot', 'password', 'repeater', 'price', 'list', 'image_choice', 'page', 'section', 'captcha', 'creditcard', 'post_title', 'post_content', 'post_excerpt', 'post_tags', 'post_category', 'post_image', 'post_custom_field', 'product', 'quantity', 'option', 'shipping', 'total', 'donation', 'calculation', 'hiddenproduct', 'singleproduct', 'singleshipping' ), true ) ) {
 				// Page breaks, sections, post and pricing fields need settings this tool does not set.
 				continue;
 			}

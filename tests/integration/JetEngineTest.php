@@ -33,7 +33,7 @@ final class JetEngineTest extends TestCase {
 		wp_set_current_user( self::make_user( 'administrator' ) );
 		$names = array_column( $this->ok( 'kuduy-jetengine-features' )['features'], 'name' );
 		$this->assertContains( 'tool-add-cpt', $names );
-		$this->assertContains( 'tool-get-configuration', $names );
+		$this->assertContains( 'resource-get-configuration', $names );
 
 		$made = $this->ok(
 			'kuduy-jetengine-run',

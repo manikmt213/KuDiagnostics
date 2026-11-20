@@ -582,6 +582,10 @@ Runs 2026-11-18 on WordPress 7.1.4 / PHP 8.3.36. Each stand-in in `tests/integra
 | DC1 | Dynamic Content for Elementor: features listed and filtered, two switched off through its feature store with undo, unknown refused, PDF templates listed and read with credentials masked, editor refused | I — `DceTest` |
 | SK1 | Kadence Shop Kit: 16 module switches read from its option (JSON form), editor refused | I — `ShopKitTest` |
 
+**Live checks 2026-11-19** on the owner's test site over real HTTP (temporary OAuth connection, one plugin stack at a time, test content removed, plugin states restored, tokens revoked; KuDiagnostics at commit 04ca429 installed from the release ZIP): Gravity Forms 3.2.2, Yoast Premium 28.8, SEOPress PRO 10.2.1, AIOSEO Pro 5.0.5, Code Snippets Pro 3.10.2, Dynamic Shortcodes 1.9.4, WPML 5.3.0 (not configured), Polylang Pro 3.9.2 (not configured), WP Rocket 3.24, JetEngine 3.8.15.4, JetElements 2.9.2.2, DCE 3.4.20, GenerateBlocks Pro 2.8.0, Spectra Pro 1.2.11, Kadence Shop Kit 3.0.10 and add-on detection. Five findings fixed with tests (details in COMPATIBILITY.md); one known limit (Code Snippets Pro deactivation through the tool).
+
+Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1; Gravity stand-in 273, 0 (both); Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 (both); PHPCS and PHPStan clean; real-HTTP smoke 26/26 (its WordPress check now accepts any 7.1.x, since Playground's 7.1 moved to 7.1.5).
+
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
 ## Phase E — fields

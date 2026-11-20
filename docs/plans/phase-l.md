@@ -45,4 +45,4 @@ Built from source read on the owner's site and tested against stand-ins (full ro
 | L8 | GenerateBlocks Pro switches via the GenerateBlocks settings tool; Spectra Pro via block tools; Kadence Shop Kit modules (read only) | Shop Kit module changes (save path not found); Kadence Blocks Pro (no copy) |
 | L9 | Catalogue rows: Oxygen Classic, Mosaic, Bricks/Divi/WPBakery add-ons (detection) | Reading Oxygen Classic pages; Mosaic deeper (next round); Etch, Voxel, Bricksforge (no copies) |
 
-Live checks on the owner's site (temporary OAuth, one stack at a time) are still to do for every product above.
+Live checks on the owner's site done 2026-11-19 for every installed product above (results in COMPATIBILITY.md; five findings fixed). Not verifiable live without changing the site: WPML and Polylang Pro language linking (no languages configured), JetEngine additions (would create definitions).
