@@ -2,7 +2,7 @@
 
 Format: user-facing releases first (newest on top), then the dated development history. Versions follow semantic versioning; tags `vX.Y.Z` publish a GitHub Release that installed sites receive through the built-in updater.
 
-## Unreleased
+## 1.4.0 — 2026-11-20
 
 Phase M of the ecosystem plan (`docs/plans/phase-m-contract.md`).
 
