@@ -290,12 +290,12 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Design tokens scan (`kuduy-design-scan`, D71) | Tested 2026-11-20 (DS2, DS3; theme.json, Elementor Kit 4.3.6, Customizer) |
 | MCP resources: site overview, integrations, content model, memory context, design tokens (D72) | Tested 2026-11-20 (RP1–RP3, smoke) and **verified in claude.ai** on the owner's site the same day: listed under "Add from {connector}", Site overview attached with the real site data |
 | MCP prompts: six workflows and site skills; `kuduy-skills`, `kuduy-skill-get` (D73) | Tested 2026-11-20 (RP1, RP4–RP6, smoke) and **verified in claude.ai**: the six prompts listed by title, "Make a change safely" asked for its required argument in a form and returned the filled text |
-| Plugin ZIP upload from the media library, delete with uninstall report, inspect (`kuduy-plugin-upload`, `-delete`, `-inspect`, D74) | Tested 2026-11-20 (AO1, AO2) |
-| Permanent delete of trashed content with undo (`kuduy-post-delete`, D46) | Tested 2026-11-20 (AO3) |
-| User delete with reassignment, password reset email (`kuduy-user-delete`, `kuduy-user-password-reset`, D75) | Tested 2026-11-20 (AO4; never yourself, never the last administrator) |
-| WP-Cron run now and unschedule with undo (`kuduy-cron-run`, `-unschedule`, D76) | Tested 2026-11-20 (AO5) |
+| Plugin ZIP upload from the media library, delete with uninstall report, inspect (`kuduy-plugin-upload`, `-delete`, `-inspect`, D74) | Tested 2026-11-20 (AO1, AO2) and **verified live** (upload, refusal, inspect history, delete) |
+| Permanent delete of trashed content with undo (`kuduy-post-delete`, D46) | Tested 2026-11-20 (AO3) and **verified live** |
+| User delete with reassignment, password reset email (`kuduy-user-delete`, `kuduy-user-password-reset`, D75) | Tested 2026-11-20 (AO4; never yourself, never the last administrator) and **verified live** (self refused, reassignment, reset email) |
+| WP-Cron run now and unschedule with undo (`kuduy-cron-run`, `-unschedule`, D76) | Tested 2026-11-20 (AO5) and **verified live** (one finding fixed: undo no longer duplicates a re-created event) |
 | Backups through UpdraftPlus: history, running jobs, start (`kuduy-backup-status`, `-start`, D77) | Tested 2026-11-20 (AO7, UpdraftPlus 1.26.16; the backup itself not run in tests); restore not offered |
-| Plugin dependency and conflict checks (`kuduy-integration-dependencies`, `-conflicts`, D78) | Tested 2026-11-20 (AO6, incl. the Rank Math + Yoast row) |
+| Plugin dependency and conflict checks (`kuduy-integration-dependencies`, `-conflicts`, D78) | Tested 2026-11-20 (AO6, incl. the Rank Math + Yoast row) and **verified live** (dependencies) |
 | File move and delete under D4 (`kuduy-dev-file-move`, `-delete`, D79) | Tested 2026-11-20 (AO8, code-execution job) |
 | LearnWorlds | Blocked — D66: hosted service needing a stored client secret; official API docs not read (UNVERIFIED); owner to decide |
 | Catalogue rows for GenerateBlocks Pro, Spectra Pro, Kadence Blocks Pro, Oxygen Classic, Mosaic and the Bricks, Divi and WPBakery add-ons | Implemented (detection and what the generic tools cover; `IntegrationsTest`) |

@@ -299,6 +299,18 @@ final class AdminToolsTest extends TestCase {
 		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $gone['_snapshot_id'] ) );
 		$this->assertNotFalse( wp_next_scheduled( $hook, array( $args ) ), 'Undo schedules it again.' );
 		$this->assertSame( 'daily', wp_get_schedule( $hook, array( $args ) ) );
+
+		// Its plugin scheduled it again before the undo: the undo adds no second copy (found live 2026-11-20).
+		$again = $this->ok(
+			'kuduy-cron-unschedule',
+			array(
+				'hook' => $hook,
+				'key'  => $key,
+			)
+		);
+		wp_schedule_event( time() + 60, 'daily', $hook, array( $args ) );
+		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $again['_snapshot_id'] ) );
+		$this->assertSame( 1, count( array_filter( (array) _get_cron_array(), static fn( $hooks ) => isset( $hooks[ $hook ] ) ) ), 'One event, not two.' );
 		wp_clear_scheduled_hook( $hook, array( $args ) );
 
 		$this->fails(

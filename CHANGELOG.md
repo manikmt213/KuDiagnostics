@@ -9,7 +9,7 @@ Phase O (`docs/plans/phase-o.md`, D74–D79):
 - Added: `kuduy-plugin-upload` (install a plugin from a ZIP in the media library, not activated), `kuduy-plugin-delete` (inactive plugins; says whether its uninstall routine will remove data), `kuduy-plugin-inspect` (header, requirements, who needs it, its REST routes, abilities, cron hooks, settings names, history).
 - Added: `kuduy-post-delete` — permanently delete content that is already in the trash, with undo.
 - Added: `kuduy-user-delete` (reassign content; never yourself or the last administrator) and `kuduy-user-password-reset` (WordPress sends its reset email).
-- Added: `kuduy-cron-run` (run a scheduled task now) and `kuduy-cron-unschedule` (with undo); `kuduy-cron-list` now gives each event's key.
+- Added: `kuduy-cron-run` (run a scheduled task now) and `kuduy-cron-unschedule` (with undo, which does nothing if the task's plugin has already scheduled it again); `kuduy-cron-list` now gives each event's key.
 - Added: `kuduy-backup-status` and `kuduy-backup-start` through UpdraftPlus (restore stays in UpdraftPlus).
 - Added: `kuduy-integration-dependencies` and `kuduy-integration-conflicts`.
 - Added: `kuduy-dev-file-move` and `kuduy-dev-file-delete` (code tools, D4).

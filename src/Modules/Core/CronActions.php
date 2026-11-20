@@ -178,6 +178,11 @@ final class CronActions implements Tool, Snapshottable {
 	public function restore( array $payload ): void {
 		$hook = (string) $payload['hook'];
 		$args = (array) $payload['args'];
+		// Its plugin (or WordPress itself, for core events) may have scheduled it again since: then it is back and a
+		// second copy would run it twice (found live 2026-11-20 with wp_privacy_delete_old_export_files).
+		if ( false !== wp_next_scheduled( $hook, $args ) ) {
+			return;
+		}
 		$time = max( time(), (int) $payload['time'] );
 		$done = false === $payload['schedule']
 			? wp_schedule_single_event( $time, $hook, $args, true )

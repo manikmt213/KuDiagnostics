@@ -191,7 +191,7 @@ class UserAdmin implements Tool {
 			'name'    => $user->display_name,
 			'roles'   => array_values( (array) $user->roles ),
 			'content' => $count,
-			'effect'  => 0 === $count ? 'The user has no content.' : ( null !== $reassign ? $count . ' items go to ' . $reassign->display_name . ' (id ' . $reassign->ID . ').' : $count . ' items are deleted with the account (give reassign_to to keep them).' ),
+			'effect'  => 0 === $count ? 'The user has no content.' : ( null !== $reassign ? $count . ( 1 === $count ? ' item goes' : ' items go' ) . ' to ' . $reassign->display_name . ' (id ' . $reassign->ID . ').' : $count . ( 1 === $count ? ' item is' : ' items are' ) . ' deleted with the account (give reassign_to to keep it).' ),
 			'undo'    => 'Not possible: the account cannot be brought back.',
 			'version' => md5( $user->ID . '|' . $user->user_login . '|' . implode( ',', (array) $user->roles ) . '|' . $count . '|' . ( null === $reassign ? '' : (string) $reassign->ID ) ),
 		);
