@@ -124,6 +124,10 @@ final class PostDelete implements Tool, Confirmable, Snapshottable {
 		if ( ! $post instanceof \WP_Post || in_array( $post->post_type, array( 'attachment', 'revision', 'nav_menu_item', 'customize_changeset', 'oembed_cache', 'user_request' ), true ) ) {
 			throw ToolError::of( ToolError::RESOURCE_NOT_FOUND, 'No content item with id ' . $id . ' (media: kuduy-media-delete; products: kuduy-woo-product-delete).' );
 		}
+		// WooCommerce items are deleted through WooCommerce (its CRUD also removes variations and lookup rows), rule 4.
+		if ( in_array( $post->post_type, array( 'product', 'product_variation', 'shop_order', 'shop_order_refund', 'shop_order_placehold', 'shop_coupon', 'shop_subscription' ), true ) ) {
+			throw ToolError::of( ToolError::INVALID_ARGUMENT, '"' . $post->post_title . '" is a WooCommerce ' . $post->post_type . '. Delete it with the WooCommerce tools (e.g. kuduy-woo-product-delete), which use WooCommerce\'s own delete. Nothing was deleted.' );
+		}
 		if ( 'trash' !== $post->post_status ) {
 			throw ToolError::of( ToolError::CONFLICT, '"' . $post->post_title . '" is not in the trash. Trash it first with kuduy-post-trash (that can be undone), then delete it here. Nothing was deleted.' );
 		}

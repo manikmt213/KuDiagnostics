@@ -185,7 +185,26 @@ class UserAdmin implements Tool {
 			}
 		}
 		$count = self::content( $user->ID );
-		return array(
+		$woo   = array();
+		if ( function_exists( 'wc_get_orders' ) ) {
+			// WooCommerce 11.x on deleted_user / delete_user: orders stay as guest orders (customer id set to 0, also
+			// with reassign_to), saved payment methods, API keys and sessions of the user are deleted.
+			$orders = wc_get_orders(
+				array(
+					'customer_id' => $user->ID,
+					'limit'       => -1,
+					'return'      => 'ids',
+					'status'      => 'any',
+				)
+			);
+			$woo    = array(
+				'woocommerce' => array(
+					'orders' => is_array( $orders ) ? count( $orders ) : 0,
+					'effect' => 'WooCommerce keeps this customer\'s orders but turns them into guest orders (no longer linked to any account, also with reassign_to), and deletes the user\'s saved payment methods, API keys and sessions.',
+				),
+			);
+		}
+		return $woo + array(
 			'user_id' => $user->ID,
 			'login'   => $user->user_login,
 			'name'    => $user->display_name,

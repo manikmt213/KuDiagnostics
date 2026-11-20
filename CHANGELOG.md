@@ -2,6 +2,12 @@
 
 Format: user-facing releases first (newest on top), then the dated development history. Versions follow semantic versioning; tags `vX.Y.Z` publish a GitHub Release that installed sites receive through the built-in updater.
 
+## Unreleased
+
+- Fixed: `kuduy-post-delete` no longer deletes trashed WooCommerce products, orders or coupons with plain WordPress; it points to the WooCommerce tools, which use WooCommerce's own delete.
+- Changed: `kuduy-user-delete` on a WooCommerce site shows the customer's order count and what WooCommerce does: orders stay as guest orders, saved payment methods, API keys and sessions are deleted.
+- Fixed: Dashboard > Updates showed "Compatibility with WordPress: Not tested" for KuDiagnostics; updates now carry "tested up to" (the 7.1 branch).
+
 ## 1.7.0 — 2026-11-20
 
 Phase O (`docs/plans/phase-o.md`, D74–D79):

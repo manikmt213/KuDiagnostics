@@ -21,6 +21,11 @@ final class GitHubUpdater {
 
 	private const TTL = 12 * HOUR_IN_SECONDS;
 
+	/**
+	 * Newest WordPress branch the release is tested on (CI and live checks; COMPATIBILITY.md).
+	 */
+	private const TESTED_BRANCH = '7.1';
+
 	private const RETRY = HOUR_IN_SECONDS;
 
 	private const ZIP = 'kuduy-mcp.zip';
@@ -109,6 +114,7 @@ final class GitHubUpdater {
 			'homepage'      => 'https://github.com/' . self::REPO,
 			'requires'      => '6.9',
 			'requires_php'  => '8.1',
+			'tested'        => self::tested(),
 			'last_updated'  => $release['published'],
 			'download_link' => $release['package'],
 			'sections'      => array(
@@ -292,7 +298,17 @@ final class GitHubUpdater {
 			'package'      => $release['package'],
 			'requires'     => '6.9',
 			'requires_php' => '8.1',
+			'tested'       => self::tested(),
 		);
+	}
+
+	/**
+	 * "Tested up to" for Dashboard > Updates. WordPress compares it with the full site version (7.1.5), so, as
+	 * wordpress.org reports the newest point release of the tested branch, a site on that branch gets its own version.
+	 */
+	public static function tested(): string {
+		$site = preg_replace( '/-.*$/', '', (string) get_bloginfo( 'version' ) );
+		return str_starts_with( (string) $site, self::TESTED_BRANCH . '.' ) || self::TESTED_BRANCH === $site ? (string) $site : self::TESTED_BRANCH;
 	}
 
 	/**

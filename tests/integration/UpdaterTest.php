@@ -155,6 +155,10 @@ final class UpdaterTest extends TestCase {
 		$this->assertSame( '9.9.9', $update->new_version );
 		$this->assertSame( self::DL . 'v9.9.9/kuduy-mcp.zip', $update->package );
 		$this->assertSame( 'kuduy-mcp', $update->slug );
+		// "Tested up to": the site's own version on the tested 7.1 branch (so the Updates screen does not say
+		// "Not tested"), the branch otherwise.
+		$site = preg_replace( '/-.*$/', '', get_bloginfo( 'version' ) );
+		$this->assertSame( str_starts_with( $site, '7.1.' ) ? $site : '7.1', $update->tested ?? null );
 		$github = array_values( array_filter( $this->seen, static fn( $r ) => str_contains( $r[0], 'api.github.com' ) ) );
 		$this->assertStringStartsWith( 'KUDUY-MCP/', $github[0][1]['headers']['User-Agent'] ?? '' );
 	}
