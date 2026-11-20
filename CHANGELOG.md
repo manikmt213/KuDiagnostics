@@ -2,7 +2,7 @@
 
 Format: user-facing releases first (newest on top), then the dated development history. Versions follow semantic versioning; tags `vX.Y.Z` publish a GitHub Release that installed sites receive through the built-in updater.
 
-## Unreleased
+## 1.5.0 — 2026-11-20
 
 Phase R (`docs/plans/phase-r.md`, D62–D66; built from source, tests written with the code and run after the whole phase was built, so the failing-first run was not observed):
 
