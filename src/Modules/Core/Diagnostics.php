@@ -397,7 +397,7 @@ final class Diagnostics implements Tool {
 	 * @param mixed $callback Callback.
 	 * @return array{callback:string, file:?string, line:?int, source:string}
 	 */
-	private static function describe( mixed $callback ): array {
+	public static function describe( mixed $callback ): array {
 		$name       = 'unknown';
 		$reflection = null;
 		try {

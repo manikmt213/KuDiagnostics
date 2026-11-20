@@ -100,6 +100,9 @@ jobs:
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: '', fakes: 'dce,shop-kit', label: '+ Dynamic Content for Elementor, Kadence Shop Kit (stand-ins)' }
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'wpforms-lite@2.0.4', fakes: 'wpforms-pro', label: '+ WPForms Pro entries (stand-in)' }
           - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'wpforms-lite@2.0.4', fakes: 'wpforms-pro', label: '+ WPForms Pro entries (stand-in)' }
+          # Phase F2: add-on module switches (HT Mega, Element Pack, Happy), extensions, Unlimited Elements, at the versions read.
+          - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'happy-elementor-addons@3.52.0,ht-mega-for-elementor@3.2.9,bdthemes-element-pack-lite@10.0.12,unlimited-elements-for-elementor@2.0.28', label: '+ add-on extras' }
+          - { wp: '7.1', php: '8.3', elementor: '4.3.6', plugins: 'happy-elementor-addons@3.52.0,ht-mega-for-elementor@3.2.9,bdthemes-element-pack-lite@10.0.12,unlimited-elements-for-elementor@2.0.28', label: '+ add-on extras' }
           # Phase R: WPCode (its abilities, write setting switched on by the test script), Masteriyo, Tutor LMS,
           # Themify Builder with a Builder Mosaic stand-in (paid add-on).
           - { wp: '6.9', php: '8.1', elementor: '4.3.6', plugins: 'insert-headers-and-footers@2.4.2', label: '+ WPCode' }

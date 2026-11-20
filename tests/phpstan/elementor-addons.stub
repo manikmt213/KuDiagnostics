@@ -1,0 +1,82 @@
+<?php
+/**
+ * PHPStan declarations of the Elementor add-on API KuDiagnostics calls in phase F2 (HT Mega 3.2.9, Happy Addons
+ * 3.52.0, Unlimited Elements 2.0.28).
+ */
+
+namespace HTMegaOpt\Admin {
+	class Options_Field {
+		/** @return self */
+		public static function instance() {}
+		/** @return array<string, array<int|string, mixed>> */
+		public function get_registered_settings() {}
+	}
+}
+
+namespace Happy_Addons\Elementor\Classes {
+	class Widgets_Manager {
+		/** @return array<string, array<string, mixed>> */
+		public static function get_widgets_map() {}
+		/** @return array<int, string>|false */
+		public static function get_inactive_widgets() {}
+		/** @param array<int, string> $widgets */
+		public static function save_inactive_widgets( $widgets = array() ): void {}
+		public static function get_base_widget_key(): string {}
+	}
+
+	class Extensions_Manager {
+		/** @return array<string, array<string, mixed>> */
+		public static function get_features_map() {}
+		/** @return array<string, array<string, mixed>> */
+		public static function get_extensions_map() {}
+		/** @return array<int, string>|false */
+		public static function get_inactive_features() {}
+		/** @return array<int, string>|false */
+		public static function get_inactive_extensions() {}
+		/** @return array<int, string> */
+		public static function get_always_on_features() {}
+		/** @param array<int, string> $features */
+		public static function save_inactive_features( $features = array() ): void {}
+		/** @param array<int, string> $extensions */
+		public static function save_inactive_extensions( $extensions = array() ): void {}
+	}
+}
+
+namespace {
+	function ha_has_pro(): bool {}
+
+	class GlobalsUC {
+		const ADDON_TYPE_ELEMENTOR = 'elementor';
+	}
+
+	class UniteCreatorAddon {
+		/** @return int|string */
+		public function getID() {}
+		/** @return string */
+		public function getTitle( $is_special_chars = false ) {}
+		/** @return string */
+		public function getName() {}
+		/** @return string */
+		public function getAlias() {}
+		/** @return bool|int|string */
+		public function getIsActive() {}
+		/** @return string */
+		public function getCatTitle() {}
+		/** @return string */
+		public function getDescription( $is_special_chars = false ) {}
+		/** @return array<int, mixed> */
+		public function getParams( $filter_type = null ) {}
+		/** @return array<int, mixed> */
+		public function getParamsItems( $filter_type = null ) {}
+		/** @return int|string */
+		public function addSmall( string $title, string $name, string $description, $cat_id, string $type ) {}
+	}
+
+	class UniteCreatorAddons {
+		/**
+		 * @param array<string, mixed> $params
+		 * @return array<int, mixed>|null
+		 */
+		public function getArrAddons( $order = '', $params = array(), $addon_type = null ) {}
+	}
+}

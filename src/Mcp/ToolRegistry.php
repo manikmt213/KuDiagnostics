@@ -56,6 +56,9 @@ use Kuduy\Mcp\Modules\Elementor\ElementorDocs;
 use Kuduy\Mcp\Modules\Elementor\ElementorForms;
 use Kuduy\Mcp\Modules\Elementor\ElementorPopup;
 use Kuduy\Mcp\Modules\Elementor\ElementorRead;
+use Kuduy\Mcp\Modules\Elementor\ElementorExtras;
+use Kuduy\Mcp\Modules\Elementor\AddonModules;
+use Kuduy\Mcp\Modules\Elementor\UnlimitedElements;
 use Kuduy\Mcp\Modules\Elementor\ElementorVerify;
 use Kuduy\Mcp\Modules\Elementor\ElementorWrite;
 use Kuduy\Mcp\Modules\Elementor\ThemeBuilder;
@@ -243,6 +246,14 @@ final class ToolRegistry {
 		foreach ( array( 'documents', 'get', 'widgets', 'schema', 'kit' ) as $mode ) {
 			$registry->register( new ElementorRead( $mode ) );
 		}
+		// Phase F2: usage search, add-on extensions, add-on module switches, Unlimited Elements (D67-D69).
+		foreach ( array( 'usage', 'extensions' ) as $mode ) {
+			$registry->register( new ElementorExtras( $mode ) );
+		}
+		foreach ( array( 'addon-modules', 'addon-module-set' ) as $mode ) {
+			$registry->register( new AddonModules( $mode ) );
+		}
+		$registry->register( new UnlimitedElements() );
 		foreach ( array( 'edit', 'create', 'kit-update' ) as $mode ) {
 			$registry->register( new ElementorWrite( $mode ) );
 		}

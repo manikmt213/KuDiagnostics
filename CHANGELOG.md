@@ -2,6 +2,16 @@
 
 Format: user-facing releases first (newest on top), then the dated development history. Versions follow semantic versioning; tags `vX.Y.Z` publish a GitHub Release that installed sites receive through the built-in updater.
 
+## Unreleased
+
+Phase F2 (`docs/plans/phase-f2.md`, D67–D69; built from source, tests written with the code and run after the phase was built):
+
+- Added: `kuduy-elementor-usage` — where Elementor widget and element types are used across the site (per type: uses, pages, providing plugin; for one widget or one add-on: the pages), counting only posts you can edit.
+- Added: `kuduy-elementor-extensions` — what add-ons attach to Elementor's own widgets, sections and containers, by plugin.
+- Added: `kuduy-elementor-addon-modules`, `-addon-module-set` — switch HT Mega, Element Pack and Happy Addons widgets, extensions and features on or off through each add-on's own save path, with undo.
+- Added: `kuduy-unlimited-elements-widgets` — the widgets installed with Unlimited Elements and their settings (no templates, no installs from its online library).
+- Changed: `kuduy-elementor-widgets` filters by plugin.
+
 ## 1.5.0 — 2026-11-20
 
 Phase R (`docs/plans/phase-r.md`, D62–D66; built from source, tests written with the code and run after the whole phase was built, so the failing-first run was not observed):

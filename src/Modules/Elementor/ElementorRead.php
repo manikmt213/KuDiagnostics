@@ -61,7 +61,7 @@ final class ElementorRead implements Tool {
 		return match ( $this->mode ) {
 			'documents' => 'Lists pages, posts and templates built with Elementor: id, title, document type, status, Elementor version, link.',
 			'get'       => 'Returns an Elementor page\'s element tree (id, elType, widgetType, settings, children) and page settings. Optionally only the subtree of one element, or without settings for a compact outline. Also lists element types on the page that are not registered right now (their plugin is inactive): such pages cannot be saved safely.',
-			'widgets'   => 'Lists the element and widget types Elementor can build on this site: name, title, v4 (atomic) or classic, categories, and the plugin that provides it (Elementor, Elementor Pro, an add-on).',
+			'widgets'   => 'Lists the element and widget types Elementor can build on this site: name, title, v4 (atomic) or classic, categories, and the plugin that provides it (Elementor, Elementor Pro, an add-on). Filter by search (name or title) or plugin (folder or part of the name, e.g. "HT Mega").',
 			'schema'    => 'Returns the settings a widget or element accepts. Classic widgets: every control with type, default and options; responsive controls list their per-device keys (e.g. "align", "align_tablet", "align_mobile"); "dynamic": true marks settings that accept a dynamic tag (kuduy-elementor-dynamic-set). v4 (atomic) elements: JSON Schema per prop, where values use {"$$type": …, "value": …}.',
 			default     => 'Returns the active Elementor Kit\'s global colors and fonts (with ids used as global references), breakpoints and content width.',
 		};
@@ -96,6 +96,11 @@ final class ElementorRead implements Tool {
 				'search' => array(
 					'type'      => 'string',
 					'maxLength' => 100,
+				),
+				'plugin' => array(
+					'type'        => 'string',
+					'maxLength'   => 100,
+					'description' => 'Only widgets of this plugin: its folder (e.g. "happy-elementor-addons") or part of its name (e.g. "HT Mega").',
 				),
 			),
 			'schema'    => array(
@@ -224,7 +229,7 @@ final class ElementorRead implements Tool {
 		return match ( $this->mode ) {
 			'documents' => self::documents( $input ),
 			'get'       => self::get( $input ),
-			'widgets'   => self::widgets( (string) ( $input['search'] ?? '' ) ),
+			'widgets'   => self::widgets( (string) ( $input['search'] ?? '' ), (string) ( $input['plugin'] ?? '' ) ),
 			'schema'    => self::schema( (string) $input['type'] ),
 			default     => self::kit(),
 		};
@@ -354,17 +359,30 @@ final class ElementorRead implements Tool {
 	 * Registered element and widget types.
 	 *
 	 * @param string $search Filter on name or title.
+	 * @param string $by     Filter on the providing plugin: folder or part of its name.
 	 * @return array<string, mixed>
 	 */
-	private static function widgets( string $search ): array {
+	private static function widgets( string $search, string $by = '' ): array {
 		$plugin = \Elementor\Plugin::$instance;
 		$match  = static fn( string $name, string $title ): bool => '' === $search || false !== stripos( $name . ' ' . $title, $search );
-		$out    = array(
+		// An exact plugin folder matches only that folder ("elementor" must not match "Happy Elementor Addons"); otherwise
+		// part of the plugin's name.
+		$folders = array();
+		foreach ( array( (array) $plugin->elements_manager->get_element_types(), (array) $plugin->widgets_manager->get_widget_types() ) as $types ) {
+			foreach ( $types as $type ) {
+				if ( is_object( $type ) ) {
+					$folders[ Elementor::source( $type ) ] = true;
+				}
+			}
+		}
+		$exact = isset( $folders[ $by ] );
+		$from  = static fn( object $type ): bool => '' === $by || ( $exact ? Elementor::source( $type ) === $by : false !== stripos( Elementor::source_name( $type ), $by ) );
+		$out   = array(
 			'elements' => array(),
 			'widgets'  => array(),
 		);
 		foreach ( (array) $plugin->elements_manager->get_element_types() as $name => $type ) {
-			if ( is_object( $type ) && $match( (string) $name, (string) $type->get_title() ) ) {
+			if ( is_object( $type ) && $match( (string) $name, (string) $type->get_title() ) && $from( $type ) ) {
 				$out['elements'][] = array(
 					'name'   => (string) $name,
 					'title'  => (string) $type->get_title(),
@@ -374,7 +392,7 @@ final class ElementorRead implements Tool {
 			}
 		}
 		foreach ( (array) $plugin->widgets_manager->get_widget_types() as $name => $type ) {
-			if ( is_object( $type ) && $match( (string) $name, (string) $type->get_title() ) ) {
+			if ( is_object( $type ) && $match( (string) $name, (string) $type->get_title() ) && $from( $type ) ) {
 				$out['widgets'][] = array(
 					'name'       => (string) $name,
 					'title'      => (string) $type->get_title(),

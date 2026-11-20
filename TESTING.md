@@ -592,6 +592,21 @@ Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures o
 
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
+## Phase F2 — Elementor add-on extras (2026-11-20)
+
+Real plugins in Playground: Happy Addons 3.52.0, HT Mega 3.2.9, Element Pack Lite 10.0.12, Unlimited Elements 2.0.28 (CI row "+ add-on extras", both pairs); EX4 also runs in the existing add-on rows (Happy 3.51.3, HT Mega 3.2.8, Element Pack 10.0.5).
+
+| ID | What | Type — file |
+|---|---|---|
+| EX1 | Usage: summary per type with providing plugin, pages of one widget with counts, unknown plugin refused, posts a contributor cannot edit not counted | I — `ElementorExtrasTest` |
+| EX2 | Widget list by plugin: exactly that plugin's widgets for every add-on folder present ("elementor" no longer matches add-ons with Elementor in their name) | I — `ElementorExtrasTest` |
+| EX3 | Extensions by plugin (Elementor, Elementor Pro and KuDiagnostics excluded; Happy Addons listed and found by name); editor refused | I — `ElementorExtrasTest` |
+| EX4 | Module switches for each active add-on: one switched off through its own save path, stored, no other switch changed, undone; unknown module refused; editor refused | I — `ElementorExtrasTest` |
+| EX5 | Unlimited Elements: widget made with its own `addSmall()` listed with its Elementor name and read; template text not returned; unknown widget refused | I — `ElementorExtrasTest` |
+| EX6 | All five tools registered | I — `ElementorExtrasTest` |
+
+Round 2026-11-20: "+ add-on extras" 290 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1 (a filtered run confirmed EX1–EX6 all ran, none skipped; EX4 74 assertions over the three add-ons); bare 290, 0 (both); add-ons B and C rows (7.1) 290, 0; PHPCS and PHPStan clean. The first run failed EX2 and found a real bug: the plugin filter matched "elementor" inside add-on names; exact folders now match only that folder (also in the usage and extensions filters).
+
 ## Phase R — WPCode, Masteriyo, Tutor LMS, Themify Builder, Mosaic (2026-11-20)
 
 Real plugins in Playground (each its own CI row); Builder Mosaic against a stand-in (`tests/integration/fakes/mosaic.php`, from the source read on the owner's site). Tests were written with the code and run after the phase was built.
