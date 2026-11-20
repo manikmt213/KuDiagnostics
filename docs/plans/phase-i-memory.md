@@ -33,4 +33,4 @@ Secrets are refused, not masked: a save or import whose text the redactor or the
 
 ## Status
 
-Built and tested 2026-11-20 (ME1–ME7, DS2–DS3 on both pairs; results in `TESTING.md`). Not released.
+Built and tested 2026-11-20 (ME1–ME7, DS2–DS3 on both pairs; results in `TESTING.md`). Released in 1.6.0 (2026-11-20).

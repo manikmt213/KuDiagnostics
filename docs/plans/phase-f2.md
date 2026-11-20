@@ -31,4 +31,4 @@ D67 usage search and extensions list as described (reads, no per-add-on code). D
 
 ## Status
 
-Built and tested 2026-11-20 (EX1–EX6 on both pairs; results in `TESTING.md`). Not released, not live-checked.
+Built and tested 2026-11-20 (EX1–EX6 on both pairs; results in `TESTING.md`). Released in 1.6.0 (2026-11-20).
