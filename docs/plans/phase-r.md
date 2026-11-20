@@ -36,4 +36,4 @@ Real plugins in Playground: WPCode 2.4.2, Masteriyo 3.5.2, Tutor LMS 4.2.1, Them
 
 ## Status
 
-Built and tested 2026-11-20 (WC1–WC5, MY1–MY4, TU1–TU4, TB1–TB3 on both pairs; results in `TESTING.md`). Live-checked on the owner's site 2026-11-20 (results in `TESTING.md`); gap found: no trash tool for WPCode snippets — added the same day (`kuduy-wpcode-snippet-trash`, WC1). LearnWorlds open (D66).
+Built and tested 2026-11-20 (WC1–WC5, MY1–MY4, TU1–TU4, TB1–TB3 on both pairs; results in `TESTING.md`). Live-checked on the owner's site 2026-11-20 (results in `TESTING.md`); gap found: no trash tool for WPCode snippets — added the same day (`kuduy-wpcode-snippet-trash`, WC1). Released in 1.5.0 (2026-11-20). LearnWorlds open (D66).
