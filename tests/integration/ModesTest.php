@@ -134,6 +134,17 @@ final class ModesTest extends TestCase {
 			)
 		);
 		wp_register_ability(
+			'wpforms/kuduy-test-get-entry',
+			array(
+				'label'               => 'Covered forms plugin',
+				'description'         => 'A forms plugin KuDiagnostics has its own tools for (entries are masked there).',
+				'category'            => 'site',
+				'execute_callback'    => static fn(): bool => true,
+				'permission_callback' => '__return_true',
+				'meta'                => $public( true ),
+			)
+		);
+		wp_register_ability(
 			'meta-box/kuduy-test-get',
 			array(
 				'label'               => 'Covered',
@@ -334,6 +345,8 @@ final class ModesTest extends TestCase {
 		$this->assertNotContains( 'kuduy-test/private-thing', $names, 'only abilities marked public for MCP' );
 		$this->assertNotContains( 'meta-box/kuduy-test-get', $names, 'covered plugins are left to their own tools' );
 		$this->assertContains( 'Meta Box', array_column( $list['covered'], 'product' ) );
+		$this->assertNotContains( 'wpforms/kuduy-test-get-entry', $names, 'forms plugins are covered (live check 2026-11-21)' );
+		$this->assertContains( 'WPForms', array_column( $list['covered'], 'product' ) );
 		$this->assertSame( 'kuduy-ability-read', $rows['kuduy-test/get-note']['run_with'] );
 		$this->assertSame( 'kuduy-ability-run', $rows['kuduy-test/set-note']['run_with'] );
 		$this->assertSame( 'not run here', $rows['kuduy-test/run-php']['run_with'] );

@@ -105,6 +105,18 @@ final class FormidableEditor implements FormEditor {
 	}
 
 	/**
+	 * Formidable creates and upgrades its tables when an admin page loads (FrmAppController::admin_init). After it is
+	 * activated over the API no admin page has loaded, and FrmForm::create() fails ("Form creation failed"; found on
+	 * the live site, 2026-11-21, Formidable 7.1.1). Run Formidable's own silent upgrade, the one its REST route and
+	 * ajax installer use (`api_install()`: only when `needs_update()`, guarded against running twice).
+	 */
+	private static function ensure_database(): void {
+		if ( is_callable( array( 'FrmAppController', 'needs_update' ) ) && is_callable( array( 'FrmAppController', 'api_install' ) ) && call_user_func( array( 'FrmAppController', 'needs_update' ) ) ) {
+			call_user_func( array( 'FrmAppController', 'api_install' ) );
+		}
+	}
+
+	/**
 	 * Types that can be added, with their labels.
 	 *
 	 * @return array<string, string>
@@ -360,6 +372,7 @@ final class FormidableEditor implements FormEditor {
 	 * @throws ToolError When the plugin refuses or the form is missing.
 	 */
 	public function apply( int $form_id, array $operations ): array {
+		self::ensure_database();
 		$before = $this->snapshot( $form_id );
 		$added  = array();
 		try {
@@ -459,6 +472,7 @@ final class FormidableEditor implements FormEditor {
 	 * @throws ToolError When the plugin refuses or the form is missing.
 	 */
 	public function create( string $title ): int {
+		self::ensure_database();
 		$made = self::run( self::FORMS, 'execute_create_form', array( 'name' => sanitize_text_field( $title ) ) );
 		$id   = (int) ( $made['id'] ?? 0 );
 		if ( $id <= 0 ) {

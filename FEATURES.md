@@ -263,7 +263,7 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | Content model across plugins (`kuduy-content-model`) | Tested 2026-11-18 (FE6) |
 | Gravity Forms form editing (`kuduy-gravity-forms-*`) | Tested 2026-11-18 against a stand-in (FB6; source of 3.2.2) |
 | Form export to a plugin-neutral model (`kuduy-forms-export`: CF7, WPForms, Fluent, Ninja, Formidable, Gravity) | Tested 2026-11-21 (FM1, FM5; Gravity not covered by a migration test) |
-| Form migration between plugins with plan, new form and check (`kuduy-forms-migrate`) | Tested 2026-11-21 (FM2 CF7 → Fluent, FM3 Fluent → WPForms Lite with fallbacks, FM5 Ninja ↔ Formidable; real plugins in Playground). Notifications and entries are not moved (by design) |
+| Form migration between plugins with plan, new form and check (`kuduy-forms-migrate`) | Tested 2026-11-21 (FM2 CF7 → Fluent, FM3 Fluent → WPForms Lite with fallbacks, FM5 Ninja ↔ Formidable; real plugins in Playground) and checked live with the paid Gravity Forms 3.2.2, WPForms 2.0.4 and Formidable 7.1.1 (one finding fixed). Notifications and entries are not moved (by design) |
 | Pro SEO redirects: Yoast Premium, SEOPress PRO, AIOSEO Pro (`kuduy-{yoast,seopress,aioseo}-redirect*`) | Tested 2026-11-18 against stand-ins (SR1–SR3) |
 | Dynamic Shortcodes types, check, Power Shortcodes (`kuduy-dynamic-shortcodes-*`) | Tested 2026-11-18 against a stand-in (DS1) |
 | WPML languages and translations (`kuduy-lang-*`) | Tested 2026-11-18 against a stand-in (L5; hooks of 5.3.0) |
@@ -379,10 +379,10 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 
 | Feature | Status |
 |---|---|
-| Site-wide read-only switch (screen + `KUDUY_MCP_READ_ONLY`): only read tools listed and run, jobs stop | Tested 2026-11-21 (MJ1–MJ4, every write tool on both pairs) |
+| Site-wide read-only switch (screen + `KUDUY_MCP_READ_ONLY`): only read tools listed and run, jobs stop | Tested 2026-11-21 (MJ1–MJ4, every write tool on both pairs) and checked live (screen switch on and off) |
 | Ghost mode: preview, then apply exactly what was previewed | Tested (D45 confirmation tokens, phase M, CT1–CT8) |
-| Snapshot comparison (`kuduy-snapshot-diff`) | Tested 2026-11-21 (MJ6) |
-| Abilities hub: list, read, run public abilities of other plugins (`kuduy-abilities`, `-ability-read`, `-ability-run`) | Tested 2026-11-21 (MJ7, test abilities); not yet run against a real plugin's abilities |
+| Snapshot comparison (`kuduy-snapshot-diff`) | Tested 2026-11-21 (MJ6) and checked live |
+| Abilities hub: list, read, run public abilities of other plugins (`kuduy-abilities`, `-ability-read`, `-ability-run`) | Tested 2026-11-21 (MJ7) and checked live (Formidable 7.1.1 read ability; forms plugins now covered); no write ability run live |
 
 ## Admin screen and docs (phase P, D84–D86)
 

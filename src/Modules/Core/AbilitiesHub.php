@@ -21,17 +21,26 @@ use Kuduy\Mcp\Mcp\ToolError;
 final class AbilitiesHub implements Tool {
 
 	/**
-	 * Ability namespaces handled by dedicated KuDiagnostics tools => product name.
+	 * Ability namespaces handled by dedicated KuDiagnostics tools => product name. A namespace is covered when it is
+	 * one of these, or starts with one of FAMILIES (products that use several namespaces, e.g. "aioseo-posts",
+	 * "formidable-forms"). The forms plugins were added after the live
+	 * check of 2026-11-21: WPForms publishes get-entry and similar abilities, which would have returned entries
+	 * without the personal-data masking of KuDiagnostics' own entry tools (D12).
 	 */
 	public const COVERED = array(
 		'aioseo'         => 'All in One SEO',
 		'astra'          => 'Astra',
 		'breakdance'     => 'Breakdance',
 		'bricks'         => 'Bricks',
+		'contact-form-7' => 'Contact Form 7',
 		'elementor'      => 'Elementor',
+		'fluent'         => 'Fluent Forms',
+		'formidable'     => 'Formidable Forms',
+		'gravity'        => 'Gravity Forms',
 		'kuduy'          => 'KuDiagnostics',
 		'masteriyo'      => 'Masteriyo',
 		'meta-box'       => 'Meta Box',
+		'ninja-forms'    => 'Ninja Forms',
 		'oxygen'         => 'Oxygen',
 		'rank-math'      => 'Rank Math',
 		'seopress'       => 'SEOPress',
@@ -39,7 +48,14 @@ final class AbilitiesHub implements Tool {
 		'woocommerce'    => 'WooCommerce',
 		'wp-rocket'      => 'WP Rocket',
 		'wpcode'         => 'WPCode',
+		'wpcf7'          => 'Contact Form 7',
+		'wpforms'        => 'WPForms',
 	);
+
+	/**
+	 * COVERED keys matched as a prefix of the namespace.
+	 */
+	private const FAMILIES = array( 'aioseo', 'fluent', 'formidable', 'gravity' );
 
 	/**
 	 * Parts of an ability's own name that mean it runs code or sends data out: never run here.
@@ -224,7 +240,7 @@ final class AbilitiesHub implements Tool {
 	public static function covered_by( string $name ): string {
 		$namespace = (string) strstr( $name, '/', true );
 		foreach ( self::COVERED as $prefix => $product ) {
-			if ( $namespace === $prefix || ( 'aioseo' === $prefix && str_starts_with( $namespace, 'aioseo' ) ) ) {
+			if ( $namespace === $prefix || ( in_array( $prefix, self::FAMILIES, true ) && str_starts_with( $namespace, $prefix ) ) ) {
 				return $product;
 			}
 		}

@@ -231,8 +231,8 @@ final class FormMigrationTest extends TestCase {
 
 	public function test_fm5_ninja_to_formidable_and_back(): void {
 		$this->needs( array( 'ninja', 'formidable' ) );
-		// Creates Formidable's tables when the plugin was activated without its admin screens (as FormEditFormidableTest).
-		\FrmAppController::install();
+		// No install call: the Formidable editor runs Formidable's own upgrade when its tables are missing (live check
+		// 2026-11-21: activated over the API, Formidable refused to create forms until an admin page loaded).
 		$ninja  = (int) $this->ok(
 			'kuduy-ninja-forms-form-create',
 			array(
