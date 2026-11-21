@@ -2,7 +2,7 @@
 
 Format: user-facing releases first (newest on top), then the dated development history. Versions follow semantic versioning; tags `vX.Y.Z` publish a GitHub Release that installed sites receive through the built-in updater.
 
-## Unreleased
+## 1.8.1 — 2026-11-21
 
 - Fixed: the abilities hub no longer runs the abilities of forms plugins KuDiagnostics has its own tools for (WPForms, Formidable, Gravity Forms, Ninja Forms, Fluent Forms, Contact Form 7). WPForms' entry abilities returned form entries without the personal-data masking of `kuduy-forms-entries`.
 - Fixed: right after Formidable was activated through KuDiagnostics, creating or changing a Formidable form failed until someone opened a Formidable admin page. KuDiagnostics now runs Formidable's own database update first.
