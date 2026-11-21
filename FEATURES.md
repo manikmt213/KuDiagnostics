@@ -262,6 +262,8 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | ASE module switches (`kuduy-ase-*`) | Tested 2026-11-18 (FE5; ASE 9.3.3) |
 | Content model across plugins (`kuduy-content-model`) | Tested 2026-11-18 (FE6) |
 | Gravity Forms form editing (`kuduy-gravity-forms-*`) | Tested 2026-11-18 against a stand-in (FB6; source of 3.2.2) |
+| Form export to a plugin-neutral model (`kuduy-forms-export`: CF7, WPForms, Fluent, Ninja, Formidable, Gravity) | Tested 2026-11-21 (FM1, FM5; Gravity not covered by a migration test) |
+| Form migration between plugins with plan, new form and check (`kuduy-forms-migrate`) | Tested 2026-11-21 (FM2 CF7 → Fluent, FM3 Fluent → WPForms Lite with fallbacks, FM5 Ninja ↔ Formidable; real plugins in Playground). Notifications and entries are not moved (by design) |
 | Pro SEO redirects: Yoast Premium, SEOPress PRO, AIOSEO Pro (`kuduy-{yoast,seopress,aioseo}-redirect*`) | Tested 2026-11-18 against stand-ins (SR1–SR3) |
 | Dynamic Shortcodes types, check, Power Shortcodes (`kuduy-dynamic-shortcodes-*`) | Tested 2026-11-18 against a stand-in (DS1) |
 | WPML languages and translations (`kuduy-lang-*`) | Tested 2026-11-18 against a stand-in (L5; hooks of 5.3.0) |

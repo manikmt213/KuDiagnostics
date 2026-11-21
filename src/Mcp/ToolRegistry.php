@@ -107,6 +107,7 @@ use Kuduy\Mcp\Modules\Forms\Cf7Save;
 use Kuduy\Mcp\Modules\Forms\Editing\Cf7Tags;
 use Kuduy\Mcp\Modules\Forms\Editing\FluentEditor;
 use Kuduy\Mcp\Modules\Forms\Editing\FormEditTools;
+use Kuduy\Mcp\Modules\Forms\Migration\MigrationTools;
 use Kuduy\Mcp\Modules\Forms\Editing\FormidableEditor;
 use Kuduy\Mcp\Modules\Forms\Editing\GravityEditor;
 use Kuduy\Mcp\Modules\Forms\Editing\NinjaEditor;
@@ -458,6 +459,10 @@ final class ToolRegistry {
 		}
 		foreach ( array( 'form-tags', 'form-edit', 'validate' ) as $mode ) {
 			$registry->register( new Cf7Tags( $mode ) );
+		}
+		// Phase B3 (D83): form export and migration between forms plugins.
+		foreach ( array( 'export', 'migrate' ) as $mode ) {
+			$registry->register( new MigrationTools( $mode ) );
 		}
 		foreach ( array( 'types', 'post' ) as $mode ) {
 			$registry->register( new BlockTools( $mode ) );

@@ -210,7 +210,7 @@ Owner's standing order (2026-11-14): builders and themes first, then C → G →
 | 9 | **O. Administration** (+ spec 15, 25) | Plugin ZIP/uninstall/delete/inspect (D46, D47, D49); user delete with reassignment/reset; cron actions; backup provider (D48); cross-plugin dependency/conflict tools; file move/delete under D4 | Guards tested (last admin, self, own plugin) | Large |
 | 10 | **J. Modes** | Site-wide read-only switch; abilities hub (D34); snapshot diff | Every write tool blocked in read-only | Medium |
 | 11 | **K. Tokens and translation** | Measure, trim; Weglot | Numbers before/after | Small–medium |
-| 12 | **B3. Form migration** | Canonical export, mapping, preview, execute, verify | CF7 → Fluent round-trip with report | Medium |
+| 12 | **B3. Form migration** | Canonical export, mapping, preview, execute, verify | CF7 → Fluent round-trip with report | Medium — **built 2026-11-21** (D83, `docs/plans/phase-b3-form-migration.md`) |
 | 13 | **P. Admin UI and docs** | Integrations tab, consent wording "Full Site Administration", connection activity, per-integration docs generated from the catalogue, adapter developer guide | Screens checked in browser | Medium |
 | — | **L. Paid products** | Gravity Forms, WPForms Pro, JetEngine, JetElements, DCE, Bricksforge, Dynamic Shortcodes, WPML, ACF Pro, ASE Pro, SEO Pro editions | Tested on the licensed copy | Per copy |
 

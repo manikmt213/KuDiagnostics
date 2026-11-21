@@ -600,6 +600,18 @@ Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures o
 
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
+## Phase B3 — form migration (2026-11-21)
+
+| ID | What | Type — file |
+|---|---|---|
+| FM1 | CF7 export: labels from `<label>`, required, placeholder, choices with `label|value` pipes, acceptance text and required, quiz skipped, submit text, "sent" message, one active mail | I — `FormMigrationTest` (forms row) |
+| FM2 | **Exit gate:** CF7 → Fluent Forms plan creates nothing and maps each field (input_text, input_email, input_url, select, gdpr_agreement; quiz not carried); with confirm a new Fluent form is created, verify ok, CF7 names kept as Fluent names (`your_name`, …), placeholder, submit text and confirmation carried, the CF7 form unchanged | I — `FormMigrationTest` (forms row) |
+| FM3 | Fluent → WPForms Lite: URL becomes text ("no URL check"), agreement becomes a one-choice checkbox; verify ok | I — `FormMigrationTest` (forms row) |
+| FM4 | Author refused for export and migration; unknown form refused; inactive target refused | I — `FormMigrationTest` (forms row) |
+| FM5 | Ninja → Formidable → Ninja: types, labels, choices kept; verify ok both ways | I — `FormMigrationTest` (Ninja + Formidable row) |
+
+Round 2026-11-21: bare suites 326 tests, 0 failures on 7.1.5/8.3 and 6.9.12/8.1; forms row (CF7, Flamingo, Fluent, WPForms Lite) 349 tests, 0 failures on both pairs (FM1–FM4 ran, FM5 skipped there); Ninja + Formidable row 336 tests, 0 failures on both pairs (FM5 ran); Gravity stand-in row 331 tests, 0 failures on 7.1.5/8.3; PHPCS and PHPStan clean; `docs/TOOLS.md` regenerated. Two runs had to be repeated: the 6.9 forms row once stopped before PHPUnit wrote its report (Playground exit 1), and the 6.9 bare suite once reported 1 failure whose report was overwritten before it was read; both were green when run again, and the failing test is not known. Found while testing: Formidable refuses to create forms until its tables exist (FM5 runs its install, as the Formidable editing test does).
+
 ## Phase J — modes (2026-11-21)
 
 | ID | What | Type — file |

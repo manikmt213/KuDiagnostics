@@ -10,6 +10,11 @@ Phase J (`docs/plans/phase-j.md`, D80–D82):
 - Added: `kuduy-snapshot-diff` — what changed since an undo snapshot, field by field, before restoring it.
 - Added: abilities hub — `kuduy-abilities`, `kuduy-ability-read`, `kuduy-ability-run` for plugins that publish WordPress abilities for MCP and have no KuDiagnostics tools; changes always ask for confirmation first.
 
+Phase B3 (`docs/plans/phase-b3-form-migration.md`, D83):
+
+- Added: `kuduy-forms-export` — any Contact Form 7, WPForms, Fluent Forms, Ninja Forms, Formidable or Gravity Forms form in one plugin-neutral shape.
+- Added: `kuduy-forms-migrate` — copy a form into another forms plugin as a new form: a plan first (what each field becomes, what cannot be carried), then the form is created through that plugin's own save path and checked field by field. The old form, its entries and notifications stay as they are.
+
 ## 1.7.2 — 2026-11-21
 
 - Fixed: updates were not offered while GitHub's API refused this server (its anonymous limit of 60 requests an hour is per IP address, which shared hosts share between many sites). The updater now reads the latest release from GitHub's release page instead; the download is still checked against its published SHA-256.

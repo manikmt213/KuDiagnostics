@@ -280,6 +280,17 @@ final class Cf7Tags implements Tool, Snapshottable {
 	}
 
 	/**
+	 * The tags of a form, as kuduy-cf7-form-tags lists them (used by the form migration, phase B3).
+	 *
+	 * @param int $form_id Form id.
+	 * @return list<array<string, mixed>>
+	 * @throws ToolError When the form does not exist.
+	 */
+	public static function tags( int $form_id ): array {
+		return array_map( array( self::class, 'show' ), self::locate( (string) Cf7Adapter::find( $form_id )->prop( 'form' ) ) );
+	}
+
+	/**
 	 * A tag as the tools show it.
 	 *
 	 * @param array<string, mixed> $row Located tag.
