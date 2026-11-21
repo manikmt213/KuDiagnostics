@@ -10,6 +10,7 @@ namespace Kuduy\Mcp\Jobs;
 use Kuduy\Mcp\Mcp\Executor;
 use Kuduy\Mcp\Mcp\ToolRegistry;
 use Kuduy\Mcp\OAuth\Scopes;
+use Kuduy\Mcp\Policy\ReadOnlyMode;
 
 /**
  * A job runs one tool over many inputs in the background, as the user who started it. Each item goes through the
@@ -208,6 +209,9 @@ final class Jobs {
 		$tool   = ToolRegistry::create()->get( (string) ( $job['tool'] ?? '' ) );
 		if ( '' !== $scopes && ( ! $tool || ! Scopes::allows( Scopes::parse( $scopes ), $tool->scope() ) ) ) {
 			return 'The connection does not allow this tool.';
+		}
+		if ( $tool && ! ReadOnlyMode::allows( $tool ) ) {
+			return 'The site was switched to read-only mode.';
 		}
 		$client = (string) ( $job['client_id'] ?? '' );
 		if ( '' !== $client && ! self::connected( (int) $job['user_id'], $client ) ) {

@@ -10,6 +10,7 @@ namespace Kuduy\Mcp\Mcp;
 use Kuduy\Mcp\Audit\AuditLog;
 use Kuduy\Mcp\OAuth\Scopes;
 use Kuduy\Mcp\Policy\RateLimiter;
+use Kuduy\Mcp\Policy\ReadOnlyMode;
 use Kuduy\Mcp\OAuth\TokenAuth;
 use Kuduy\Mcp\Plugin;
 
@@ -301,7 +302,7 @@ final class Server {
 	private static function list_tools(): array {
 		$tools = array();
 		foreach ( ToolRegistry::create()->all() as $tool ) {
-			if ( ( true !== $tool->is_available() && ! self::list_unavailable() ) || ! self::scope_allows( $tool ) || ! Executor::allowed( $tool, array() ) ) {
+			if ( ( true !== $tool->is_available() && ! self::list_unavailable() ) || ! self::scope_allows( $tool ) || ! ReadOnlyMode::allows( $tool ) || ! Executor::allowed( $tool, array() ) ) {
 				continue;
 			}
 			$tools[] = array(
@@ -405,7 +406,8 @@ final class Server {
 	 * Server instructions for the model.
 	 */
 	private static function instructions(): string {
-		return 'Tools act on this WordPress site as the connected WordPress user, limited by that user\'s capabilities. Start with kuduy-site-info.';
+		return 'Tools act on this WordPress site as the connected WordPress user, limited by that user\'s capabilities. Start with kuduy-site-info.'
+			. ( ReadOnlyMode::is_on() ? ' The site is in read-only mode: only tools that read are available.' : '' );
 	}
 
 	/**

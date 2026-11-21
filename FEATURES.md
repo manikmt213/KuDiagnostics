@@ -373,6 +373,15 @@ Plan and gap analysis for the wider upgrade: `AUDIT.md`, `FEATURE-GAP.md`, `INTE
 | MCP, OAuth, tools, jobs, audit keep working when hidden | Tested 2026-11-10 (Playground, WP 6.9.11 + 7.1.4) (D23) |
 | Recovery: `wp option update kuduy_mcp_hidden_mode 0`, WP-CLI command, `KUDUY_MCP_SHOW_UI` constant | Tested 2026-11-10 (Playground, WP 6.9.11 + 7.1.4) (D23) |
 
+## Modes (phase J, D80–D82)
+
+| Feature | Status |
+|---|---|
+| Site-wide read-only switch (screen + `KUDUY_MCP_READ_ONLY`): only read tools listed and run, jobs stop | Tested 2026-11-21 (MJ1–MJ4, every write tool on both pairs) |
+| Ghost mode: preview, then apply exactly what was previewed | Tested (D45 confirmation tokens, phase M, CT1–CT8) |
+| Snapshot comparison (`kuduy-snapshot-diff`) | Tested 2026-11-21 (MJ6) |
+| Abilities hub: list, read, run public abilities of other plugins (`kuduy-abilities`, `-ability-read`, `-ability-run`) | Tested 2026-11-21 (MJ7, test abilities); not yet run against a real plugin's abilities |
+
 ## Release deliverables (§15 Phase 10)
 
 | Feature | Status |

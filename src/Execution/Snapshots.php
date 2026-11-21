@@ -7,6 +7,8 @@
 
 namespace Kuduy\Mcp\Execution;
 
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- tool errors are returned to the MCP client as JSON text, never printed as HTML.
+
 use Kuduy\Mcp\Mcp\Executor;
 use Kuduy\Mcp\Mcp\ToolError;
 use Kuduy\Mcp\Mcp\ToolRegistry;
@@ -63,12 +65,58 @@ final class Snapshots {
 			? $wpdb->get_results( $wpdb->prepare( "SELECT id, ts, user_id, tool, object_type, object_id FROM {$table} WHERE restored_at IS NULL ORDER BY id DESC LIMIT %d", $limit ), ARRAY_A )
 			: $wpdb->get_results( $wpdb->prepare( "SELECT id, ts, user_id, tool, object_type, object_id FROM {$table} WHERE restored_at IS NULL AND user_id = %d ORDER BY id DESC LIMIT %d", get_current_user_id(), $limit ), ARRAY_A );
 		// phpcs:enable
+		// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- see the top of the file.
 		return array_map(
 			static fn( array $row ): array => array(
 				'id'      => (int) $row['id'],
 				'user_id' => (int) $row['user_id'],
 			) + $row,
 			array_values( (array) $rows )
+		);
+	}
+
+	/**
+	 * A snapshot the current user may act on, with the tool that made it (same rules as undo: the owner or a site
+	 * manager, the connection's scope and the user's capability for the same object).
+	 *
+	 * @param int  $id       Snapshot id.
+	 * @param bool $restored Whether an already restored snapshot is acceptable.
+	 * @return array{row: array<string, mixed>, tool: Snapshottable&\Kuduy\Mcp\Mcp\Tool, input: array<string, mixed>, state: array<string, mixed>}
+	 * @throws ToolError When it is unknown or not allowed.
+	 */
+	private static function checked( int $id, bool $restored ): array {
+		global $wpdb;
+		$table = $wpdb->prefix . 'kuduy_snapshots';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- custom table.
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ), ARRAY_A );
+		if ( ! is_array( $row ) ) {
+			throw new ToolError( 'Snapshot not found.', ToolError::RESOURCE_NOT_FOUND );
+		}
+		if ( get_current_user_id() !== (int) $row['user_id'] && ! current_user_can( 'manage_options' ) ) {
+			throw new ToolError( 'Only the person who made this change, or a site manager, can use this snapshot.', ToolError::PERMISSION_DENIED );
+		}
+		if ( ! $restored && null !== $row['restored_at'] ) {
+			throw new ToolError( 'This snapshot was already restored.', ToolError::CONFLICT );
+		}
+		$tool = ToolRegistry::create()->get( (string) $row['tool'] );
+		if ( ! $tool instanceof Snapshottable ) {
+			throw new ToolError( 'The tool that made this snapshot is not available on this site now.', ToolError::FEATURE_NOT_SUPPORTED );
+		}
+		$saved   = json_decode( (string) $row['payload'], true );
+		$input   = is_array( $saved['input'] ?? null ) ? $saved['input'] : array();
+		$state   = is_array( $saved['state'] ?? null ) ? $saved['state'] : array();
+		$granted = TokenAuth::scopes();
+		if ( null !== $granted && ! Scopes::allows( $granted, $tool->scope() ) ) {
+			throw new ToolError( 'This connection was not granted the access level of the tool that made this change.', ToolError::PERMISSION_DENIED );
+		}
+		if ( ! Executor::allowed( $tool, $input ) ) {
+			throw new ToolError( 'Your WordPress account is not allowed to make this change.', ToolError::PERMISSION_DENIED );
+		}
+		return array(
+			'row'   => $row,
+			'tool'  => $tool,
+			'input' => $input,
+			'state' => $state,
 		);
 	}
 
@@ -83,36 +131,15 @@ final class Snapshots {
 	public static function restore( int $id ): array {
 		global $wpdb;
 		$table = $wpdb->prefix . 'kuduy_snapshots';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- custom table.
-		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ), ARRAY_A );
-		if ( ! is_array( $row ) ) {
-			throw new ToolError( 'Snapshot not found.' );
-		}
-		if ( get_current_user_id() !== (int) $row['user_id'] && ! current_user_can( 'manage_options' ) ) {
-			throw new ToolError( 'Only the person who made this change, or a site manager, can restore it.' );
-		}
-		$tool = ToolRegistry::create()->get( (string) $row['tool'] );
-		if ( ! $tool instanceof Snapshottable ) {
-			throw new ToolError( 'The tool that made this snapshot is not available, so it cannot be restored.' );
-		}
-		$saved = json_decode( (string) $row['payload'], true );
-		$input = is_array( $saved['input'] ?? null ) ? $saved['input'] : array();
-		$state = is_array( $saved['state'] ?? null ) ? $saved['state'] : array();
 		// Undo is the original change in reverse: it needs the same OAuth scope and capability as the tool that made it.
-		$granted = TokenAuth::scopes();
-		if ( null !== $granted && ! Scopes::allows( $granted, $tool->scope() ) ) {
-			throw new ToolError( 'This connection was not granted the access level that undoing this change needs.' );
-		}
-		if ( ! Executor::allowed( $tool, $input ) ) {
-			throw new ToolError( 'Your WordPress account is not allowed to make this change.' );
-		}
+		$snap = self::checked( $id, false );
 		// Claim first so two simultaneous restores cannot both run; release the claim if restoring fails.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- custom table.
 		if ( 1 !== (int) $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET restored_at = %s WHERE id = %d AND restored_at IS NULL", gmdate( 'Y-m-d H:i:s' ), $id ) ) ) {
 			throw new ToolError( 'This snapshot was already restored.' );
 		}
 		try {
-			$tool->restore( $state );
+			$snap['tool']->restore( $snap['state'] );
 		} catch ( \Throwable $e ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- custom table.
 			$wpdb->update( $table, array( 'restored_at' => null ), array( 'id' => $id ) );
@@ -120,8 +147,48 @@ final class Snapshots {
 		}
 		return array(
 			'restored'    => $id,
-			'object_type' => (string) $row['object_type'],
-			'object_id'   => (string) $row['object_id'],
+			'object_type' => (string) $snap['row']['object_type'],
+			'object_id'   => (string) $snap['row']['object_id'],
+		);
+	}
+
+	/**
+	 * Compare a snapshot with the current state of the same object (D81): the tool that made it takes a fresh
+	 * snapshot of the same input, so both sides have the same shape. Nothing is changed.
+	 *
+	 * @param int $id Snapshot id.
+	 * @return array<string, mixed>
+	 * @throws ToolError When it is unknown or not allowed.
+	 */
+	public static function compare( int $id ): array {
+		$snap = self::checked( $id, true );
+		$out  = array(
+			'snapshot_id' => $id,
+			'ts'          => (string) $snap['row']['ts'],
+			'tool'        => (string) $snap['row']['tool'],
+			'object_type' => (string) $snap['row']['object_type'],
+			'object_id'   => (string) $snap['row']['object_id'],
+			'restored'    => null !== $snap['row']['restored_at'],
+		);
+		try {
+			$now = $snap['tool']->snapshot( $snap['input'] );
+		} catch ( ToolError $e ) {
+			return $out + array(
+				'current_available' => false,
+				'note'              => 'The current state could not be read: ' . $e->getMessage(),
+				'changes'           => array(),
+				'truncated'         => false,
+			);
+		}
+		$changes = array();
+		Diff::walk( $snap['state'], is_array( $now['payload'] ?? null ) ? $now['payload'] : array(), '', $changes );
+		$total = count( $changes );
+		return $out + array(
+			'current_available' => null !== $now,
+			'identical'         => 0 === $total,
+			'change_count'      => $total,
+			'changes'           => array_slice( $changes, 0, Diff::MAX_CHANGES ),
+			'truncated'         => $total > Diff::MAX_CHANGES,
 		);
 	}
 }

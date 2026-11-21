@@ -9,6 +9,7 @@ namespace Kuduy\Mcp\Admin;
 
 use Kuduy\Mcp\Audit\AuditLog;
 use Kuduy\Mcp\OAuth\Urls;
+use Kuduy\Mcp\Policy\ReadOnlyMode;
 
 /**
  * Every logged-in user can manage their own connections here.
@@ -70,6 +71,7 @@ final class ConnectionsPage {
 			echo '</tbody></table>';
 		}
 
+		ReadOnlyMode::render_section();
 		HiddenMode::render_section();
 
 		echo '<h2>' . esc_html__( 'Recent tool calls', 'kuduy-mcp' ) . '</h2>';

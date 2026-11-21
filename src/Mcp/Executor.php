@@ -14,9 +14,10 @@ use Kuduy\Mcp\Execution\Confirmable;
 use Kuduy\Mcp\Execution\Confirmation;
 use Kuduy\Mcp\Execution\Snapshots;
 use Kuduy\Mcp\Execution\Snapshottable;
+use Kuduy\Mcp\Policy\ReadOnlyMode;
 
 /**
- * Availability → validation → capability → confirmation (high-risk tools, D45) → snapshot (destructive tools) →
+ * Availability → read-only mode (D80) → validation → capability → confirmation (high-risk tools, D45) → snapshot (destructive tools) →
  * execute → redact → audit.
  */
 final class Executor {
@@ -56,6 +57,10 @@ final class Executor {
 			$category = false !== stripos( (string) $available, 'not active' ) ? ToolError::PLUGIN_NOT_ACTIVE : ToolError::FEATURE_NOT_SUPPORTED;
 			/* translators: %s: why the tool cannot run, e.g. "Elementor is not active". */
 			return self::error( sprintf( __( 'This tool is not available: %s', 'kuduy-mcp' ), (string) $available ), 'error', 'unavailable', $category );
+		}
+
+		if ( ! ReadOnlyMode::allows( $tool ) ) {
+			return self::error( __( 'This site is in read-only mode: a site administrator has switched off every tool that changes the site. Nothing was changed.', 'kuduy-mcp' ), 'denied', 'read_only', ToolError::PERMISSION_DENIED );
 		}
 
 		$args   = null === $args ? array() : $args;

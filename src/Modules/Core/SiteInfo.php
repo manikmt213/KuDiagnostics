@@ -9,6 +9,7 @@ namespace Kuduy\Mcp\Modules\Core;
 
 use Kuduy\Mcp\Mcp\Tool;
 use Kuduy\Mcp\Plugin;
+use Kuduy\Mcp\Policy\ReadOnlyMode;
 
 /**
  * Basic facts about the site and the connected user.
@@ -66,6 +67,10 @@ final class SiteInfo implements Tool {
 				'kuduy_mcp_version' => array( 'type' => 'string' ),
 				'theme'             => array( 'type' => 'string' ),
 				'is_multisite'      => array( 'type' => 'boolean' ),
+				'read_only'         => array(
+					'type'        => 'boolean',
+					'description' => 'True when a site administrator switched on read-only mode: only tools that read are available.',
+				),
 				'php_version'       => array(
 					'type'        => 'string',
 					'description' => 'Only for users who can manage options.',
@@ -141,6 +146,7 @@ final class SiteInfo implements Tool {
 			'kuduy_mcp_version' => Plugin::VERSION,
 			'theme'             => (string) wp_get_theme()->get( 'Name' ),
 			'is_multisite'      => is_multisite(),
+			'read_only'         => ReadOnlyMode::is_on(),
 			'user'              => array(
 				'id'           => $user->ID,
 				'display_name' => $user->display_name,

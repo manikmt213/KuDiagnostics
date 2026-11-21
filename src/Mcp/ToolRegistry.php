@@ -47,6 +47,9 @@ use Kuduy\Mcp\Modules\Core\Integrations;
 use Kuduy\Mcp\Modules\Core\SiteInfo;
 use Kuduy\Mcp\Modules\Core\SnapshotList;
 use Kuduy\Mcp\Modules\Core\SnapshotRestore;
+use Kuduy\Mcp\Modules\Core\SnapshotDiff;
+use Kuduy\Mcp\Modules\Core\AbilitiesHub;
+use Kuduy\Mcp\Modules\Core\AbilityRun;
 use Kuduy\Mcp\Modules\Core\TermList;
 use Kuduy\Mcp\Modules\Core\Themes;
 use Kuduy\Mcp\Modules\Core\ThemeSettings;
@@ -228,6 +231,11 @@ final class ToolRegistry {
 		}
 		$registry->register( new SnapshotList() );
 		$registry->register( new SnapshotRestore() );
+		// Phase J: snapshot comparison (D81) and the abilities hub (D82).
+		$registry->register( new SnapshotDiff() );
+		$registry->register( new AbilitiesHub( 'list' ) );
+		$registry->register( new AbilitiesHub( 'read' ) );
+		$registry->register( new AbilityRun() );
 		$registry->register( new CheckUpdate() );
 		$registry->register( new PostTypes() );
 		$registry->register( new PostList() );

@@ -10,6 +10,7 @@ namespace Kuduy\Mcp;
 use Kuduy\Mcp\Admin\Cli;
 use Kuduy\Mcp\Admin\ConnectionsPage;
 use Kuduy\Mcp\Admin\HiddenMode;
+use Kuduy\Mcp\Policy\ReadOnlyMode;
 use Kuduy\Mcp\Http\OutputGuard;
 use Kuduy\Mcp\Jobs\Jobs;
 use Kuduy\Mcp\Lifecycle\Cleanup;
@@ -73,6 +74,7 @@ final class Plugin {
 		add_action( 'admin_menu', array( ConnectionsPage::class, 'menu' ) );
 		// Hidden mode and its recovery (Phase 8): presentation only, the MCP runtime never reads it.
 		HiddenMode::register();
+		ReadOnlyMode::register();
 		Cli::register();
 		// Post types and taxonomies defined through kuduy-content-type-save (D22).
 		ContentTypes::boot();

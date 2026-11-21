@@ -2,6 +2,14 @@
 
 Format: user-facing releases first (newest on top), then the dated development history. Versions follow semantic versioning; tags `vX.Y.Z` publish a GitHub Release that installed sites receive through the built-in updater.
 
+## Unreleased
+
+Phase J (`docs/plans/phase-j.md`, D80–D82):
+
+- Added: read-only mode. A site administrator can switch it on under Tools > KuDiagnostics (or with `define( 'KUDUY_MCP_READ_ONLY', true );`); Claude then sees and runs only tools that read, for every connection, and background jobs stop.
+- Added: `kuduy-snapshot-diff` — what changed since an undo snapshot, field by field, before restoring it.
+- Added: abilities hub — `kuduy-abilities`, `kuduy-ability-read`, `kuduy-ability-run` for plugins that publish WordPress abilities for MCP and have no KuDiagnostics tools; changes always ask for confirmation first.
+
 ## 1.7.2 — 2026-11-21
 
 - Fixed: updates were not offered while GitHub's API refused this server (its anonymous limit of 60 requests an hour is per IP address, which shared hosts share between many sites). The updater now reads the latest release from GitHub's release page instead; the download is still checked against its published SHA-256.

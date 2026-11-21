@@ -600,6 +600,20 @@ Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures o
 
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
+## Phase J — modes (2026-11-21)
+
+| ID | What | Type — file |
+|---|---|---|
+| MJ1 | Read-only mode: tools/list shows no tool without `readOnlyHint`; read tools stay; `kuduy-site-info` reports `read_only` | I — `ModesTest` |
+| MJ2 | Read-only mode: every available write tool (loop over the registry) is refused through tools/call with an id of a real post; the post is unchanged; writes work again when switched off | I — `ModesTest` |
+| MJ3 | A queued job stops when the site turns read-only; its item is not changed | I — `ModesTest` |
+| MJ4 | `KUDUY_MCP_READ_ONLY` wins over the option | I — `ModesTest` |
+| MJ5 | No tool is both `readOnlyHint` and destructive or confirm-first (such a tool would stay open in read-only mode) | I — `ModesTest` |
+| MJ6 | Snapshot diff: the changed field with before/after, unchanged fields left out; another user refused; identical after undo; unknown id refused | I — `ModesTest` |
+| MJ7 | Abilities hub: only `mcp.public` abilities; covered namespace and code ability refused; read refuses a write ability; run previews, binds the token to the arguments, runs once; invalid input refused before a token; the ability's own permission decides (author may read, not run); run blocked in read-only mode | I — `ModesTest` |
+
+Round 2026-11-21: bare suites 321 tests, 0 failures (52 skipped, as before: integration rows without their plugins) on 7.1.5/8.3 and 6.9.12/8.1, MJ1–MJ7 ran on both; PHPCS and PHPStan clean; `docs/TOOLS.md` regenerated (444 tools). MJ2 called every available write tool in read-only mode and none ran. Found while testing: the hub first issued a confirmation token for input the ability would reject; input is now validated before the preview. The failing-first run was not observed for MJ1–MJ5 (built first, per the round workflow). Not yet checked against a real plugin's public abilities or on the owner's site.
+
 ## Phase O — administration (2026-11-20)
 
 | ID | What | Type — file |
