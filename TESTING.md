@@ -600,6 +600,20 @@ Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures o
 
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
+## Phase P — admin screen and docs (2026-11-21)
+
+| ID | What | Type — file |
+|---|---|---|
+| AP1 | Tabs by role: administrator sees Connections, Activity, Integrations; an author has no Integrations tab and an unknown tab falls back to Connections | I — `AdminScreensTest` |
+| AP2 | Connections: app name, access in words, calls in 7 days, the access levels explained, activity link with the client id encoded | I — `AdminScreensTest` |
+| AP3 | High-risk = confirm-first, destructive or changing with admin/code (read-only admin tools excluded); activity filters (high-risk, result, connection); authors see only their rows; apps by registered name; managers see everyone | I — `AdminScreensTest` |
+| AP4 | Integrations tab: installed by default, whole catalogue on request, last check by Claude | I — `AdminScreensTest` |
+| AP5 | Consent form: "Full Site Administration", each scope explained, admin offered unticked when not asked, code access not offered unasked | I — `OAuthTest::test_ap5_consent_wording` |
+
+Live check 2026-11-21 on the owner's test site (test build of the working copy uploaded over 1.7.2 with the owner's approval; nothing switched on the site): Connections tab with the real claude.ai connection (access in words, last use, 187 calls in 7 days), Activity tab with filters by connection, result and high-risk, Integrations tab (61 of 86 catalogue products installed, last check by Claude). Three findings fixed and rechecked live: read-only administration tools (file reads, searches) were flagged high-risk; dynamically registered apps showed as kmcp_c_… ids instead of their names; the activity link carried the client id unencoded. The consent form was not opened live (it needs a new OAuth client on the site); its wording is covered by AP5.
+
+Round 2026-11-21: bare suites 331 tests on 7.1.5/8.3 and 6.9.12/8.1 with one failure on both, `SafetyTest::test_admin_page_shows_mcp_url_and_activity`, which looked for recent calls on the default tab (they moved to the Activity tab); the test now checks both tabs (still no secret shown) and the admin, safety, hidden-mode and OAuth classes (49 tests) pass on both pairs; PHPCS and PHPStan clean; `docs/TOOLS.md` and `docs/INTEGRATIONS.md` regenerated.
+
 ## Phase B3 — form migration (2026-11-21)
 
 | ID | What | Type — file |

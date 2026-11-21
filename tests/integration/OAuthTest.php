@@ -493,6 +493,21 @@ final class OAuthTest extends TestCase {
 		$this->assertStringContainsString( 'value="kuduy:write"', $result['html'] );
 	}
 
+	/**
+	 * AP5 (phase P, D85): the consent form names the admin scope "Full Site Administration", explains each scope, and
+	 * shows admin access unticked when the application did not ask for it; code access is never offered unasked.
+	 */
+	public function test_ap5_consent_wording(): void {
+		[ , $challenge ] = self::pkce();
+		$html            = Authorize::handle( 'GET', self::query( $this->register_client(), $challenge ), array() )['html'];
+		$this->assertStringContainsString( 'Full Site Administration', $html );
+		$this->assertStringContainsString( 'Create and edit content', $html );
+		$this->assertStringContainsString( 'Still limited by your own WordPress permissions', $html );
+		$this->assertMatchesRegularExpression( '/value="kuduy:admin">/', $html, 'admin access is offered unticked' );
+		$this->assertStringContainsString( 'the application did not ask for this', $html );
+		$this->assertStringNotContainsString( 'kuduy:code', $html );
+	}
+
 	public function test_bad_client_or_redirect_shows_error_page_and_never_redirects(): void {
 		[ , $challenge ] = self::pkce();
 		$client          = $this->register_client();

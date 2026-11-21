@@ -189,12 +189,7 @@ final class Authorize {
 	private static function consent( array $client, string $redirect, array $offered, array $optional, \WP_User $user, array $params ): string {
 		$host     = (string) wp_parse_url( $redirect, PHP_URL_HOST );
 		$loopback = in_array( $host, array( 'localhost', '127.0.0.1', '[::1]' ), true );
-		$labels   = array(
-			Scopes::READ  => __( 'Read site content and settings', 'kuduy-mcp' ),
-			Scopes::WRITE => __( 'Create and edit content', 'kuduy-mcp' ),
-			Scopes::ADMIN => __( 'Manage plugins, themes, users and settings', 'kuduy-mcp' ),
-			Scopes::CODE  => __( 'Run code on this site (developer mode)', 'kuduy-mcp' ),
-		);
+		$line     = static fn( string $scope ): string => '<strong>' . esc_html( Scopes::label( $scope ) ) . '</strong><br><small>' . esc_html( Scopes::explain( $scope ) ) . '</small>';
 
 		$html = '<form method="post" action="' . esc_url( Urls::authorize() ) . '">'
 			. '<p><strong>' . esc_html( $client['name'] ) . '</strong> '
@@ -211,11 +206,11 @@ final class Authorize {
 		}
 		$html .= '<fieldset><legend>' . esc_html__( 'Allow:', 'kuduy-mcp' ) . '</legend>';
 		foreach ( $offered as $scope ) {
-			$html .= '<p><label><input type="checkbox" name="scopes[]" value="' . esc_attr( $scope ) . '" checked> ' . esc_html( $labels[ $scope ] ?? $scope ) . '</label></p>';
+			$html .= '<p><label><input type="checkbox" name="scopes[]" value="' . esc_attr( $scope ) . '" checked> ' . $line( $scope ) . '</label></p>';
 		}
 		foreach ( $optional as $scope ) {
-			$html .= '<p><label><input type="checkbox" name="scopes[]" value="' . esc_attr( $scope ) . '"> ' . esc_html( $labels[ $scope ] ?? $scope ) . '</label><br>'
-				. '<small>' . esc_html__( 'Optional. Not requested by the application; tick only if it should also manage plugins, themes, users, settings and Elementor site templates.', 'kuduy-mcp' ) . '</small></p>';
+			$html .= '<p><label><input type="checkbox" name="scopes[]" value="' . esc_attr( $scope ) . '"> ' . $line( $scope ) . '</label><br>'
+				. '<small><em>' . esc_html__( 'Optional: the application did not ask for this. Tick it only if this application should also administer the site.', 'kuduy-mcp' ) . '</em></small></p>';
 		}
 		$html .= '</fieldset>';
 		foreach ( $params as $key => $value ) {

@@ -15,6 +15,12 @@ Phase B3 (`docs/plans/phase-b3-form-migration.md`, D83):
 - Added: `kuduy-forms-export` — any Contact Form 7, WPForms, Fluent Forms, Ninja Forms, Formidable or Gravity Forms form in one plugin-neutral shape.
 - Added: `kuduy-forms-migrate` — copy a form into another forms plugin as a new form: a plan first (what each field becomes, what cannot be carried), then the form is created through that plugin's own save path and checked field by field. The old form, its entries and notifications stay as they are.
 
+Phase P (`docs/plans/phase-p.md`, D84–D86):
+
+- Added: Tools > KuDiagnostics has three tabs. **Connections** shows each connection's access in plain words, when it was last used and how many calls it made this week. **Activity** lists Claude's tool calls with filters (connection, result, high-risk only). **Integrations** shows which builders, themes and plugins KuDiagnostics supports on this site.
+- Changed: the approval screen calls administrator access "Full Site Administration" and explains each access level; code access is explained on its own.
+- Added: `docs/INTEGRATIONS.md` (generated from the catalogue) and a guide to writing an integration adapter in `docs/DEVELOPER.md`.
+
 ## 1.7.2 — 2026-11-21
 
 - Fixed: updates were not offered while GitHub's API refused this server (its anonymous limit of 60 requests an hour is per IP address, which shared hosts share between many sites). The updater now reads the latest release from GitHub's release page instead; the download is still checked against its published SHA-256.

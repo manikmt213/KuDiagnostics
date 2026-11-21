@@ -447,6 +447,14 @@ final class SafetyTest extends TestCase {
 		$html = (string) ob_get_clean();
 
 		$this->assertStringContainsString( esc_html( rest_url( 'kuduy-mcp/v1/mcp' ) ), $html );
+		$this->assertStringNotContainsString( 'hunter2', $html );
+
+		// Recent calls moved to the Activity tab in phase P (D84).
+		$_GET = array( 'tab' => 'activity' );
+		ob_start();
+		ConnectionsPage::render();
+		$html = (string) ob_get_clean();
+		$_GET = array();
 		$this->assertStringContainsString( 'test-secrets', $html );
 		$this->assertStringNotContainsString( 'hunter2', $html );
 	}

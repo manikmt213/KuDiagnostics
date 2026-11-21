@@ -211,7 +211,7 @@ Owner's standing order (2026-11-14): builders and themes first, then C → G →
 | 10 | **J. Modes** | Site-wide read-only switch; abilities hub (D34); snapshot diff | Every write tool blocked in read-only | Medium |
 | 11 | **K. Tokens and translation** | Measure, trim; Weglot | Numbers before/after | Small–medium |
 | 12 | **B3. Form migration** | Canonical export, mapping, preview, execute, verify | CF7 → Fluent round-trip with report | Medium — **built 2026-11-21** (D83, `docs/plans/phase-b3-form-migration.md`) |
-| 13 | **P. Admin UI and docs** | Integrations tab, consent wording "Full Site Administration", connection activity, per-integration docs generated from the catalogue, adapter developer guide | Screens checked in browser | Medium |
+| 13 | **P. Admin UI and docs** | Integrations tab, consent wording "Full Site Administration", connection activity, per-integration docs generated from the catalogue, adapter developer guide | Screens checked in browser | Medium — **built 2026-11-21** (D84–D86, `docs/plans/phase-p.md`; checked live) |
 | — | **L. Paid products** | Gravity Forms, WPForms Pro, JetEngine, JetElements, DCE, Bricksforge, Dynamic Shortcodes, WPML, ACF Pro, ASE Pro, SEO Pro editions | Tested on the licensed copy | Per copy |
 
 Process per phase is unchanged (memory `v1-round-workflow`): research from source into `RESEARCH.md`, failing test, code, full test round, security pass, update `FEATURES.md` / `INTEGRATION-MATRIX.md` / `TESTING.md` / `CHANGELOG.md`, regenerate `docs/TOOLS.md`, one push; ask before tagging.

@@ -81,6 +81,73 @@ final class AuditLog {
 	}
 
 	/**
+	 * Rows matching filters, newest first, with the total (KuDiagnostics screen, Activity tab; D84).
+	 *
+	 * @param array{user_id?: int|null, client_id?: string, result?: string, tools?: list<string>|null} $filters Filters; tools null = any.
+	 * @param int                                                                                       $limit   Rows.
+	 * @param int                                                                                       $offset  Rows to skip.
+	 * @return array{rows: list<array<string, mixed>>, total: int}
+	 */
+	public static function search( array $filters, int $limit, int $offset ): array {
+		global $wpdb;
+		$where  = array( '1=1' );
+		$values = array();
+		if ( null !== ( $filters['user_id'] ?? null ) ) {
+			$where[]  = 'user_id = %d';
+			$values[] = (int) $filters['user_id'];
+		}
+		if ( '' !== ( $filters['client_id'] ?? '' ) ) {
+			$where[]  = 'client_id = %s';
+			$values[] = (string) $filters['client_id'];
+		}
+		if ( '' !== ( $filters['result'] ?? '' ) ) {
+			$where[]  = 'result = %s';
+			$values[] = (string) $filters['result'];
+		}
+		if ( null !== ( $filters['tools'] ?? null ) ) {
+			$tools = (array) $filters['tools'];
+			if ( ! $tools ) {
+				return array(
+					'rows'  => array(),
+					'total' => 0,
+				);
+			}
+			$where[] = 'tool IN (' . implode( ',', array_fill( 0, count( $tools ), '%s' ) ) . ')';
+			$values  = array_merge( $values, array_map( 'strval', $tools ) );
+		}
+		$table = $wpdb->prefix . 'kuduy_audit_log';
+		$sql   = implode( ' AND ', $where );
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- custom table; the WHERE clause is built from fixed fragments with placeholders only.
+		$total = (int) $wpdb->get_var( $values ? $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE {$sql}", $values ) : "SELECT COUNT(*) FROM {$table}" );
+		$rows  = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table} WHERE {$sql} ORDER BY id DESC LIMIT %d OFFSET %d", array_merge( $values, array( $limit, $offset ) ) ), ARRAY_A );
+		// phpcs:enable
+		return array(
+			'rows'  => array_values( (array) $rows ),
+			'total' => $total,
+		);
+	}
+
+	/**
+	 * When a user's connection with a client was last used, and how many calls it made in the last 7 days.
+	 *
+	 * @param int    $user_id   User.
+	 * @param string $client_id OAuth client id.
+	 * @return array{last: string|null, week: int} Last use as UTC Y-m-d H:i:s.
+	 */
+	public static function usage( int $user_id, string $client_id ): array {
+		global $wpdb;
+		$table = $wpdb->prefix . 'kuduy_audit_log';
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- custom table.
+		$last = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(ts) FROM {$table} WHERE user_id = %d AND client_id = %s", $user_id, $client_id ) );
+		$week = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE user_id = %d AND client_id = %s AND ts > %s", $user_id, $client_id, gmdate( 'Y-m-d H:i:s', time() - WEEK_IN_SECONDS ) ) );
+		// phpcs:enable
+		return array(
+			'last' => is_string( $last ) ? $last : null,
+			'week' => $week,
+		);
+	}
+
+	/**
 	 * Most recent rows, newest first.
 	 *
 	 * @param int      $limit   Rows.

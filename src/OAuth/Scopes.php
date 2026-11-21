@@ -32,6 +32,37 @@ final class Scopes {
 	);
 
 	/**
+	 * A scope's name for people (consent form, KuDiagnostics screen; D85). Wording only: what a scope allows is
+	 * decided by allows() and the tools.
+	 *
+	 * @param string $scope Scope.
+	 */
+	public static function label( string $scope ): string {
+		return match ( $scope ) {
+			self::READ  => __( 'Read content and settings', 'kuduy-mcp' ),
+			self::WRITE => __( 'Create and edit content', 'kuduy-mcp' ),
+			self::ADMIN => __( 'Full Site Administration', 'kuduy-mcp' ),
+			self::CODE  => __( 'Run code (developer mode)', 'kuduy-mcp' ),
+			default     => $scope,
+		};
+	}
+
+	/**
+	 * What a scope adds, in one sentence.
+	 *
+	 * @param string $scope Scope.
+	 */
+	public static function explain( string $scope ): string {
+		return match ( $scope ) {
+			self::READ  => __( 'Pages, posts, media, settings and the state of plugins and themes, without changing anything.', 'kuduy-mcp' ),
+			self::WRITE => __( 'Write and change pages, posts, media, menus, forms and page-builder layouts. Most changes can be undone.', 'kuduy-mcp' ),
+			self::ADMIN => __( 'Everything a site administrator manages: plugins, themes, users, settings, site templates, notification routing and permanent deletes. Still limited by your own WordPress permissions; risky actions ask first.', 'kuduy-mcp' ),
+			self::CODE  => __( 'Write theme and plugin files and run PHP on the server. Offered only because the site owner switched developer mode on in wp-config.php. Separate from Full Site Administration.', 'kuduy-mcp' ),
+			default     => '',
+		};
+	}
+
+	/**
 	 * Resource scopes this site offers.
 	 *
 	 * @return list<string>
