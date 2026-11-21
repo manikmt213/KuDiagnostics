@@ -279,11 +279,15 @@ final class ModesTest extends TestCase {
 	}
 
 	public function test_mj6_snapshot_diff_shows_what_changed(): void {
+		// A category of its own: Polylang swaps the default category for its per-language copy on every save, which
+		// would show up in the comparison after undo (CI, Polylang rows, 2026-11-21).
+		$term    = wp_insert_term( 'Kuduy diff ' . wp_generate_password( 6, false ), 'category' );
 		$post    = wp_insert_post(
 			array(
-				'post_title'   => 'Before',
-				'post_content' => 'Body',
-				'post_status'  => 'draft',
+				'post_title'    => 'Before',
+				'post_content'  => 'Body',
+				'post_status'   => 'draft',
+				'post_category' => array( (int) $term['term_id'] ),
 			)
 		);
 		$updated = $this->ok(
@@ -317,7 +321,7 @@ final class ModesTest extends TestCase {
 		$this->ok( 'kuduy-snapshot-restore', array( 'snapshot_id' => $snap ) );
 		$again = $this->ok( 'kuduy-snapshot-diff', array( 'snapshot_id' => $snap ) );
 		$this->assertTrue( $again['restored'] );
-		$this->assertTrue( $again['identical'], 'after undo the object matches the snapshot' );
+		$this->assertTrue( $again['identical'], 'after undo the object matches the snapshot: ' . (string) wp_json_encode( $again['changes'] ) );
 		$this->fails( 'kuduy-snapshot-diff', array( 'snapshot_id' => 999999 ), 'unknown snapshot' );
 	}
 

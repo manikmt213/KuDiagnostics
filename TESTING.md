@@ -600,6 +600,8 @@ Round 2026-11-20 after the live-check fixes: bare suites 268 tests, 0 failures o
 
 Full round 2026-11-18 (HEAD before L7–L9): bare suites 268 tests, 0 failures on 7.1.4/8.3 and 6.9.11/8.1; Pro SEO + Dynamic Shortcodes + WP Rocket + JetEngine stand-ins 271, 0 failures (both); WPML 269, 0 (both); Gravity 273, 0 (both); Polylang 3.9.2 273, 0 (both); Code Snippets 4.1.0 268, 0 (both); real-HTTP smoke 26/26. L7–L9 (DC1, SK1, catalogue) 6 tests, 0 failures on both pairs.
 
+**CI on the Phase J, B3 and P commits and on the v1.8.0 tag (41c59ec, release run 44909627068) failed in the two Polylang rows** (MJ6, seen in the job log on GitHub): after undo the comparison showed the post's category changed from 1 to 6. Polylang swaps the default category for its per-language copy on every save, so the post the test made in the default category did not compare equal; undo and the diff were right. MJ6 now gives the post its own category; Polylang rows green locally on 7.1.5/8.3 and 6.9.12/8.1 (336 tests, 0 failures). The release run stopped before publishing: GitHub's latest release stayed v1.7.2, nothing reached installed sites.
+
 ## Phase P — admin screen and docs (2026-11-21)
 
 | ID | What | Type — file |
