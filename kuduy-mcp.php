@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       KuDiagnostics
  * Description:       MCP server for WordPress: connect Claude and manage this site under your own WordPress permissions.
- * Version:           1.7.2
+ * Version:           1.8.0
  * Requires at least: 6.9
  * Requires PHP:      8.1
  * Author:            KUDUY Digital
